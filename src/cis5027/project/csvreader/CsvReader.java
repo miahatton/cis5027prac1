@@ -1,4 +1,4 @@
-package cis5027.project;
+package cis5027.project.csvreader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
