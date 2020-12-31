@@ -1,66 +1,92 @@
 package cis5027.project.lightapp.components;
 
 import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RadialGradientPaint;
+import java.awt.geom.Point2D;
 
 import cis5027.project.lightapp.components.LightPanel;
 
-
-
 public class Light {
-
-	private static final Color MAX_BRIGHTNESS = new Color(253, 255, 176);
-	private Color lightColor;
-	private int arrayWidth;
-	private int arrayHeight;
-	private int numLights;
+	
+	// maximum brightness is 255, 255, 255
+	private static final int 	MAX_BRIGHTNESS = 255;
+	private static final Color 	MAX_COLOR = new Color(MAX_BRIGHTNESS, MAX_BRIGHTNESS, (int) MAX_BRIGHTNESS / 3);
+	
+	// adjustable color value
+	private Color 	lightColor;
+	private int 	incrementer = (int) 0.1 * MAX_BRIGHTNESS; 
+	
+	// width and height of panel where lights are drawn
+	private int 	panelWidth;
+	private int 	panelHeight;
+	
+	// lights per row and column
+	private int 	numLights; 
+	
+	// padding and gap between lights
+	private int 	widthPad;
+	private int 	heightPad;
+	private int 	gap;
+	
+	// size of circles representing lights
+	private int 	circleSize;
+	private int		radius;
+	
+	// associated panel
+	private LightPanel panel;
+	
+	public void setLightColor (int brightnessValue) throws IllegalArgumentException {
+		
+		int newBrightness = (int) brightnessValue * 255 / 100;
+		
+		lightColor = new Color(newBrightness, newBrightness, newBrightness);
+		panel.repaint();
+		
+	}
 	
 	// constructor
 	public Light(int width, int height, int num) {
 		
-		lightColor = MAX_BRIGHTNESS; // yellow for warmth
-		arrayWidth = width;
-		arrayHeight = height;
+		// TODO add error handling to this - at what point will circle size be < 1 px?
 		
-		// numLights must be square
-		if (Math.sqrt(num) - Math.floor(Math.sqrt(num)) == 0) {
-			numLights = num;
-		} else {
-			System.out.println("Number of lights must be square");
-		}
+		lightColor = MAX_COLOR; 
+		panelWidth = width;
+		panelHeight = height;
+		numLights = num;
 		
+		widthPad = Math.floorDiv(panelWidth, 20);	// 5% of total width
+		heightPad = Math.floorDiv(panelHeight, 20); // 5% of total width
+		gap = Math.floorDiv(panelWidth, 100); // 1% of total width
+		
+		circleSize = Math.floorDiv(panelWidth - 2 * widthPad - (numLights - 1) * gap, numLights);
+		radius = (int) circleSize / 2;
 	}
 	
-	public void incrementLightColor(boolean dim) {
-		
-		double incrementer = 0.1 * 5; // TODO make this MAX_BRIGHTNESS - for each colour value
-		
-		if(dim) {
-			
-			incrementer *= -1; // make light dimmer
-		}
-		
-		// adjust lightColor;
+	public int getCurrentBrightness() {
+		return lightColor.getRed(); // all values are the same so can get any.
 	}
+	
+	public void setLightPanel(LightPanel panel) {
+		this.panel = panel;
+	}
+	
 	
 	// draw method
 	public void draw(Graphics g) {
 
+		Graphics2D g2d = (Graphics2D) g;
+		
 		// TODO find way to do gradient from centre to outside. Make the centre always 10% brighter than outside
-		// GradientPaint gradient = new GradientPaint(70,70, brightLight, 150, 150, boldLight);
-		// g2d.setPaint(gradient);
-
+		int edgeColorVal = (int) Math.max(getCurrentBrightness()  * 0.9, 0);
+		Color[] colors = {lightColor, new Color(edgeColorVal, edgeColorVal, (int) edgeColorVal/3)};
+		float[] dist = {0.0f, 0.8f};
+		
 		g.setColor(lightColor);
-		
-		int widthPad = Math.floorDiv(arrayWidth, 20);	// 20
-		int heightPad = Math.floorDiv(arrayHeight, 20); // 20
-		int gap = 10;
-		
-		int circleSize = Math.floorDiv(arrayWidth - 2 * widthPad - 2 * gap, numLights); // 113
-		
-		int startX = widthPad;	// 20	
-		int startY = heightPad;	//20
+			
+		int startX;	
+		int startY;	
 		
 		for (int j = 0; j < numLights; j++) {
 			
@@ -69,13 +95,21 @@ public class Light {
 			for (int i = 0; i < numLights; i++) {
 				
 				startX = widthPad + i * (gap + circleSize);
-				System.out.println("Drawing oval at (" + startX + ", " + startY + ")");
-				g.fillOval(startX, startY, circleSize, circleSize);
+				
+				Point2D center = new Point2D.Float(startX + radius, startY + radius);
+				RadialGradientPaint gradient = new RadialGradientPaint(center, radius, dist, colors);
+				g2d.setPaint(gradient);
+	
+				g2d.fillOval(startX, startY, circleSize, circleSize);
 			}
 
 		}
 		
 		
+	}
+	
+	public int getIncrementer() {
+		return incrementer;
 	}
 
 	
