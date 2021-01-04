@@ -10,7 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class SpeedPanel extends JPanel{
+public class SpeedPanel extends JPanel implements ActionListener {
+	
+	//TODO refactor to extend ApplianceValuePanel
 	
 	JLabel 				lbl_speed_value;
 	JTextField			txt_speed_value;
@@ -44,14 +46,15 @@ public class SpeedPanel extends JPanel{
 	
 	private void setButtonActions() {
 		
-		this.btn_setSpeed.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int timervalue = Integer.parseInt(txt_speed_value.getText());
-				fan_instance.setFanSpeed(timervalue);
-				
-			}
-		});
+		this.btn_setSpeed.addActionListener(this);
+		this.txt_speed_value.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		int timervalue = Integer.parseInt(txt_speed_value.getText());
+		fan_instance.setFanSpeed(timervalue);
+		
 	}
 }

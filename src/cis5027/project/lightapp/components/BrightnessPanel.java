@@ -1,99 +1,77 @@
 package cis5027.project.lightapp.components;
 
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import cis5027.project.helpers.ApplianceValuePanel;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-public class BrightnessPanel extends JPanel implements ActionListener {
+public class BrightnessPanel extends ApplianceValuePanel implements ActionListener {
 
 	// label, text input, and button
-	private 	JLabel 		brightnessLabel;
-	private 	JTextField 	brightnessInput;	
-	private 	JButton 	setBrightnessBtn;
-	private 	Light 		lightInstance;
-	
-	private 	int 		currentBrightnessPercent;
+	private 	Light		lightInstance;
 	private 	String 		inputBoxLastValidText; 		// used to hold valid value in case of error
 	
 	// constructor
-	public BrightnessPanel(Light lamp) {
+	public BrightnessPanel(Light light, String labelText, String defaultVal, String btnText) {
 	
-		// Initialize light instance
-		this.lightInstance = lamp;
+		// call super constructor
+		super(labelText, defaultVal, btnText);
 		
-		// get brightness of light instance and convert to percentage of 255 (max value)
-		currentBrightnessPercent = (int) lamp.getCurrentBrightness() * 100 / 255;
-		
-		// initialise widgets
-		brightnessLabel = new JLabel("Set brightness %");
-		brightnessInput = new JTextField(Integer.toString(currentBrightnessPercent), 3);
-		setBrightnessBtn = new JButton("Set Brightness");
-	
+		// Initialise light instance
+		this.lightInstance = light;
+
 		// store valid text value
-		inputBoxLastValidText = brightnessInput.getText();
-		
-		// add components to panel
-		this.setLayout(new FlowLayout());
-		this.add(brightnessLabel);
-		this.add(brightnessInput);
-		this.add(setBrightnessBtn);
-		
-		// action listener for button
-		setBrightnessBtn.addActionListener(this);
-		
-		// same action listener for hitting return/enter in text box
-		brightnessInput.addActionListener(this);
+		inputBoxLastValidText = textField.getText();
+
 	}
 	
-	// event handler
-	public void actionPerformed(ActionEvent event) {
+	public void setBrightnessInputAndClick(int newVal) {
 		
+		// TODO make this a superclass method that can also be applied to fan - I think it will be useful for final proj.
+		textField.setText(Integer.toString(newVal));
+		button.doClick();
+		
+	}
+
+	public int getBrightnessInputText() {
+		return Integer.parseInt(textField.getText());
+	}
+	
+	@Override
+	protected void setButtonActions() {
+		// action listener for button
+		button.addActionListener(this);
+		// same action listener for hitting return/enter in text box	
+		textField.addActionListener(this);	
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
 		try {
 			
 			// convert text to integer
-			int newBrightness = Integer.parseInt(brightnessInput.getText());
+			int newBrightness = Integer.parseInt(textField.getText());
 			
 			// Don't let brightness go above 100 or below 0	
 			if (newBrightness > 100) {
-				brightnessInput.setText("100");
+				textField.setText("100");
 			} else if (newBrightness < 0) {
-				brightnessInput.setText("0");
+				textField.setText("0");
 			}
 			
 			// set new light colour
 			lightInstance.setLightColor(newBrightness);
 			
 			// note that this value was successful
-			inputBoxLastValidText = brightnessInput.getText();
-			
-		} catch (NumberFormatException e) {
-			
-			// replace text with last valid value used.
-			brightnessInput.setText(inputBoxLastValidText);
+			inputBoxLastValidText = textField.getText();
 			
 		} catch (IllegalArgumentException e) {
 			
 			// replace text with last valid value used.
-			brightnessInput.setText(inputBoxLastValidText);
+			textField.setText(inputBoxLastValidText);
 			
-		}
-
-	}
-	
-	public void setBrightnessInputAndClick(int newVal) {
+		} 
 		
-		brightnessInput.setText(Integer.toString(newVal));
-		setBrightnessBtn.doClick();
-		
-	}
-
-	public int getBrightnessInputText() {
-		return Integer.parseInt(brightnessInput.getText());
 	}
 	
 }

@@ -7,44 +7,73 @@ import javax.swing.JFrame;
 
 import cis5027.project.lightapp.components.BrightnessAdjustPanel;
 import cis5027.project.lightapp.components.BrightnessPanel;
+import cis5027.project.lightapp.components.Light;
 import cis5027.project.lightapp.components.LightPanel;
 
 
 public class LightApp extends JFrame {
 	
-	public void go() {
+	private static LightApp		lightUiInstance;
+	
+	LightPanel lPanel;
+	BrightnessPanel bPanel;
+	BrightnessAdjustPanel aPanel;
+	Light lightInstance;
+	
+	public LightApp() {
 		
-		// create JFrame
-		JFrame frame = new JFrame();
-		frame.setSize(400,500);
-				
-		// exit program when frame closed
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super();
+		
+		setSize(400,500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// initialise light panel
-		LightPanel lPanel = new LightPanel(400, 380);
+		lPanel = new LightPanel(400, 380);
+		getContentPane().add(BorderLayout.CENTER, lPanel);
 		
+		lightInstance = (Light) lPanel.getAppInstance();
+				
 		// initialise brightness panel
-		BrightnessPanel bPanel = new BrightnessPanel(lPanel.getLightInstance());
-		
+		bPanel = new BrightnessPanel(lightInstance, "Set brightness %", "100", "Set Brightness");
+		getContentPane().add(BorderLayout.NORTH, bPanel);
+				
 		// initialise brightness adjustment panel
-		BrightnessAdjustPanel aPanel = new BrightnessAdjustPanel(lPanel.getLightInstance(), bPanel);
+		aPanel = new BrightnessAdjustPanel(lightInstance, bPanel);
+		getContentPane().add(BorderLayout.SOUTH, aPanel);
 		
-		// add panels to frame
-		frame.getContentPane().add(BorderLayout.CENTER, lPanel);
-		frame.getContentPane().add(BorderLayout.NORTH, bPanel);
-		frame.getContentPane().add(BorderLayout.SOUTH, aPanel);
-		
-		// set visibility
-		frame.setVisible(true);
-		
+		pack();
+		setVisible(true);
 	}
+	
+	/*
+	@Override
+	public void run() {
+		
+		
+		
+	} */
 	
 	// main
 	public static void main(String[] args) {
 		
-		LightApp gui = new LightApp();
-		gui.go();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {			
+				LightApp.getLightUiInstance();				
+			}
+		} );
+		
+	}
+
+	public static LightApp getLightUiInstance() {
+
+
+		if(lightUiInstance == null) {
+			lightUiInstance = new LightApp();
+		}
+		
+		return lightUiInstance;
 		
 	}
 }

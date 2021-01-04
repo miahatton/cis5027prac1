@@ -1,41 +1,30 @@
 package cis5027.project.fanapp.components;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import cis5027.project.helpers.AppliancePanel;
 
-public class FanPanel extends JPanel implements ActionListener {
-	private Fan fan;
+
+public class FanPanel extends AppliancePanel implements ActionListener {
 	
 	Timer timer;
 	
 	private final static int DEFAULT_DELAY_TIME = 10;
 
-	public FanPanel(int width, int height, Fan fanObj) {
-		setPreferredSize(new Dimension(width, height));		
-		fan = fanObj;
-		fan.setFanJPanel(this);
+	public FanPanel(int width, int height) {
+
+		super(width, height, Color.white);
+		
+		appInstance = new Fan(150, 150);
+		appInstance.setPanel(this);
+		
 		timer = new Timer(DEFAULT_DELAY_TIME, this); //Update our animations every n ms
 		timer.setInitialDelay(DEFAULT_DELAY_TIME * 7);
 		timer.start();
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		
-		g.setColor(new Color(0, 0, 0, 0.1f)); // 50% darker (change to 0.25f for 25% darker)		
-		fan.draw(g);
-	}
-	
-	public Fan getFanInstance() {
-		return this.fan;
 	}
 	
 	
@@ -51,7 +40,7 @@ public class FanPanel extends JPanel implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		fan.update(); //Let the fan move
+		((Fan) appInstance).update(); //Let the fan move
 		repaint(); //Draw the changes
 	}
 }

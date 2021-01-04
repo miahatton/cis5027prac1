@@ -1,11 +1,15 @@
 package cis5027.project.fanapp.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 
-public class Fan {
+import cis5027.project.helpers.Appliance;
+
+public class Fan extends Appliance {
+	
 	private final int triWidth = 20, triHeight = 40; //Wing triangle variables
 	private final int arcWidth = 20, arcHeight = 10; //Wing arc variables
 
@@ -13,24 +17,21 @@ public class Fan {
 	private double angle; //Angle in radians
 		
 	private	int fanSpeed;
-	private FanPanel fan_panel;
-
-	public void setFanJPanel(FanPanel fanJPanel) {
-		this.fan_panel = fanJPanel;
-	}
 	
 	public int getFanSpeed() {
 		return fanSpeed;
 	}
-	
+
 	public void setFanSpeed(int speed) {
 		this.fanSpeed = speed;
-		this.fan_panel.setTimer(this.fanSpeed);
+		((FanPanel) this.panel).setTimer(this.fanSpeed);
 	}
 	
 	public Fan(int centerX, int centerY) {
+
 		this.centerX = centerX;
 		this.centerY = centerY;
+		
 	}
 	
 	public void update() {
@@ -44,8 +45,13 @@ public class Fan {
 			value -= 2 * Math.PI;
 		return value;
 	}
+	
+	
 
 	public void draw(Graphics g) {
+		
+		g.setColor(new Color(0, 0, 0, 0.1f));
+		
 		Graphics2D gx = (Graphics2D) g;
 		//Make it look a little prettier
 		gx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

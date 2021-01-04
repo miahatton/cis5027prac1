@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import cis5027.project.helpers.Appliance;
+
 public class BrightnessAdjustPanel extends JPanel {
 
 	private JButton lightMinusBtn;
@@ -18,13 +20,13 @@ public class BrightnessAdjustPanel extends JPanel {
 	
 	BrightnessPanel bpanel;
 	
-	public BrightnessAdjustPanel(Light lamp, BrightnessPanel panel) {
+	public BrightnessAdjustPanel (Appliance appliance, BrightnessPanel panel) {
 	
 		// TODO put these below center
 		lightMinusBtn = new JButton("Decrease Brightness 10%");
 		lightPlusBtn = new JButton("Increase Brightness 10%");
 		
-		this.lightInstance = lamp;
+		this.lightInstance = (Light) appliance;
 
 		this.bpanel = panel;
 		

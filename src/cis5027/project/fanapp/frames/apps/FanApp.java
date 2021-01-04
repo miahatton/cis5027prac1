@@ -47,9 +47,8 @@ public class FanApp extends JFrame {
 	public FanApp() {
 		super();
 		
-		fan_instance = new Fan(150, 150); // coordinates of centre
-		
-		fan_panel = new FanPanel(300, 300, fan_instance); // size of panel
+		fan_panel = new FanPanel(300, 300); // size of panel
+		fan_instance = (Fan) fan_panel.getAppInstance();
 		speed_panel = new SpeedPanel(fan_instance);
 				
 		add(speed_panel, BorderLayout.NORTH);
