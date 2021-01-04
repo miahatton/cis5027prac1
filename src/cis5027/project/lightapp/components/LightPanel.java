@@ -18,7 +18,6 @@ public class LightPanel extends JPanel {
 		lightInstance.setLightPanel(this);
 		
 	}
-	
 
 	@Override
 	public void paintComponent(Graphics g) {

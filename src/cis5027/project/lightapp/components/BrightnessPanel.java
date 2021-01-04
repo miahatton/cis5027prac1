@@ -43,7 +43,11 @@ public class BrightnessPanel extends JPanel implements ActionListener {
 		this.add(brightnessInput);
 		this.add(setBrightnessBtn);
 		
+		// action listener for button
 		setBrightnessBtn.addActionListener(this);
+		
+		// same action listener for hitting return/enter in text box
+		brightnessInput.addActionListener(this);
 	}
 	
 	// event handler

@@ -26,7 +26,7 @@ public class ReadFileTest {
 		CsvReader csvReader = new CsvReader(fileLocation, split, delay);
 		
 		// initialise sensor data object with data from csv
-		SensorData sensorData = csvReader.readCsv();
+		SensorData sensorData = csvReader.loadCsv();
 		
 		// Begin test
 			System.out.println("Light levels:");

@@ -30,7 +30,7 @@ public class FanPanel extends JPanel implements ActionListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		//g.setColor(new Color(0, 0, 0, 0.1f)); // 50% darker (change to 0.25f for 25% darker)		
+		g.setColor(new Color(0, 0, 0, 0.1f)); // 50% darker (change to 0.25f for 25% darker)		
 		fan.draw(g);
 	}
 	
