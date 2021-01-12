@@ -49,7 +49,7 @@ public class FanApp extends JFrame {
 		
 		fan_panel = new FanPanel(300, 300); // size of panel
 		fan_instance = (Fan) fan_panel.getAppInstance();
-		speed_panel = new SpeedPanel(fan_instance);
+		speed_panel = new SpeedPanel(fan_instance, "Fan speed (delay in ms): ", "10", "Set speed");
 				
 		add(speed_panel, BorderLayout.NORTH);
 		add(fan_panel, BorderLayout.CENTER);

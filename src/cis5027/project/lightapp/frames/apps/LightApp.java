@@ -45,14 +45,6 @@ public class LightApp extends JFrame {
 		setVisible(true);
 	}
 	
-	/*
-	@Override
-	public void run() {
-		
-		
-		
-	} */
-	
 	// main
 	public static void main(String[] args) {
 		

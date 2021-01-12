@@ -6,6 +6,24 @@ public class SensorData {
 	
 	private ArrayList<Double> temperatures = new ArrayList<Double>();
 	private ArrayList<Double> lightLevels = new ArrayList<Double>();
+	private double currentTemperature;
+	private int currentLightLevel;
+	
+	public void setCurrentTemperature(double temp) {
+		this.currentTemperature = temp;
+	}
+	
+	public double getCurrentTemperature() {
+		return currentTemperature;
+	}
+	
+	public void setCurrentLightLevel(int lumens) {
+		this.currentLightLevel = lumens;
+	}
+	
+	public int getCurrentLightLevel() {
+		return currentLightLevel;
+	}
 	
 	public SensorData(){
 		

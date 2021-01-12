@@ -6,53 +6,30 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class CsvReader {
+import cis5027.project.helpers.InputFileReader;
+
+public class CsvReader extends InputFileReader {
 
 	private File file;
 	private String split;
 	int delay; 
+	BufferedReader br;
+	int lightIndex;
+	int tempIndex;
 	
 	// Constructor
 	public CsvReader(String fileLocation, String split) {
-		
-		this.file = new File(fileLocation);
-		this.split = split;
-		delay = 0; // default
+		super(fileLocation, split);
+		this.fileExtension = ".csv";
 	}
 	
 	// Overload constructor with ability to choose delay time
 	public CsvReader(String fileLocation, String split, int delay) {
-
-		this.file = new File(fileLocation);
-		this.split = split;
-		this.delay = delay;
+		super(fileLocation, split, delay);
+		this.fileExtension = ".csv";
 	}
 
-	// Getter for file location
-	public String getFileLocation() {
-		return file.getAbsolutePath();
-	}
 
-	// setter for file location
-	public void setFileLocation(String fileLocation) {
-		if(fileLocation.contains(".csv")) {
-		
-			//TODO try/catch for validating file location
-		
-			this.file = new File(fileLocation); 
-		}
-	}
-
-	// getter for split character
-	public String getSplit() {
-		return split;
-	}
-
-	// setter for split character
-	public void setSplit(String split) {
-		this.split = split;
-	}
-	
 	private int[] getColumnHeaders(String line){
 		
 		boolean lightFound = false;
@@ -85,14 +62,93 @@ public class CsvReader {
 		}			
 		
 		if(!lightFound) {
-			System.out.println("Light level" + errorString);
+			System.err.println("[csv reader: ] Error: Light level" + errorString);
 		}
 		
 		if(!tempFound) {
-			System.out.println("Temperature" + errorString);
+			System.err.println("[csv reader: ] Error: Temperature" + errorString);
 		}
 		
 		return lightTempIndices;
+		
+	}
+	
+	public void loadFile(boolean fetchHeader) {
+		
+		try {
+			br = new BufferedReader(new FileReader(this.file));
+			
+			// read the first line
+			String headerRow = br.readLine();
+			
+			if(headerRow != null) {
+				
+				if(fetchHeader) { // we can skip this if we already know the index of light and temperature in csv
+					
+					// get indexes of relevant column headers (light level, temperature)
+					int[] lightTempIndices = getColumnHeaders(headerRow);
+					this.lightIndex = lightTempIndices[0];
+					this.tempIndex = lightTempIndices[1];
+				}
+			
+			} 
+			
+		} catch (IOException e) {
+			System.err.println("[csv reader: ] error reading file... " + e.toString());
+		}
+
+	}
+	
+	public void readLine(Temperature temp, LightLevel light) {
+		
+		String nextLine;
+		String errorString = " value cannot be converted to ";
+		
+		try {
+			// read the next line
+			if ((nextLine = this.br.readLine()) != null) {
+				
+				String[] items = nextLine.split(split);
+				
+				try {
+					// set current light level
+					light.setCurrentLightLevel(Integer.parseInt(items[lightIndex]));
+					
+				} catch (NumberFormatException e) {
+					
+					System.err.println("[csv reader: ] Error reading csv... light level " + errorString + "integer.");
+				}
+				
+				try {
+					// set current temperature
+					temp.setCurrentTemperature(Double.parseDouble(items[tempIndex]));
+					
+				} catch (NumberFormatException e) {
+					
+					System.err.println("[csv reader: ] Error reading csv... temperature " + errorString + "double.");
+				}
+				
+			} else {
+				// load file again if we've reached the bottom
+				loadFile(false);
+				// try again
+				readLine(temp, light);
+			}
+			
+		} catch (IOException ex) {
+			
+			System.err.println("[csv reader: ] Error reading file... " + ex.toString());
+		}
+		
+	}
+	
+	public void closeBuffer() {
+		
+		try {
+			this.br.close();
+		} catch (IOException e) {
+			System.err.println("[csv reader: ] error closing BufferedReader..." + e.toString());
+		}
 		
 	}
 	
@@ -165,9 +221,10 @@ public class CsvReader {
 			e.printStackTrace();
 		}
 		
-		
 		return sensorData;
 	}
 	
+	
+
 
 }

@@ -10,51 +10,38 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class SpeedPanel extends JPanel implements ActionListener {
+import cis5027.project.helpers.ApplianceValuePanel;
+
+public class SpeedPanel extends ApplianceValuePanel implements ActionListener {
 	
-	//TODO refactor to extend ApplianceValuePanel
-	
-	JLabel 				lbl_speed_value;
-	JTextField			txt_speed_value;
-	JButton				btn_setSpeed;
-	
-	private Fan			fan_instance;
+	private Fan			fanInstance;
 			
-	public SpeedPanel(Fan fanObj) {
-		this.lbl_speed_value 	= new JLabel("Fan speed (Delay in ms) :");
-		this.txt_speed_value 	= new JTextField("10", 5);
-		this.btn_setSpeed 		= new JButton("Set Speed");
+	public SpeedPanel(Fan fanObj, String labelText, String defaultVal, String btnText) {
+		super(labelText, defaultVal, btnText);
 		
-		this.setLayout(new FlowLayout());
-		this.add(lbl_speed_value);
-		this.add(txt_speed_value);
-		this.add(btn_setSpeed);
-		
-		this.fan_instance = fanObj;
-		
-		setButtonActions();
+		this.fanInstance = fanObj;
 	}
 	
 	public void setFanInstance(Fan fanInstance) {
-		this.fan_instance = fanInstance;
+		this.fanInstance = fanInstance;
 	}
 	
 	
 	public String getFanSpeedValue() {
-		return txt_speed_value.getText();
+		return textField.getText();
 	}
 	
-	private void setButtonActions() {
+	protected void setButtonActions() {
 		
-		this.btn_setSpeed.addActionListener(this);
-		this.txt_speed_value.addActionListener(this);
+		button.addActionListener(this);
+		textField.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		int timervalue = Integer.parseInt(txt_speed_value.getText());
-		fan_instance.setFanSpeed(timervalue);
+		int timervalue = Integer.parseInt(textField.getText());
+		fanInstance.setFanSpeed(timervalue);
 		
 	}
 }
