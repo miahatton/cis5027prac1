@@ -101,7 +101,7 @@ public class ClientHandler extends Thread {
 		String msg = "";
 		
 		try {
-			
+
 			while(!this.stopConnection) {
 				
 				msg = (String) this.in.readObject();

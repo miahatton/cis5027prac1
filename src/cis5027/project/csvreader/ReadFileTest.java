@@ -23,7 +23,7 @@ public class ReadFileTest {
 		
 		
 		// initialise csv reader object
-		CsvReader csvReader = new CsvReader(fileLocation, split, delay);
+		CsvReader csvReader = new CsvReader(fileLocation, delay);
 		
 		// initialise sensor data object with data from csv
 		SensorData sensorData = csvReader.loadCsv();

@@ -59,6 +59,7 @@ public class Server extends AbstractServer implements Runnable {
 			
 			try {
 				clientSocket = serverSocket.accept();
+
 			} catch (IOException e) {
 				System.err.println("[server: ] Error when handling client connections on port " + port);
 			}

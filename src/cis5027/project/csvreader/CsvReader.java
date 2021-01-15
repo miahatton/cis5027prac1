@@ -18,14 +18,14 @@ public class CsvReader extends InputFileReader {
 	int tempIndex;
 	
 	// Constructor
-	public CsvReader(String fileLocation, String split) {
-		super(fileLocation, split);
+	public CsvReader(String fileLocation) {
+		super(fileLocation, ",");
 		this.fileExtension = ".csv";
 	}
 	
 	// Overload constructor with ability to choose delay time
-	public CsvReader(String fileLocation, String split, int delay) {
-		super(fileLocation, split, delay);
+	public CsvReader(String fileLocation, int delay) {
+		super(fileLocation, ",", delay);
 		this.fileExtension = ".csv";
 	}
 
