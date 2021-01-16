@@ -2,18 +2,23 @@ package cis5027.project.clients.lightapp.frames.apps;
 
 
 import java.awt.BorderLayout;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import cis5027.project.clients.Client;
+import cis5027.project.clients.ClientConnectPanel;
+import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.lightapp.components.BrightnessAdjustPanel;
 import cis5027.project.clients.lightapp.components.BrightnessPanel;
 import cis5027.project.clients.lightapp.components.Light;
 import cis5027.project.clients.lightapp.components.LightPanel;
-import cis5027.project.helpers.ApplianceApp;
-import cis5027.project.helpers.ClientConnectPanel;
 
 
 public class LightApp extends ApplianceApp {
@@ -25,11 +30,12 @@ public class LightApp extends ApplianceApp {
 	BrightnessAdjustPanel aPanel;
 	Light lightInstance;
 	
-	Client client;
-	
-	public LightApp() {
+	public LightApp(String ip) {
 		
-		super();
+		this.ip = ip;
+	}
+	
+	public void go() {
 		
 		setSize(400,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,13 +62,16 @@ public class LightApp extends ApplianceApp {
 		getContentPane().add(BorderLayout.NORTH, topPanel);
 		
 		/* TEST */
-		JPanel cPanel = new ClientConnectPanel("Choose port number: ", "5000", "Start Client");
-		getContentPane().add(BorderLayout.SOUTH, cPanel);
+		cPanel = new ClientConnectPanel("Choose port number: ", "5000", "Start Client", "Light");
+		cPanel.setApp(this);
 		
+		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
+		//connectToPanel(cPanel);
 		pack();
 		setVisible(true);
+		
 	}
-	
+		
 	// main
 	public static void main(String[] args) {
 		
@@ -70,17 +79,17 @@ public class LightApp extends ApplianceApp {
 			
 			@Override
 			public void run() {			
-				LightApp.getUiInstance();				
+				LightApp.getUiInstance().go();				
 			}
 		} );
-		
+
 	}
 
 	public static LightApp getUiInstance() {
 
 
 		if(lightUiInstance == null) {
-			lightUiInstance = new LightApp();
+			lightUiInstance = new LightApp("127.0.0.1");
 		}
 		
 		return lightUiInstance;

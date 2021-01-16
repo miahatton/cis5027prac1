@@ -10,7 +10,7 @@ import java.net.SocketException;
 
 public class Client implements Runnable {
 
-private Socket				clientSocket;
+	private Socket				clientSocket;
 	
 	private ObjectOutputStream	output;
 	private ObjectInputStream	input;
@@ -21,7 +21,9 @@ private Socket				clientSocket;
 	private String				host;
 	private int					port;
 	
+	private String				clientType;
 	
+	ClientConnectPanel			panel;
 	/*
 	 * Constructor
 	 */
@@ -60,6 +62,10 @@ private Socket				clientSocket;
 		this.stopClient = false;
 		this.clientReader.start();
 		
+	}
+	
+	public String getClientInfo() {
+		return "Client running at " + this.port + "\n Client using thread: " + this.clientReader.getName();
 	}
 	
 	/*
@@ -214,29 +220,10 @@ private Socket				clientSocket;
 	 * main() to initiate the client
 	 * @param args
 	 */
-	
-	
-	
-	public void go() {
-
-		// hardcoded server IP 
-		String ip = "127.0.0.1";
-		
-		Client chatClient = null;
-		
-		// thread to communicate with the server starts here
-		try {
-			chatClient = new Client(ip, port);	
-		} catch (IOException e) {
-			System.err.println("[client: ] error in opening the client connection to " + ip + " on " + port);
-		}
-		
-		chatClient.runClient();
-	}
 
 
-	public void setPort(int portNumber) throws NumberFormatException {
-		this.port = portNumber;
+	public void setClientType(String type) {
+		this.clientType = type;
 		
 	}
 	

@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import cis5027.project.helpers.InputFileReader;
+import cis5027.project.server.helpers.InputFileReader;
 
 public class CsvReader extends InputFileReader {
 

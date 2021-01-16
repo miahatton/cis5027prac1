@@ -1,10 +1,10 @@
 package cis5027.project.clients.lightapp.components;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import cis5027.project.helpers.ValueButtonPanel;
 
-public class BrightnessPanel extends ValueButtonPanel implements ActionListener {
+import cis5027.project.clients.helpers.ValueButtonPanel;
+
+public class BrightnessPanel extends ValueButtonPanel {
 
 	// label, text input, and button
 	private 	Light		lightInstance;
@@ -15,6 +15,7 @@ public class BrightnessPanel extends ValueButtonPanel implements ActionListener 
 	
 		// call super constructor
 		super(labelText, defaultVal, btnText);
+		setButtonActions();
 		
 		// Initialise light instance
 		this.lightInstance = light;

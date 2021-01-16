@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import cis5027.project.helpers.AppliancePanel;
+import cis5027.project.clients.helpers.AppliancePanel;
 
 
 public class FanPanel extends AppliancePanel implements ActionListener {

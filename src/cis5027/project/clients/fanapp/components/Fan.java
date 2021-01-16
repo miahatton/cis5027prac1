@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 
-import cis5027.project.helpers.Appliance;
+import cis5027.project.clients.helpers.Appliance;
 
 public class Fan extends Appliance {
 	

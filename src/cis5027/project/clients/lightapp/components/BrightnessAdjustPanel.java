@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import cis5027.project.helpers.Appliance;
+import cis5027.project.clients.helpers.Appliance;
 
 public class BrightnessAdjustPanel extends JPanel {
 

@@ -3,8 +3,12 @@ package cis5027.project.server;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,17 +18,23 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.csvreader.CsvReader;
-import cis5027.project.helpers.AbstractServer;
+import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.server.helpers.AbstractServer;
 
 public class NewServer extends AbstractServer {
 
 	CsvReader csvReader;
 	String defaultFileLoc = "inputs/sensor_data.csv";
 	
-	JTextArea textBox;
+	ScrollingTextBox textBox;
 	JTextField fileBox;
+	JTextField portInput;
 	JFrame frame;
+	
+	private ThreadGroup		clientThreadGroup;
+	private BufferedReader	reader;
 	
 	public NewServer () {
 		
@@ -45,35 +55,80 @@ public class NewServer extends AbstractServer {
 		JPanel filePanel = new JPanel();
 		
 		fileBox = new JTextField(20);
-		JButton loadButton = new JButton("Load");
+		portInput = new JTextField(5);
+		
+		JButton loadButton = new JButton("Load CSV");
 		JButton startButton = new JButton("Start Server");
 		JButton stopButton = new JButton("Stop Server");
 		
-		textBox = new JTextArea(15, 50);
-		textBox.setLineWrap(true);
-		textBox.setWrapStyleWord(true);
-		textBox.setEditable(false);
-		
-		JScrollPane scrollPane = new JScrollPane(textBox);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		textBox = new ScrollingTextBox(15,50);
 		
 		loadButton.addActionListener(new LoadButtonListener());
 		startButton.addActionListener(new StartButtonListener());
 		stopButton.addActionListener(new StopButtonListener());
 		
 		filePanel.add(fileBox);
+		fileBox.setText(csvReader.getFileLocation());
+		fileBox.setCaretPosition(fileBox.getText().length());
 		filePanel.add(loadButton);
 		
+		mainPanel.add(portInput);
+		portInput.setText("5000");
+		portInput.setCaretPosition(portInput.getText().length());
 		mainPanel.add(startButton);
 		mainPanel.add(stopButton);
-		mainPanel.add(scrollPane);
+		mainPanel.add(textBox.getScrollPane());
 		
 		frame.getContentPane().add(BorderLayout.NORTH, filePanel);
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,500);
+		frame.setSize(600,400);
 		
+	}
+	
+	@Override
+	public void run() {
+		
+		System.out.println("[server: ] starting server. Listening @ port " + port);
+		
+		
+		
+		// increments when client connects.
+		int clientCount = 0;
+		
+		// loops until stopserver flag is set to true.
+		while (!this.stopServer) {
+			
+			String clientType = null;
+			Socket clientSocket = null;
+			
+			try {
+				clientSocket = serverSocket.accept();
+				InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
+				reader = new BufferedReader(input);
+				
+				clientType = reader.readLine();
+
+			} catch (IOException e) {
+				System.err.println("[server: ] Error when handling client connections on port " + port);
+			}
+			
+			// ClientHandler ch = new ClientHandler(this.clientThreadGroup, clientSocket, clientCount, this);
+			
+			new ClientHandler(this.clientThreadGroup, clientSocket, clientCount, this, clientType);
+			
+			try {
+				
+				Thread.sleep(1000);
+				
+			} catch (InterruptedException e) {
+				System.err.println("[server: ] server listener thread interrupted..." + e.toString());
+			}
+			
+			clientCount++;
+			
+			textBox.displayMessage("Connected to client of type " + clientType);
+		}
 	}
 	
 	@Override
@@ -107,7 +162,7 @@ public class NewServer extends AbstractServer {
 			
 			//TODO check that file exists.
 			
-			textBox.append("Loading csv file from " + csvReader.getFileLocation() + "... \n");
+			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
 			
 		}
 	}
@@ -116,8 +171,14 @@ public class NewServer extends AbstractServer {
 		
 		public void actionPerformed(ActionEvent e) {
 			
-			textBox.append(fileBox.getText() + "\n");
+			textBox.displayMessage("Starting server on port " + portInput.getText());
 			//TODO call server start method
+			try {
+				
+				initializeServer();
+			} catch (IOException ex) {
+				textBox.displayMessage("Error initiating server");
+			}
 			
 		}
 	}
@@ -128,6 +189,29 @@ public class NewServer extends AbstractServer {
 			
 			// TODO call server stop method.
 		}
+	}
+	
+	public void initializeServer() throws IOException {
+		
+		try {
+			this.port = Integer.parseInt(portInput.getText());
+		} catch (NumberFormatException e) {
+			
+			// TODO dialog box?
+			textBox.displayMessage("Port must be a number between X and Y");
+		}
+		
+		
+		if(serverSocket == null) {
+			
+			serverSocket = new ServerSocket(port);
+			
+		}
+		
+		stopServer = false;
+		serverListenerThread = new Thread(this);
+		serverListenerThread.start();
+		
 	}
 	
 	public static void main(String[] args) {

@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.geom.Point2D;
 
-import cis5027.project.helpers.Appliance;
+import cis5027.project.clients.helpers.Appliance;
 
 //import cis5027.project.lightapp.components.LightPanel;
 

@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-import cis5027.project.helpers.AbstractServer;
+import cis5027.project.server.helpers.AbstractServer;
 
 public class ClientHandler extends Thread {
 
@@ -19,14 +19,16 @@ public class ClientHandler extends Thread {
 	private ObjectInputStream		in;
 	
 	private int						clientID;
+	private String					clientType;
 
 	
-	public ClientHandler(ThreadGroup threadgroup, Socket socket, int clientID, AbstractServer server) {
+		public ClientHandler(ThreadGroup threadgroup, Socket socket, int clientID, AbstractServer server, String clientType) {
 		
 		this.clientSocket = socket;
 		this.server = server;
 		this.stopConnection = false;
 		this.clientID = clientID;
+		this.clientType = clientType;
 		
 		System.out.println("[ClientHandler: ] new client request received, port " + socket.getPort());
 		
@@ -143,6 +145,10 @@ public class ClientHandler extends Thread {
 	
 	public String toString() {
 		return this.clientSocket == null ? null: this.clientSocket.getInetAddress().getHostName() + "(" + this.clientSocket.getInetAddress().getHostAddress() + ")";
+	}
+	
+	public void setClientType(String type) {
+		this.clientType = type;
 	}
 	
 }

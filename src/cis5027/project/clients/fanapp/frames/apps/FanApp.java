@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import cis5027.project.clients.fanapp.components.Fan;
 import cis5027.project.clients.fanapp.components.FanPanel;
 import cis5027.project.clients.fanapp.components.SpeedPanel;
-import cis5027.project.helpers.ApplianceApp;
+import cis5027.project.clients.helpers.ApplianceApp;
 
 
 public class FanApp extends ApplianceApp {

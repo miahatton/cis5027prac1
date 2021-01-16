@@ -3,7 +3,7 @@ package cis5027.project.clients.lightapp.components;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import cis5027.project.helpers.AppliancePanel;
+import cis5027.project.clients.helpers.AppliancePanel;
 
 public class LightPanel extends AppliancePanel {
 	

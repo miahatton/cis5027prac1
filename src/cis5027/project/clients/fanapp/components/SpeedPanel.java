@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cis5027.project.helpers.ValueButtonPanel;
+import cis5027.project.clients.helpers.ValueButtonPanel;
 
 public class SpeedPanel extends ValueButtonPanel implements ActionListener {
 	
@@ -18,7 +18,7 @@ public class SpeedPanel extends ValueButtonPanel implements ActionListener {
 			
 	public SpeedPanel(Fan fanObj, String labelText, String defaultVal, String btnText) {
 		super(labelText, defaultVal, btnText);
-		
+		setButtonActions();
 		this.fanInstance = fanObj;
 	}
 	
