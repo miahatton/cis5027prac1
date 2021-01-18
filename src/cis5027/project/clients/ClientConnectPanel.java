@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.server.Server;
+import cis5027.project.server.ServerApp;
 
 
 public class ClientConnectPanel extends ValueButtonPanel {
@@ -37,8 +39,6 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		containerPanel.add(this);
 		containerPanel.add(clientOutput.getScrollPane());
 		
-		this.client = null;
-		
 		setButtonActions();
 	}
 	
@@ -55,7 +55,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 			
 			return Integer.parseInt(textField.getText());
 		} catch (NumberFormatException e) {
-			clientOutput.displayMessage("Port must be a number");
+			displayMessage("Port must be a number");
 			return 0;
 		}
 		
@@ -69,12 +69,22 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	@Override
 	public void actionPerformed(ActionEvent arg0) { 
 		
-		clientOutput.displayMessage("Button clicked!");
+		port = getPortNumber();
+		
+		if (port > 0) {
+			
+			client = new Client(this, port, clientType);
+			
+			Thread clientThread = new Thread(client);
+			clientThread.start();
+			//TODO check what X and Y are hahahaha
+		} else displayMessage("Port must be between X and Y");
 		
 	}
 	
-	public void display(String msg) {
+	public void displayMessage(String msg) {
 		clientOutput.displayMessage(msg);
+		
 	}
 	
 }

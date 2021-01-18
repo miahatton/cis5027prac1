@@ -9,24 +9,25 @@ import cis5027.project.csvreader.Temperature;
 abstract public class InputFileReader {
 
 	protected File file;
-	protected String split;
 	protected int delay; 
 	protected BufferedReader br;
 	protected String fileExtension;
+	protected String fileLocation;
 	
 	abstract public void loadFile(boolean fetchHeader);
 	abstract public void readLine(Temperature temp, LightLevel light);
 	abstract public void closeBuffer();
 	
-	public InputFileReader(String fileLocation, String split) {
-		this.file = new File(fileLocation);
-		this.split = split;
+	public InputFileReader(String fileLocation, String fileExtension) {
+		this.fileLocation = fileLocation;
+		this.fileExtension = fileExtension;
+		this.file = new File(fileLocation); 
 		delay = 1000; // default
 	}
 	
-	public InputFileReader(String fileLocation, String split, int delay) {
-		this.file = new File(fileLocation);
-		this.split = split;
+	public InputFileReader(String fileLocation, String fileExtension, int delay) {
+		this.fileExtension = fileExtension;
+		setFileLocation(fileLocation);
 		this.delay = delay;
 	}
 	
@@ -43,18 +44,8 @@ abstract public class InputFileReader {
 			//TODO try/catch for validating file location
 		
 			this.file = new File(fileLocation); 
+			System.out.println("created file.");
 		}
 	}
-
-	// getter for split character
-	public String getSplit() {
-		return split;
-	}
-
-	// setter for split character
-	public void setSplit(String split) {
-		this.split = split;
-	}
-	
 	
 }

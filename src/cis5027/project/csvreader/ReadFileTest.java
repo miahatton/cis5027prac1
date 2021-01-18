@@ -1,5 +1,7 @@
 package cis5027.project.csvreader;
 
+import cis5027.project.helpers.SensorData;
+
 public class ReadFileTest {
 
 	public ReadFileTest() {

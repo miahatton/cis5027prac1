@@ -2,18 +2,11 @@ package cis5027.project.clients.lightapp.frames.apps;
 
 
 import java.awt.BorderLayout;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import cis5027.project.clients.ClientConnectPanel;
 import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.lightapp.components.BrightnessAdjustPanel;
 import cis5027.project.clients.lightapp.components.BrightnessPanel;
@@ -30,12 +23,12 @@ public class LightApp extends ApplianceApp {
 	BrightnessAdjustPanel aPanel;
 	Light lightInstance;
 	
-	public LightApp(String ip) {
-		
-		this.ip = ip;
+	public LightApp() {
+
+		this.clientType = "light";
 	}
 	
-	public void go() {
+	public void draw() {
 		
 		setSize(400,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,16 +53,6 @@ public class LightApp extends ApplianceApp {
 		topPanel.add(aPanel);
 		// add top panel to JFrame content pane
 		getContentPane().add(BorderLayout.NORTH, topPanel);
-		
-		/* TEST */
-		cPanel = new ClientConnectPanel("Choose port number: ", "5000", "Start Client", "Light");
-		cPanel.setApp(this);
-		
-		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
-		//connectToPanel(cPanel);
-		pack();
-		setVisible(true);
-		
 	}
 		
 	// main
@@ -89,7 +72,7 @@ public class LightApp extends ApplianceApp {
 
 
 		if(lightUiInstance == null) {
-			lightUiInstance = new LightApp("127.0.0.1");
+			lightUiInstance = new LightApp();
 		}
 		
 		return lightUiInstance;

@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,9 +24,10 @@ import javax.swing.ScrollPaneConstants;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.helpers.SensorData;
 import cis5027.project.server.helpers.AbstractServer;
 
-public class NewServer extends AbstractServer {
+public class ServerApp {
 
 	CsvReader csvReader;
 	String defaultFileLoc = "inputs/sensor_data.csv";
@@ -33,12 +37,17 @@ public class NewServer extends AbstractServer {
 	JTextField portInput;
 	JFrame frame;
 	
-	private ThreadGroup		clientThreadGroup;
-	private BufferedReader	reader;
+	SensorData data;
+	ArrayList<ObjectOutputStream> clientOutputStreams;
 	
-	public NewServer () {
+	Server server;
+	
+	private boolean isFileLoaded;
+	
+	public ServerApp () {
 		
-		csvReader = new CsvReader(defaultFileLoc);
+		data = new SensorData();
+		isFileLoaded = false;
 	}
 	
 	public void go() {
@@ -46,6 +55,7 @@ public class NewServer extends AbstractServer {
 		draw();
 		
 		frame.setVisible(true);
+		
 		}
 	
 	public void draw() {
@@ -68,7 +78,7 @@ public class NewServer extends AbstractServer {
 		stopButton.addActionListener(new StopButtonListener());
 		
 		filePanel.add(fileBox);
-		fileBox.setText(csvReader.getFileLocation());
+		fileBox.setText(defaultFileLoc);
 		fileBox.setCaretPosition(fileBox.getText().length());
 		filePanel.add(loadButton);
 		
@@ -85,101 +95,59 @@ public class NewServer extends AbstractServer {
 		frame.setSize(600,400);
 		
 	}
-	
-	@Override
-	public void run() {
-		
-		System.out.println("[server: ] starting server. Listening @ port " + port);
-		
-		
-		
-		// increments when client connects.
-		int clientCount = 0;
-		
-		// loops until stopserver flag is set to true.
-		while (!this.stopServer) {
-			
-			String clientType = null;
-			Socket clientSocket = null;
-			
-			try {
-				clientSocket = serverSocket.accept();
-				InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
-				reader = new BufferedReader(input);
-				
-				clientType = reader.readLine();
 
-			} catch (IOException e) {
-				System.err.println("[server: ] Error when handling client connections on port " + port);
-			}
-			
-			// ClientHandler ch = new ClientHandler(this.clientThreadGroup, clientSocket, clientCount, this);
-			
-			new ClientHandler(this.clientThreadGroup, clientSocket, clientCount, this, clientType);
-			
-			try {
-				
-				Thread.sleep(1000);
-				
-			} catch (InterruptedException e) {
-				System.err.println("[server: ] server listener thread interrupted..." + e.toString());
-			}
-			
-			clientCount++;
-			
-			textBox.displayMessage("Connected to client of type " + clientType);
-		}
-	}
-	
-	@Override
-	public void handleMessagesFromClient(String msg, ClientHandler client) {
-		// TODO Auto-generated method stub
-		
-		/*
-		 * When the client connects it should somehow send its name
-		 * The server should note what kind of client it is
-		 * 
-		 */
-	}
-
-	@Override
-	public void sendMessageToClient(String msg, ClientHandler client) {
-
-		/*
-		 * The server should send temperature readings to the temp client and light readings to the light client
-		 */
-		
-	}
-	
 	
 	public class LoadButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
-			
-			if (!fileBox.getText().equals(csvReader.getFileLocation())) {
-				csvReader.setFileLocation(fileBox.getText());
-			}
+
+			csvReader = new CsvReader(fileBox.getText());
+
+			System.out.println("File located at " + csvReader.getFileLocation());
 			
 			//TODO check that file exists.
 			
 			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
+				
+			csvReader.loadFile(true);
 			
+			textBox.displayMessage("Loaded csv.");
+			isFileLoaded = true;
 		}
+	}
+	
+	public void displayMessage(String message) {
+		textBox.displayMessage(message);
 	}
 	
 	public class StartButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
 			
-			textBox.displayMessage("Starting server on port " + portInput.getText());
-			//TODO call server start method
-			try {
+			if (isFileLoaded & server == null) {
 				
-				initializeServer();
-			} catch (IOException ex) {
-				textBox.displayMessage("Error initiating server");
+				try {
+					
+					int port = Integer.parseInt(portInput.getText());
+					server = new Server(csvReader, ServerApp.this, port);
+					
+					Thread serverThread = new Thread(server);
+					serverThread.start();
+					
+				} catch (NumberFormatException ex) {
+					
+					// TODO dialog box? and better validation
+					displayMessage("Port must be a number between X and Y");
+				}	
+				
+			} else if (server != null) {
+				displayMessage("Server already running!");
 			}
 			
+			else if (!isFileLoaded) {
+				displayMessage("Please load csv file before starting server");
+			}
+
 		}
 	}
 	
@@ -191,32 +159,12 @@ public class NewServer extends AbstractServer {
 		}
 	}
 	
-	public void initializeServer() throws IOException {
-		
-		try {
-			this.port = Integer.parseInt(portInput.getText());
-		} catch (NumberFormatException e) {
-			
-			// TODO dialog box?
-			textBox.displayMessage("Port must be a number between X and Y");
-		}
-		
-		
-		if(serverSocket == null) {
-			
-			serverSocket = new ServerSocket(port);
-			
-		}
-		
-		stopServer = false;
-		serverListenerThread = new Thread(this);
-		serverListenerThread.start();
-		
-	}
+	
 	
 	public static void main(String[] args) {
 		
-		new NewServer().go(); 
+		ServerApp serverApp = new ServerApp();
+		serverApp.go(); 
 		
 	}
 }

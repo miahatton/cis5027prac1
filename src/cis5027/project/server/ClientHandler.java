@@ -6,9 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
+import cis5027.project.helpers.SensorData;
 import cis5027.project.server.helpers.AbstractServer;
 
-public class ClientHandler extends Thread {
+public class ClientHandler implements Runnable {
 
 	
 	private Socket					clientSocket;
@@ -19,16 +20,15 @@ public class ClientHandler extends Thread {
 	private ObjectInputStream		in;
 	
 	private int						clientID;
-	private String					clientType;
+	private int						delay;
 
 	
-		public ClientHandler(ThreadGroup threadgroup, Socket socket, int clientID, AbstractServer server, String clientType) {
+		public ClientHandler(Socket socket, ServerApp server) {
 		
 		this.clientSocket = socket;
-		this.server = server;
 		this.stopConnection = false;
-		this.clientID = clientID;
-		this.clientType = clientType;
+		//this.delay = n;
+		this.delay = 1000;
 		
 		System.out.println("[ClientHandler: ] new client request received, port " + socket.getPort());
 		
@@ -51,9 +51,7 @@ public class ClientHandler extends Thread {
 			}
 		
 		}
-		
-		start();
-		
+	
 	}
 	
 	private void closeAll() throws IOException {
@@ -84,7 +82,7 @@ public class ClientHandler extends Thread {
 		return this.clientID;
 	}
 
-	public void sendMessageToClient (String msg) throws IOException {
+	public void sendMessageToClient (SensorData data) throws IOException {
 		
 		if (this.clientSocket == null || this.out == null) {
 			
@@ -92,7 +90,7 @@ public class ClientHandler extends Thread {
 			
 		}
 		
-		this.out.writeObject(msg);
+		this.out.writeObject(data);
 		
 	}
 	
@@ -106,12 +104,9 @@ public class ClientHandler extends Thread {
 
 			while(!this.stopConnection) {
 				
-				msg = (String) this.in.readObject();
-				this.server.handleMessagesFromClient(msg, this);
-				
-				if(msg.equals("over")) {
-					this.stopConnection = true;
-				}
+				//msg = (String) this.in.readObject();
+				this.server.sendReadingToClient(this);
+				Thread.sleep(delay);
 			}
 			
 			System.out.println("[ClientHandler: ] Stopping connection to the client connection ID: " + this.clientID);
@@ -147,8 +142,8 @@ public class ClientHandler extends Thread {
 		return this.clientSocket == null ? null: this.clientSocket.getInetAddress().getHostName() + "(" + this.clientSocket.getInetAddress().getHostAddress() + ")";
 	}
 	
-	public void setClientType(String type) {
-		this.clientType = type;
-	}
+	//public void setClientType(String type) {
+	//	this.clientType = type;
+	//}
 	
 }
