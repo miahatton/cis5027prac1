@@ -17,19 +17,21 @@ public class Server extends AbstractServer {
 	ServerSocket serverSocket;
 	boolean sending;
 	int		delay;
-	SensorData data;
 	
 	ObjectOutputStream out;
 	ObjectInputStream in;
 	
 	CsvReader csvReader;
 	
-	public Server(CsvReader csvReader, ServerApp app, int port) {
-		super(csvReader, app, port);
+	public Server(CsvReader csvReader, ServerApp app, int port, int delay) {
+		super(port);
+		
+		this.csvReader = csvReader;
+		this.app = app;
+		data = new SensorData();	
 		sending = false;
-
-		SensorData data = new SensorData();
 		csvReader.setTarget(data);
+		this.delay = delay;
 		
 		Thread csvReaderThread = new Thread(csvReader);
 		csvReaderThread.start();
@@ -40,6 +42,7 @@ public class Server extends AbstractServer {
 	public void run() {
 		try {
 			initializeServer();
+			
 		} catch (IOException e) {
 			app.displayMessage("Exception: " + e.toString());
 		}
@@ -50,7 +53,7 @@ public class Server extends AbstractServer {
 
 				Socket clientSocket = serverSocket.accept();
 	
-				Thread messengerThread = new Thread(new Messenger(this, clientSocket, data));
+				Thread messengerThread = new Thread(new Messenger(this, clientSocket, data, delay));
 				
 				messengerThread.start();
 		
@@ -75,5 +78,6 @@ public class Server extends AbstractServer {
 	public ServerApp getApp() {
 		return this.app;
 	}
+
 
 }

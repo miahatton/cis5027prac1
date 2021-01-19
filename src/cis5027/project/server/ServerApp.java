@@ -134,7 +134,7 @@ public class ServerApp {
 				try {
 					
 					int port = Integer.parseInt(portInput.getText());
-					server = new Server(csvReader, ServerApp.this, port);
+					server = new Server(csvReader, ServerApp.this, port, delay);
 					
 					Thread serverThread = new Thread(server);
 					serverThread.start();

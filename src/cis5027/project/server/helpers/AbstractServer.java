@@ -12,15 +12,11 @@ abstract public class AbstractServer implements Runnable {
 	//protected 	ServerSocket 	serverSocket;
 	protected 	boolean 		stopServer;
 	protected 	Thread 			serverListenerThread;
-	protected CsvReader		csvReader;
 	public ServerApp app;
 	public SensorData data;
 	
-	public AbstractServer(CsvReader csvReader, ServerApp app, int port) {
-		this.csvReader = csvReader;
-		this.app = app;
+	public AbstractServer(int port) {
 		this.port = port;
-		data = new SensorData();
 	}
 	
 }

@@ -20,16 +20,17 @@ public class Messenger implements Runnable {
 	
 	SensorData data;
 	
-	public Messenger(Server server, Socket clientSocket, SensorData data) {
+	public Messenger(Server server, Socket clientSocket, SensorData data, int delay) {
 		this.server = server;
 		this.app = server.getApp();
 		this.clientType = null;
 		this.clientSocket = clientSocket;
 		this.data = data;
+		this.delay = delay;
 	}
 	
 	public void run() {
-
+		
 		try {
 			
 			out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -56,27 +57,37 @@ public class Messenger implements Runnable {
 			
 			try {
 
-				switch(clientType) {
-				case "light":
-					out.writeObject(data.getCurrentLightLevel());
-					break;
-				case "temp":
-					out.writeObject(data.getCurrentTemperature());
-					break;
+				synchronized(data) {
+					switch(clientType) {
+					case "light":
+						out.writeObject(data.getCurrentLightLevel());
+						break;
+					case "temp":
+						out.writeObject(data.getCurrentTemperature());
+						break;
+					}
 				}
-					
+
 				out.flush();
 		
 				server.app.displayMessage("Sending reading to the client of type " + clientType);
 					
 				app.displayMessage("Message received from client: " + (String) in.readObject());
 				
-			} catch (IOException e) {
-					app.displayMessage("Error sending data to client: " + e.toString());
+				try {
+					Thread.sleep(delay);
+				} catch (InterruptedException e) {
+					app.displayMessage("Thread sleep interrupted");
+				}
+				
+			} catch (IOException e1) {
+					app.displayMessage("Error sending data to client: " + e1.toString());
 			} // end try/catch
-			  catch (ClassNotFoundException e) {
+			  catch (ClassNotFoundException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e2.printStackTrace();
+			} catch(NullPointerException e3) {
+				app.displayMessage("Null pointer exception: " + e3.toString());
 			}
 
 			

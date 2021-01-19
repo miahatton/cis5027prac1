@@ -37,16 +37,16 @@ public class Client implements Runnable {
 				switch (clientType) {
 				
 				case "light":
-					displayMessage("Current light level " + (String) reading);
+					displayMessage("Current light level " + reading);
 					break;
 				}
 				
 				if (clientType == "light") {
 
-					displayMessage("Current light level: " + (String) reading);
+					displayMessage("Current light level: " + reading);
 				} 
 				
-				writer.writeObject("Reading received: " + (String) reading);
+				writer.writeObject("Reading received: " + reading);
 
 			} // close while
 		} catch(Exception ex) {ex.printStackTrace();}

@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SensorData implements Serializable {
-	
-	private ArrayList<Double> temperatures = new ArrayList<Double>();
-	private ArrayList<Double> lightLevels = new ArrayList<Double>();
+
 	private double currentTemperature;
 	private int currentLightLevel;
 	private boolean tempValueSet;
@@ -53,7 +51,7 @@ public class SensorData implements Serializable {
 		return this.currentTemperature;
 	}
 	
-	public void setCurrentLightLevel(int lumens) {
+	public synchronized void setCurrentLightLevel(int lumens) {
 		while(lightValueSet) {
 			
 			try{
@@ -86,6 +84,7 @@ public class SensorData implements Serializable {
 	}
 
 	public void connectClient(String clientType){
+		System.out.println("connecting client to data");
 		switch (clientType) {
 		
 		case "light":
