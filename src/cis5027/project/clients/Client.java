@@ -27,11 +27,20 @@ public class Client implements Runnable {
 	
 	public void run() {
 		
-		setUpNetworking();
-		startThread();
+		SensorData reading;
+		try {
+			while ((reading = (SensorData) reader.readObject()) != null) {
+				if (clientType == "light") {
+
+					displayMessage("Current light level: " + reading.getCurrentLightLevel());
+				}
+
+			} // close while
+		} catch(Exception ex) {ex.printStackTrace();}
+		
 	}
 	
-	public void setUpNetworking() {
+	public void initialiseClient() {
 		try {
 			
 			port = cPanel.getPortNumber();
@@ -45,7 +54,10 @@ public class Client implements Runnable {
 					
 					writer = new ObjectOutputStream(this.socket.getOutputStream());
 					reader = new ObjectInputStream(this.socket.getInputStream());
-					displayMessage("Networking established");
+					displayMessage("Set up IO streams");
+					
+					// Send client type to server
+					writer.writeObject(clientType);
 					
 				} catch (ConnectException e) {
 					displayMessage("Nothing to connect to! Please start the server and check the port number.");
@@ -58,29 +70,6 @@ public class Client implements Runnable {
 				
 				ex.printStackTrace();
 			}
-	}
-	
-	public void startThread() {
-		
-		Thread readerThread = new Thread(new IncomingMessageReader());
-		readerThread.start();
-	}
-	
-	public class IncomingMessageReader implements Runnable {
-
-		public void run() {
-			SensorData reading;
-			try {
-				while ((reading = (SensorData) reader.readObject()) != null) {
-					if (clientType == "light") {
-
-						displayMessage("Current light level: " + reading.getCurrentLightLevel());
-					}
-
-				} // close while
-			} catch(Exception ex) {ex.printStackTrace();}
-		}
-		
 	}
 	
 	public void displayMessage(String msg) {

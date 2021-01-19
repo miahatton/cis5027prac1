@@ -1,6 +1,7 @@
 package cis5027.project.server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,6 +14,7 @@ import cis5027.project.server.helpers.AbstractServer;
 public class Server extends AbstractServer {
 
 	ArrayList<ObjectOutputStream> clientOutputStreams;
+	ArrayList<String> clientTypes;
 	ServerSocket serverSocket;
 	boolean sending;
 	int		delay;
@@ -49,16 +51,37 @@ public class Server extends AbstractServer {
 		}
 		
 		Thread messengerThread = new Thread(new Messenger(this));
+		
 		messengerThread.start();
+		
+		String clientType;
 		
 		while (!stopServer) {
 			
 			try {
-			Socket clientSocket = serverSocket.accept();
-			
-			ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-			
-			clientOutputStreams.add(outputStream);
+				
+				clientType = null;
+				Socket clientSocket = serverSocket.accept();
+	
+				ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+				ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
+				
+				/*
+				 * Get the name of the client and set it to the name of the socket.
+				 */
+				
+				try {
+					clientType = (String) inputStream.readObject();
+				} catch (ClassNotFoundException e1) {		
+					app.displayMessage("Cannot find class 'String'");	
+				} catch (IOException e2) {
+					app.displayMessage("Error getting client type from client.");	
+				}
+				
+				clientOutputStreams.add(outputStream);
+				clientTypes.add(clientType);
+				
+				app.displayMessage("Connected to client of type " + clientType);
 		
 			} catch (IOException e) {
 				app.displayMessage("Error connecting to client: " + e.toString());
@@ -69,6 +92,7 @@ public class Server extends AbstractServer {
 	public void initializeServer() throws IOException {
 
 		clientOutputStreams = new ArrayList<ObjectOutputStream>();
+		clientTypes = new ArrayList<String>();
 		
 		if(serverSocket == null & port > 0) {
 			//TODO better validation
@@ -90,28 +114,44 @@ public class Server extends AbstractServer {
 				csvReader.readLine(data);
 				if(clientOutputStreams.size() > 0) {
 					
-					Iterator<ObjectOutputStream> it = clientOutputStreams.iterator();
 					
-					while(it.hasNext()) {
+					for(int i = 0; i < clientOutputStreams.size(); i++) {
+						
+						ObjectOutputStream out = clientOutputStreams.get(i);
+						String message = "";
+						
 						try {
-							ObjectOutputStream out = (ObjectOutputStream) it.next();
-							out.writeObject(data);
+						
+							switch(clientTypes.get(i)) {
+							
+							case "light":
+								out.writeObject(data.getCurrentLightLevel());
+								message = "Light level: " + data.getCurrentLightLevel();
+								break;
+								
+							case "fan":
+								out.writeObject(data.getCurrentTemperature());
+								message = "Temperature: " + data.getCurrentTemperature();
+								break;
+							default:
+								break;
+								
+							} // end switch
 							
 							out.flush();
 							
-							server.app.displayMessage("Sending readings to the client...\n Temperature: " + data.getCurrentTemperature() + "\t Light level: " + data.getCurrentLightLevel());
+							server.app.displayMessage("Sending readings to the client...\n" + message);
 							
-							
-						} catch(Exception ex) {
-							ex.printStackTrace();
-						}
-					} // end while
+						} catch (IOException e) {
+							app.displayMessage("Error sending data to client: " + e.toString());
+						} // end try/catch
+					} // end for loop
 					
 					try {
 						Thread.sleep(delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						
+						app.displayMessage("Thread interrupted: " + e.toString());
 					}
 					
 				}

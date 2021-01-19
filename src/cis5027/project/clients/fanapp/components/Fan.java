@@ -50,7 +50,7 @@ public class Fan extends Appliance {
 
 	public void draw(Graphics g) {
 		
-		g.setColor(new Color(0, 0, 0, 0.1f));
+		g.setColor(new Color(0, 0, 0));
 		
 		Graphics2D gx = (Graphics2D) g;
 		//Make it look a little prettier

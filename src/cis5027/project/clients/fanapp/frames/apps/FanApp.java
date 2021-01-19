@@ -24,7 +24,7 @@ public class FanApp extends ApplianceApp {
 			
 			@Override
 			public void run() {			
-				FanApp.getUiInstance();				
+				FanApp.getUiInstance().go();				
 			}
 		} );
 	}
@@ -46,7 +46,11 @@ public class FanApp extends ApplianceApp {
 	 * Constructor
 	 */
 	public FanApp() {
-		super();
+		
+		this.clientType = "fan";
+	}
+	
+	protected void draw() {
 		
 		fan_panel = new FanPanel(300, 300); // size of panel
 		fan_instance = (Fan) fan_panel.getAppInstance();
@@ -58,5 +62,6 @@ public class FanApp extends ApplianceApp {
 		setVisible(true);
 		pack();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import cis5027.project.clients.helpers.ApplianceApp;
@@ -23,6 +24,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	JPanel containerPanel;
 	Client client;
 	int port;
+	JButton stopButton;
 	
 	private String clientType;
 	
@@ -75,6 +77,10 @@ public class ClientConnectPanel extends ValueButtonPanel {
 			
 			client = new Client(this, port, clientType);
 			
+			/*Thread clientThread = new Thread(client);
+			clientThread.start();*/
+			
+			client.initialiseClient();
 			Thread clientThread = new Thread(client);
 			clientThread.start();
 			//TODO check what X and Y are hahahaha

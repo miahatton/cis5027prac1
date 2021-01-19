@@ -27,6 +27,6 @@ public abstract class ApplianceApp extends JFrame {
 		setVisible(true);
 	}
 	
-	abstract public void draw();
+	abstract protected void draw();
 	
 }

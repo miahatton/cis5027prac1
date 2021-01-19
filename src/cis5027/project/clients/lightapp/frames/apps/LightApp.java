@@ -28,7 +28,7 @@ public class LightApp extends ApplianceApp {
 		this.clientType = "light";
 	}
 	
-	public void draw() {
+	protected void draw() {
 		
 		setSize(400,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
