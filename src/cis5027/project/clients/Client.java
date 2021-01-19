@@ -27,13 +27,26 @@ public class Client implements Runnable {
 	
 	public void run() {
 		
-		SensorData reading;
+		displayMessage("Client running now.");
+		
+		Object reading;
+		
 		try {
-			while ((reading = (SensorData) reader.readObject()) != null) {
+			while ((reading = reader.readObject()) != null) {
+
+				switch (clientType) {
+				
+				case "light":
+					displayMessage("Current light level " + (String) reading);
+					break;
+				}
+				
 				if (clientType == "light") {
 
-					displayMessage("Current light level: " + reading.getCurrentLightLevel());
-				}
+					displayMessage("Current light level: " + (String) reading);
+				} 
+				
+				writer.writeObject("Reading received: " + (String) reading);
 
 			} // close while
 		} catch(Exception ex) {ex.printStackTrace();}

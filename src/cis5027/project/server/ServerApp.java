@@ -37,7 +37,8 @@ public class ServerApp {
 	JTextField portInput;
 	JFrame frame;
 	
-	SensorData data;
+	int delay;
+
 	ArrayList<ObjectOutputStream> clientOutputStreams;
 	
 	Server server;
@@ -45,9 +46,9 @@ public class ServerApp {
 	private boolean isFileLoaded;
 	
 	public ServerApp () {
-		
-		data = new SensorData();
+
 		isFileLoaded = false;
+		delay = 3000; // TODO allow this to change.
 	}
 	
 	public void go() {
@@ -73,7 +74,7 @@ public class ServerApp {
 		
 		textBox = new ScrollingTextBox(15,50);
 		
-		loadButton.addActionListener(new LoadButtonListener());
+		loadButton.addActionListener(new LoadButtonListener(this));
 		startButton.addActionListener(new StartButtonListener());
 		stopButton.addActionListener(new StopButtonListener());
 		
@@ -99,12 +100,16 @@ public class ServerApp {
 	
 	public class LoadButtonListener implements ActionListener {
 		
+		ServerApp app;
+		
+		public LoadButtonListener(ServerApp app) {
+			this.app = app;
+		}
+		
 		public void actionPerformed(ActionEvent e) {
 
-			csvReader = new CsvReader(fileBox.getText());
+			csvReader = new CsvReader(app, fileBox.getText(), delay);
 
-			System.out.println("File located at " + csvReader.getFileLocation());
-			
 			//TODO check that file exists.
 			
 			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
@@ -159,7 +164,9 @@ public class ServerApp {
 		}
 	}
 	
-	
+	public String getFileLocation() {
+		return fileBox.getText();
+	}
 	
 	public static void main(String[] args) {
 		

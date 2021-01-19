@@ -4,7 +4,6 @@ import java.net.ServerSocket;
 
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.helpers.SensorData;
-import cis5027.project.server.ClientHandler;
 import cis5027.project.server.ServerApp;
 
 abstract public class AbstractServer implements Runnable {
@@ -23,8 +22,5 @@ abstract public class AbstractServer implements Runnable {
 		this.port = port;
 		data = new SensorData();
 	}
-	
-	public abstract void handleMessagesFromClient(String msg, ClientHandler client);
-	public abstract void sendReadingToClient(ClientHandler client);
 	
 }

@@ -11,15 +11,18 @@ public class SensorData implements Serializable {
 	private int currentLightLevel;
 	private boolean tempValueSet;
 	private boolean lightValueSet;
+	private boolean lightClientConnected;
+	private boolean tempClientConnected;
 	
 	public SensorData() {
 		this.tempValueSet = false;
 		this.lightValueSet = false;
+		this.lightClientConnected = false;
+		this.tempClientConnected = false;
 	}
-		
-	public synchronized void setValues(double temp, int lumens) {
-		
-		while(lightValueSet) {
+	
+	public synchronized void setCurrentTemperature(double temp) {
+		while(tempValueSet) {
 			
 			try{
 				wait();
@@ -29,18 +32,15 @@ public class SensorData implements Serializable {
 		}
 		
 		this.currentTemperature = temp;
-		tempValueSet = true;
-		this.currentTemperature = temp;
-		lightValueSet = true;
-		notify();
 		
-	}
-	
-	public void setCurrentTemperature(double temp) {
-		this.currentTemperature = temp;
+		if (tempClientConnected) {
+			tempValueSet = true;
+			notify();
+		}
 	}
 	
 	public synchronized double getCurrentTemperature() {
+
 		while(!tempValueSet) {
 			try {
 				wait();
@@ -54,10 +54,25 @@ public class SensorData implements Serializable {
 	}
 	
 	public void setCurrentLightLevel(int lumens) {
+		while(lightValueSet) {
+			
+			try{
+				wait();
+			} catch (InterruptedException e) {
+				System.out.println("Interrupted exception in setValues: " + e.toString());
+			}	
+		}
+
 		this.currentLightLevel = lumens;
+		
+		if (lightClientConnected) {
+			lightValueSet = true;
+			notify();
+		}
 	}
 	
 	public synchronized int getCurrentLightLevel() {
+		
 		while(!lightValueSet) {
 			try {
 				wait();
@@ -69,29 +84,17 @@ public class SensorData implements Serializable {
 		notify();
 		return this.currentLightLevel;
 	}
-	
-	public void addLightLevel(double lightLevel) {
-		this.lightLevels.add(lightLevel);
-	}
-	
-	public void addTemperature(double temperature) {
-		this.temperatures.add(temperature);
-	}
 
-	public ArrayList<Double> getTemperatures() {
-		return temperatures;
-	}
-
-	public void setTemperatures(ArrayList<Double> temperatures) {
-		this.temperatures = temperatures;
-	}
-
-	public ArrayList<Double> getLightLevels() {
-		return lightLevels;
-	}
-
-	public void setLightLevels(ArrayList<Double> lightLevels) {
-		this.lightLevels = lightLevels;
+	public void connectClient(String clientType){
+		switch (clientType) {
+		
+		case "light":
+			this.lightClientConnected = true;
+			break;
+		case "fan":
+			this.tempClientConnected = true;
+			break;
+		}
 	}
 	
 }

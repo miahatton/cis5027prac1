@@ -1,6 +1,6 @@
 package cis5027.project.csvreader;
 
-import java.awt.datatransfer.SystemFlavorMap;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,32 +8,35 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import cis5027.project.helpers.SensorData;
-import cis5027.project.server.helpers.InputFileReader;
+import cis5027.project.server.ServerApp;
+import cis5027.project.server.helpers.AbstractFileReader;
 
-public class CsvReader extends InputFileReader {
+public class CsvReader extends AbstractFileReader implements Runnable {
 
-	private File file;
-	private String split;
+	private final String split = ",";
 	int delay; 
 	BufferedReader br;
 	int lightIndex;
 	int tempIndex;
 	boolean fileLoaded;
+	boolean stopThread;
+	ServerApp app;
+	SensorData data;
+
 	
 	// Constructor
 	public CsvReader(String fileLocation) {
 		super(fileLocation, ".csv");
-		this.split = ",";
 	}
 	
 	// Overload constructor with ability to choose delay time
-	public CsvReader(String fileLocation, int delay) {
+	public CsvReader(ServerApp app, String fileLocation, int delay) {
 		super(fileLocation, ".csv", delay);
-		this.split = ",";
+		this.app = app;
 	}
 
 
-	private int[] getColumnHeaders(String line, String split){
+	private int[] getColumnHeaders(String line, String split) {
 		
 		boolean lightFound = false;
 		boolean tempFound = false;
@@ -75,11 +78,11 @@ public class CsvReader extends InputFileReader {
 		
 	}
 	
-	public void loadFile(boolean fetchHeader) {
+	public void loadFile (boolean fetchHeader) {
 			
 		try {
 			
-			br = new BufferedReader(new FileReader(new File(this.fileLocation)));
+			br = new BufferedReader(new FileReader(this.file));
 			
 			// read the first line
 			String headerRow = br.readLine();
@@ -98,59 +101,13 @@ public class CsvReader extends InputFileReader {
 			
 		} catch (IOException e) {
 			System.err.println("[csv reader: ] error reading file... " + e.toString());
-		}
+		} 
 		
 		fileLoaded = true;
 
 	}
-	
-	
-	
-	public void readLine(Temperature temp, LightLevel light) {
-		
-		String nextLine;
-		String errorString = " value cannot be converted to ";
-		
-		try {
-			// read the next line
-			if ((nextLine = this.br.readLine()) != null) {
-				
-				String[] items = nextLine.split(split);
-				
-				try {
-					// set current light level
-					light.setCurrentLightLevel(Integer.parseInt(items[lightIndex]));
-					
-				} catch (NumberFormatException e) {
-					
-					System.err.println("[csv reader: ] Error reading csv... light level " + errorString + "integer.");
-				}
-				
-				try {
-					// set current temperature
-					temp.setCurrentTemperature(Double.parseDouble(items[tempIndex]));
-					
-				} catch (NumberFormatException e) {
-					
-					System.err.println("[csv reader: ] Error reading csv... temperature " + errorString + "double.");
-				}
-				
-			} else {
-				// load file again if we've reached the bottom
-				loadFile(false);
-				// try again
-				readLine(temp, light);
-			}
-			
-		} catch (IOException ex) {
-			
-			System.err.println("[csv reader: ] Error reading file... " + ex.toString());
-		}
-		
-	}
-	
-	// overload for now
-public void readLine(SensorData data) {
+
+	public void readLine() {
 		
 		String nextLine;
 		String errorString = " value cannot be converted to ";
@@ -181,13 +138,14 @@ public void readLine(SensorData data) {
 					System.out.println("[csv reader: ] Error reading csv... temperature " + errorString + "double.");
 				}
 				
-				data.setValues(temp, lumens);
+				data.setCurrentLightLevel(lumens);
+				data.setCurrentTemperature(temp);
 				
 			} else {
 				// load file again if we've reached the bottom
 				loadFile(false);
 				// try again
-				readLine(data);
+				readLine();
 			}
 			
 		} catch (IOException ex) {
@@ -211,80 +169,26 @@ public void readLine(SensorData data) {
 		}
 		
 	}
-	
-	private SensorData readLines (BufferedReader br, int[] lightTempIndices) throws IOException {
-		
-		// SensorData object to hold data once read from csv
-		SensorData sensorData = new SensorData();
-		// String variable to hold each line of the csv while reading
-		String line;
-		
-		while((line = br.readLine()) != null) {
-			
-			String[] items = line.split(split);
 
-			try {
-				
-				sensorData.addLightLevel(Double.parseDouble(items[lightTempIndices[0]]));
-				sensorData.addTemperature(Double.parseDouble(items[lightTempIndices[1]]));
-				
-			} catch(NumberFormatException e) {
-				//TODO include BETTER error handling here for parsing strings to doubles
-				continue;
-			}
+	@Override
+	public void run() {
+		while(!stopThread) {
+			readLine();
 			
 			try {
-			    TimeUnit.SECONDS.sleep(delay);
-			    
-			} catch (InterruptedException ie) {
-				
-			    Thread.currentThread().interrupt();
-			    
+				Thread.sleep(delay);
+			} catch (InterruptedException e) {
+				app.displayMessage("Thread sleep interrupted");
 			}
 		}
 		
-		return sensorData;
 		
 	}
-	
-	// read csv method that returns data from sensor.
-	public SensorData loadCsv() {
 
-		int[] lightTempIndices;
-		SensorData sensorData = null;
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-
-			String line = br.readLine();
-			
-			if (line != null) { // if file is not empty
-				
-				// get indexes of relevant column headers (light level, temperature)
-				lightTempIndices = getColumnHeaders(line, this.split);
-			
-				//TODO surround this in a while loop resetting the line to 0 each time end of file is reached. 
-				//TODO Add something to allow the program to STOP.
-				
-				sensorData = readLines(br, lightTempIndices);
-			
-			br.close();
-			
-			} else {
-				
-				//TODO improve error handling
-				System.out.println("File is empty!");
-				
-			}
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		return sensorData;
+	public void setTarget(SensorData data) {
+		this.data = data;
 	}
-	
-	
 
+	
 
 }
