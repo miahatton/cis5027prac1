@@ -3,12 +3,14 @@ package cis5027.project.clients.lightapp.components;
 import java.awt.event.ActionEvent;
 
 import cis5027.project.clients.helpers.ValueButtonPanel;
+import cis5027.project.clients.lightapp.frames.apps.LightApp;
 
 public class BrightnessPanel extends ValueButtonPanel {
 
 	// label, text input, and button
 	private 	Light		lightInstance;
 	private 	String 		inputBoxLastValidText; 		// used to hold valid value in case of error
+	private		LightApp	app;	
 	
 	// constructor
 	public BrightnessPanel(Light light, String labelText, String defaultVal, String btnText) {
@@ -73,6 +75,23 @@ public class BrightnessPanel extends ValueButtonPanel {
 			
 		} 
 		
+	}
+	
+	public void convertReading(int lumens) {
+		
+		// map the full range of possible readings (from around 20 to around 70) to a value between 0 and 100
+		
+		int readingPercent = (Integer) Math.round(((lumens - 20)*100)/(70-20));
+
+		try {
+			setBrightnessInputAndClick(100 - readingPercent);
+		} catch (IllegalArgumentException e) {
+			app.displayMessage("Error occured calculating new light level: " + e.toString());
+		}
+	}
+	
+	public void setLightApp(LightApp app) {
+		this.app = app;
 	}
 	
 }

@@ -2,12 +2,13 @@ package cis5027.project.clients;
 
 import cis5027.project.clients.helpers.AbstractClient;
 import cis5027.project.clients.helpers.ApplianceApp;
+import cis5027.project.clients.lightapp.components.BrightnessPanel;
 import cis5027.project.clients.lightapp.components.Light;
 import cis5027.project.clients.lightapp.frames.apps.LightApp;
 
 public class LightClient extends AbstractClient {
 
-	private Light lightInstance;
+	private BrightnessPanel brightnessPanelInstance;
 	private LightApp app;
 	
 	public LightClient(ClientConnectPanel cPanel, int port, ApplianceApp app) {
@@ -15,7 +16,7 @@ public class LightClient extends AbstractClient {
 		super(cPanel, port);
 		this.clientType = "light";
 		this.app = (LightApp) app;
-		this.lightInstance = this.app.getLightInstance();
+		this.brightnessPanelInstance = this.app.getBrightnessPanelInstance();
 	}
 	
 	public void run() {
@@ -35,7 +36,7 @@ public class LightClient extends AbstractClient {
 					displayMessage("Current light level " + newLightLevel);
 					
 					// set new light value
-					this.lightInstance.convertReading(newLightLevel);
+					this.brightnessPanelInstance.convertReading(newLightLevel);
 				} catch (NumberFormatException e) {
 					displayMessage("Unusual reading received ("+ msg+"), cannot be converted to integer: " + e.toString());
 				}
