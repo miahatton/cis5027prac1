@@ -4,12 +4,11 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import cis5027.project.clients.Client;
 import cis5027.project.clients.ClientConnectPanel;
 
 public abstract class ApplianceApp extends JFrame {
 
-	public 		Client 				client;
+	public 		AbstractClient 				client;
 	protected 	ClientConnectPanel 	cPanel;
 	protected 	int 				port;
 	protected 	String 				ip;

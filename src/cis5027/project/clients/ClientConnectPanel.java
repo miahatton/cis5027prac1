@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import cis5027.project.clients.helpers.AbstractClient;
 import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.helpers.ScrollingTextBox;
@@ -22,7 +23,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	ScrollingTextBox	clientOutput;
 	ApplianceApp app;
 	JPanel containerPanel;
-	Client client;
+	LightClient client;
 	int port;
 	JButton stopButton;
 	
@@ -75,7 +76,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		
 		if (port > 0) {
 			
-			client = new Client(this, port, clientType);
+			client = new LightClient(this, port);
 			
 			/*Thread clientThread = new Thread(client);
 			clientThread.start();*/

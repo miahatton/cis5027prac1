@@ -1,4 +1,4 @@
-package cis5027.project.clients;
+package cis5027.project.clients.helpers;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,52 +6,27 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 
+import cis5027.project.clients.ClientConnectPanel;
 import cis5027.project.helpers.SensorData;
 
-public class Client implements Runnable {
+public abstract class AbstractClient implements Runnable {
 	
-	ClientConnectPanel cPanel;
-	ObjectInputStream reader;
-	ObjectOutputStream writer;
-	Socket socket;
-	String clientType;
-	String ip;
-	int port;
+	protected ClientConnectPanel cPanel;
+	protected ObjectInputStream reader;
+	protected ObjectOutputStream writer;
+	protected Socket socket;
+	protected String clientType;
+	private String ip;
+	private int port;
 	
-	public Client(ClientConnectPanel cPanel, int port, String type) {
+	public AbstractClient(ClientConnectPanel cPanel, int port) {
 		this.cPanel = cPanel;
 		this.port = port;
 		this.ip = "127.0.0.1";
-		this.clientType = type;
+		
 	}
 	
-	public void run() {
-		
-		displayMessage("Client running now.");
-		
-		Object reading;
-		
-		try {
-			while ((reading = reader.readObject()) != null) {
-
-				switch (clientType) {
-				
-				case "light":
-					displayMessage("Current light level " + reading);
-					break;
-				}
-				
-				if (clientType == "light") {
-
-					displayMessage("Current light level: " + reading);
-				} 
-				
-				writer.writeObject("Reading received: " + reading);
-
-			} // close while
-		} catch(Exception ex) {ex.printStackTrace();}
-		
-	}
+	public abstract void run();
 	
 	public void initialiseClient() {
 		try {
