@@ -28,4 +28,8 @@ public abstract class ApplianceApp extends JFrame {
 	
 	abstract protected void draw();
 	
+	public void displayMessage(String msg) {
+		cPanel.displayMessage(msg);
+	}
+	
 }

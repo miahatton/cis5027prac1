@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 public class AppliancePanel extends JPanel {
 
-	protected Appliance appInstance;
+	protected Appliance applianceInstance;
 	protected Color backgroundColor;
 	
 	public AppliancePanel(int width, int height, Color bgColor) {
@@ -18,9 +18,9 @@ public class AppliancePanel extends JPanel {
 
 	}
 	
-	public Appliance getAppInstance() {
+	public Appliance getApplianceInstance() {
 		
-		return this.appInstance;
+		return this.applianceInstance;
 		
 	}
 	
@@ -30,7 +30,7 @@ public class AppliancePanel extends JPanel {
 		// Set colour and draw appliance
 		g.setColor(this.backgroundColor);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		appInstance.draw(g);
+		applianceInstance.draw(g);
 
 	}
 	

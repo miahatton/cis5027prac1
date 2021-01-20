@@ -12,8 +12,8 @@ public class LightPanel extends AppliancePanel {
 	public LightPanel(int width, int height) {
 		
 		super(width, height, Color.black);
-		appInstance = new Light(width, height, 10);
-		appInstance.setPanel(this);
+		applianceInstance = new Light(width, height, 10);
+		applianceInstance.setPanel(this);
 		
 	}
 

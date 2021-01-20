@@ -7,6 +7,7 @@ import java.awt.RadialGradientPaint;
 import java.awt.geom.Point2D;
 
 import cis5027.project.clients.helpers.Appliance;
+import cis5027.project.clients.lightapp.frames.apps.LightApp;
 
 //import cis5027.project.lightapp.components.LightPanel;
 
@@ -35,6 +36,9 @@ public class Light extends Appliance {
 	// size of circles representing lights
 	private int 	circleSize;
 	private int		radius;
+	
+	// app for messaging
+	private LightApp app;
 	
 	public void setLightColor (int brightnessValue) throws IllegalArgumentException {
 		
@@ -114,4 +118,22 @@ public class Light extends Appliance {
 	}
 
 	
+	public void convertReading(int lumens) {
+		
+		// map the full range of possible readings (from around 20 to around 70) to a value between 0 and 100
+		
+		int readingPercent = (Integer) Math.round(((lumens - 20)*100)/(70-20));
+
+		try {
+			setLightColor(100 - readingPercent);
+		} catch (IllegalArgumentException e) {
+			app.displayMessage("Error occured calculating new light level: " + e.toString());
+		}
+	}
+
+	public void setApp(LightApp lightApp) {
+		this.app = lightApp;
+		
+	}
+
 }

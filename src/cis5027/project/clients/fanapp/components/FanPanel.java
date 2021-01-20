@@ -19,8 +19,8 @@ public class FanPanel extends AppliancePanel implements ActionListener {
 
 		super(width, height, Color.white);
 		
-		appInstance = new Fan(150, 150);
-		appInstance.setPanel(this);
+		applianceInstance = new Fan(150, 150);
+		applianceInstance.setPanel(this);
 		
 		timer = new Timer(DEFAULT_DELAY_TIME, this); //Update our animations every n ms
 		timer.setInitialDelay(DEFAULT_DELAY_TIME * 7);
@@ -40,7 +40,7 @@ public class FanPanel extends AppliancePanel implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		((Fan) appInstance).update(); //Let the fan move
+		((Fan) applianceInstance).update(); //Let the fan move
 		repaint(); //Draw the changes
 	}
 }

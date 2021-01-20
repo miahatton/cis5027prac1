@@ -53,7 +53,7 @@ public class FanApp extends ApplianceApp {
 	protected void draw() {
 		
 		fan_panel = new FanPanel(300, 300); // size of panel
-		fan_instance = (Fan) fan_panel.getAppInstance();
+		fan_instance = (Fan) fan_panel.getApplianceInstance();
 		speed_panel = new SpeedPanel(fan_instance, "Fan speed (delay in ms): ", "10", "Set speed");
 				
 		add(speed_panel, BorderLayout.NORTH);

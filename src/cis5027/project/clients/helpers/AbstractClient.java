@@ -7,13 +7,13 @@ import java.net.ConnectException;
 import java.net.Socket;
 
 import cis5027.project.clients.ClientConnectPanel;
-import cis5027.project.helpers.SensorData;
 
 public abstract class AbstractClient implements Runnable {
 	
 	protected ClientConnectPanel cPanel;
 	protected ObjectInputStream reader;
 	protected ObjectOutputStream writer;
+
 	protected Socket socket;
 	protected String clientType;
 	private String ip;
@@ -23,7 +23,7 @@ public abstract class AbstractClient implements Runnable {
 		this.cPanel = cPanel;
 		this.port = port;
 		this.ip = "127.0.0.1";
-		
+
 	}
 	
 	public abstract void run();

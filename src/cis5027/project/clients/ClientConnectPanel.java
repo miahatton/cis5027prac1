@@ -76,10 +76,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		
 		if (port > 0) {
 			
-			client = new LightClient(this, port);
-			
-			/*Thread clientThread = new Thread(client);
-			clientThread.start();*/
+			client = new LightClient(this, port, app);
 			
 			client.initialiseClient();
 			Thread clientThread = new Thread(client);
