@@ -41,10 +41,10 @@ public class LightApp extends ApplianceApp {
 		getContentPane().add(BorderLayout.CENTER, lPanel);
 		
 		lightInstance = (Light) lPanel.getApplianceInstance();
-		lightInstance.setApp(this);
 				
 		// initialise brightness panel
 		bPanel = new BrightnessPanel(lightInstance, "Set brightness %", "100", "Set Brightness");
+		bPanel.setLightApp(this);
 		
 		// initialise brightness adjustment panel
 		aPanel = new BrightnessAdjustPanel(lightInstance, bPanel);

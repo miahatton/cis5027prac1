@@ -27,11 +27,11 @@ public class BrightnessPanel extends ValueButtonPanel {
 
 	}
 	
-	public void setBrightnessInputAndClick(int newVal) {
+	public void setBrightnessAndInputField(int newVal) {
 		
 		// TODO make this a superclass method that can also be applied to fan - I think it will be useful for final proj.
 		textField.setText(Integer.toString(newVal));
-		button.doClick();
+		setBrightness(newVal);
 		
 	}
 
@@ -55,11 +55,29 @@ public class BrightnessPanel extends ValueButtonPanel {
 			// convert text to integer
 			int newBrightness = Integer.parseInt(textField.getText());
 			
+			setBrightness(newBrightness);
+			
+		} catch (NumberFormatException e) {
+			
+			app.displayMessage("Not a number! Please enter a number between 0 and 100.");
+			// replace text with last valid value used.
+			textField.setText(inputBoxLastValidText);
+			
+		} 
+		
+	}
+	
+	public void setBrightness(int newBrightness) {
+		
+		try {
+			
 			// Don't let brightness go above 100 or below 0	
 			if (newBrightness > 100) {
 				textField.setText("100");
+				newBrightness = 100;
 			} else if (newBrightness < 0) {
 				textField.setText("0");
+				newBrightness = 0;
 			}
 			
 			// set new light colour
@@ -75,19 +93,26 @@ public class BrightnessPanel extends ValueButtonPanel {
 			
 		} 
 		
-	}
+	} 
+
+
 	
 	public void convertReading(int lumens) {
 		
 		// map the full range of possible readings (from around 20 to around 70) to a value between 0 and 100
 		
-		int readingPercent = (Integer) Math.round(((lumens - 20)*100)/(70-20));
-
 		try {
-			setBrightnessInputAndClick(100 - readingPercent);
-		} catch (IllegalArgumentException e) {
-			app.displayMessage("Error occured calculating new light level: " + e.toString());
+		
+		int newBrightness = (Integer) Math.round(1 - (lumens/10));
+		
+		if(newBrightness != Integer.parseInt(textField.getText())) {
+				setBrightnessAndInputField(newBrightness);
 		}
+		
+		} catch (NumberFormatException e1) {
+			app.displayMessage("Bad reading received! Cannot convert " + lumens + ":  " + e1.toString());
+		} 
+		
 	}
 	
 	public void setLightApp(LightApp app) {

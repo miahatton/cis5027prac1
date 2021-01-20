@@ -117,23 +117,5 @@ public class Light extends Appliance {
 		return incrementer;
 	}
 
-	
-	public void convertReading(int lumens) {
-		
-		// map the full range of possible readings (from around 20 to around 70) to a value between 0 and 100
-		
-		int readingPercent = (Integer) Math.round(((lumens - 20)*100)/(70-20));
-
-		try {
-			setLightColor(100 - readingPercent);
-		} catch (IllegalArgumentException e) {
-			app.displayMessage("Error occured calculating new light level: " + e.toString());
-		}
-	}
-
-	public void setApp(LightApp lightApp) {
-		this.app = lightApp;
-		
-	}
 
 }

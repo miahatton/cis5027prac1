@@ -75,7 +75,7 @@ public class BrightnessAdjustPanel extends JPanel {
 			colorValue = 0;
 		}
 			
-		bpanel.setBrightnessInputAndClick(colorValue);
+		bpanel.setBrightnessAndInputField(colorValue);
 		
 		incrementer = 10;
 		
