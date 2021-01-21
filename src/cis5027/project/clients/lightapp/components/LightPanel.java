@@ -1,7 +1,6 @@
 package cis5027.project.clients.lightapp.components;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 import cis5027.project.clients.helpers.AppliancePanel;
 

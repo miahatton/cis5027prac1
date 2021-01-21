@@ -62,7 +62,7 @@ public class Messenger implements Runnable {
 					case "light":
 						out.writeObject(data.getCurrentLightLevel());
 						break;
-					case "temp":
+					case "fan":
 						out.writeObject(data.getCurrentTemperature());
 						break;
 					}

@@ -103,7 +103,7 @@ public class BrightnessPanel extends ValueButtonPanel {
 		
 		try {
 		
-		int newBrightness = (Integer) Math.round(1 - (lumens/10));
+		int newBrightness = (Integer) Math.round(100 - (lumens/10)); // map range 0->1000 to range 100->0
 		
 		if(newBrightness != Integer.parseInt(textField.getText())) {
 				setBrightnessAndInputField(newBrightness);

@@ -1,7 +1,6 @@
 package cis5027.project.helpers;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class SensorData implements Serializable {
 

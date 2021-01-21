@@ -21,8 +21,6 @@ public class LightClient extends AbstractClient {
 	
 	public void run() {
 		
-		displayMessage("Client running now.");
-		
 		String msg;
 		
 		try {
@@ -40,10 +38,6 @@ public class LightClient extends AbstractClient {
 				} catch (NumberFormatException e) {
 					displayMessage("Unusual reading received ("+ msg+"), cannot be converted to integer: " + e.toString());
 				}
-				
-				
-				
-				
 
 			} // close while
 		} catch(Exception ex) {ex.printStackTrace();}

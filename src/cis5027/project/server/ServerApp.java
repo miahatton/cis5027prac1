@@ -3,29 +3,16 @@ package cis5027.project.server;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
-import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.helpers.ScrollingTextBox;
-import cis5027.project.helpers.SensorData;
-import cis5027.project.server.helpers.AbstractServer;
 
 public class ServerApp {
 

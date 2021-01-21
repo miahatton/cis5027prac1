@@ -7,7 +7,6 @@ import java.awt.RadialGradientPaint;
 import java.awt.geom.Point2D;
 
 import cis5027.project.clients.helpers.Appliance;
-import cis5027.project.clients.lightapp.frames.apps.LightApp;
 
 //import cis5027.project.lightapp.components.LightPanel;
 
@@ -36,9 +35,6 @@ public class Light extends Appliance {
 	// size of circles representing lights
 	private int 	circleSize;
 	private int		radius;
-	
-	// app for messaging
-	private LightApp app;
 	
 	public void setLightColor (int brightnessValue) throws IllegalArgumentException {
 		

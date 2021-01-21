@@ -23,7 +23,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	ScrollingTextBox	clientOutput;
 	ApplianceApp app;
 	JPanel containerPanel;
-	LightClient client;
+	AbstractClient client;
 	int port;
 	JButton stopButton;
 	
@@ -76,9 +76,20 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		
 		if (port > 0) {
 			
-			client = new LightClient(this, port, app);
+			switch (clientType) {
+			case "light":
+				client = new LightClient(this, port, app);
+				break;
+			case "fan":
+				client = new FanClient(this, port, app);
+				break;
+			default:
+				//TODO obviously improve this.
+				app.displayMessage("Something has gone terribly wrong");
+			}
 			
 			client.initialiseClient();
+			
 			Thread clientThread = new Thread(client);
 			clientThread.start();
 			//TODO check what X and Y are hahahaha

@@ -37,11 +37,11 @@ public abstract class AbstractClient implements Runnable {
 				
 				try {
 					
-					socket = new Socket(ip, port);
+					this.socket = new Socket(ip, port);
 					displayMessage("Created socket");
 					
-					writer = new ObjectOutputStream(this.socket.getOutputStream());
-					reader = new ObjectInputStream(this.socket.getInputStream());
+					this.writer = new ObjectOutputStream(this.socket.getOutputStream());
+					this.reader = new ObjectInputStream(this.socket.getInputStream());
 					displayMessage("Set up IO streams");
 					
 					// Send client type to server

@@ -3,9 +3,6 @@ package cis5027.project.server.helpers;
 import java.io.BufferedReader;
 import java.io.File;
 
-import cis5027.project.csvreader.LightLevel;
-import cis5027.project.csvreader.Temperature;
-
 abstract public class AbstractFileReader {
 
 	protected File file;

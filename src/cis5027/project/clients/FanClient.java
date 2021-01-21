@@ -18,9 +18,7 @@ public class FanClient extends AbstractClient {
 	}
 	
 	public void run() {
-		
-		displayMessage("Client running now.");
-		
+
 		String msg;
 		
 		try {

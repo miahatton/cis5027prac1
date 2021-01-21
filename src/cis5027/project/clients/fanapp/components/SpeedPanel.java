@@ -1,14 +1,7 @@
 package cis5027.project.clients.fanapp.components;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import cis5027.project.clients.fanapp.frames.apps.FanApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
@@ -61,16 +54,18 @@ public class SpeedPanel extends ValueButtonPanel implements ActionListener {
 	}
 
 	public void convertReading(double newTemperature) {
-
+		int newSpeed;
 		// check against thresholds
 		
 		if(newTemperature<18) {
-			fanInstance.setFanSpeed(5000); // effectively turn the fan off if the temperature gets too low
+			newSpeed = 1000; // effectively turn the fan off if the temperature gets too low
 		} else if (newTemperature < 24) {	
-			fanInstance.setFanSpeed(100); // comfortable working temperature
+			newSpeed = 100; // comfortable working temperature
 		} else if (newTemperature < 27) {
-			fanInstance.setFanSpeed(20); // getting warm
-		} else fanInstance.setFanSpeed(1); // 27 degrees is far too hot!
+			newSpeed = 20; // getting warm
+		} else newSpeed = 1; // 27 degrees is far too hot!
 		
+		textField.setText(String.valueOf(newSpeed));
+		fanInstance.setFanSpeed(newSpeed);
 	}
 }
