@@ -1,5 +1,7 @@
 package cis5027.project.clients;
 
+import java.io.IOException;
+
 import cis5027.project.clients.fanapp.components.SpeedPanel;
 import cis5027.project.clients.fanapp.frames.apps.FanApp;
 import cis5027.project.clients.helpers.AbstractClient;
@@ -38,7 +40,13 @@ public class FanClient extends AbstractClient {
 				}
 
 			} // close while
-		} catch(Exception ex) {ex.printStackTrace();}
+		} catch(NullPointerException e1) {
+			displayMessage("Cannot set up networking because no connection was established.");
+		} catch(IOException e2) {
+			displayMessage("Error getting messages from server: " + e2.toString());
+		} catch (ClassNotFoundException e) {
+			displayMessage("Output stream not found.");
+		}
 		
 	}
 }

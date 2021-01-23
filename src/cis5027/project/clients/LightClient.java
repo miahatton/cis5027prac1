@@ -19,7 +19,7 @@ public class LightClient extends AbstractClient {
 		this.brightnessPanelInstance = this.app.getBrightnessPanelInstance();
 	}
 	
-	public void run() {
+	public void run() throws NullPointerException {
 		
 		String msg;
 		

@@ -2,8 +2,7 @@ package cis5027.project.clients;
 
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.Socket;
+import java.net.ConnectException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,8 +12,6 @@ import cis5027.project.clients.helpers.AbstractClient;
 import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.helpers.ScrollingTextBox;
-import cis5027.project.server.Server;
-import cis5027.project.server.ServerApp;
 
 
 public class ClientConnectPanel extends ValueButtonPanel {
@@ -33,6 +30,10 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		
 		super(labelText, defaultVal, btnText);
 		this.clientType = type;
+		
+		stopButton = new JButton("Stop client");
+		
+		this.add(stopButton);
 		
 		clientOutput = new ScrollingTextBox(12,30);
 		
@@ -66,36 +67,58 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	
 	@Override
 	protected void setButtonActions() {
+		button.setActionCommand("START");
+		stopButton.setActionCommand("STOP");
 		button.addActionListener(this);
+		stopButton.addActionListener(this);
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent arg0) { 
-		
-		port = getPortNumber();
-		
-		if (port > 0) {
+	public void actionPerformed(ActionEvent e) { 
 			
-			switch (clientType) {
-			case "light":
-				client = new LightClient(this, port, app);
+		switch(e.getActionCommand()) {
+		
+			case "START":
+				port = getPortNumber();
+				
+				if (port > 0) {
+					
+					switch (clientType) {
+					case "light":
+						client = new LightClient(ClientConnectPanel.this, port, app);
+						break;
+					case "fan":
+						client = new FanClient(ClientConnectPanel.this, port, app);
+						break;
+					default:
+						//TODO obviously improve this.
+						app.displayMessage("Client type not recognised.");
+					}
+					
+					try {
+						
+						client.initialiseClient();
+						
+						Thread clientThread = new Thread(client);
+						clientThread.start();
+						
+						
+					} catch (NullPointerException e1) {
+						displayMessage("Nothing to connect to! Please start the server and check the port number.");
+						
+					} 
+					//TODO check what X and Y are hahahaha
+				} else displayMessage("Port must be between X and Y");
 				break;
-			case "fan":
-				client = new FanClient(this, port, app);
+			case "STOP":
+				// TODO stop the server
+				client.closeAll();
 				break;
-			default:
-				//TODO obviously improve this.
-				app.displayMessage("Something has gone terribly wrong");
-			}
-			
-			client.initialiseClient();
-			
-			Thread clientThread = new Thread(client);
-			clientThread.start();
-			//TODO check what X and Y are hahahaha
-		} else displayMessage("Port must be between X and Y");
 		
+		}
+			
+			
 	}
+	
 	
 	public void displayMessage(String msg) {
 		clientOutput.displayMessage(msg);

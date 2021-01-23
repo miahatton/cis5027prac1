@@ -34,34 +34,61 @@ public abstract class AbstractClient implements Runnable {
 			port = cPanel.getPortNumber();
 			// TODO better validation
 			if (port > 0) {
-				
-				try {
 					
-					this.socket = new Socket(ip, port);
-					displayMessage("Created socket");
+				this.socket = new Socket(ip, port);
+				displayMessage("Created socket");
 					
-					this.writer = new ObjectOutputStream(this.socket.getOutputStream());
-					this.reader = new ObjectInputStream(this.socket.getInputStream());
-					displayMessage("Set up IO streams");
+				this.writer = new ObjectOutputStream(this.socket.getOutputStream());
+				this.reader = new ObjectInputStream(this.socket.getInputStream());
+				displayMessage("Set up IO streams");
 					
-					// Send client type to server
-					writer.writeObject(clientType);
-					
-				} catch (ConnectException e) {
-					displayMessage("Nothing to connect to! Please start the server and check the port number.");
-					
-				}
+				// Send client type to server
+				writer.writeObject(clientType);
 				
 			}
 			
-			} catch(IOException ex) {
-				
-				ex.printStackTrace();
-			}
+		} catch (ConnectException e1) {
+			
+			displayMessage("Nothing to connect to! Please check the port number and ensure server is connected.");
+			
+		}catch(IOException e2) {
+			
+			//TODO improve
+			e2.printStackTrace();
+		}
 	}
 	
 	public void displayMessage(String msg) {
 		
 		cPanel.displayMessage(msg);
+	}
+
+	public void closeAll() {
+		
+		displayMessage("Closing connection...");
+		
+		try {
+			// close the socket
+			if(this.socket != null) this.socket.close();
+			
+			// close the input stream
+			if(this.reader != null) this.reader.close();
+			
+			// close the output stream
+			if(this.writer != null) this.writer.close();
+		
+		} catch (IOException e) {
+			
+			displayMessage("Error closing client..." + e.toString());
+			
+		} finally {
+			// set the streams and socket to null either way
+			this.socket = null;
+			this.writer = null;
+			this.reader = null;
+		}
+		
+		
+		
 	}
 }
