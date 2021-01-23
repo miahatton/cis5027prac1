@@ -1,4 +1,4 @@
-package cis5027.project.helpers;
+package cis5027.project.csvreader;
 
 import java.io.Serializable;
 

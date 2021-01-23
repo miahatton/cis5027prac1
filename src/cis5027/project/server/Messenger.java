@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import cis5027.project.helpers.SensorData;
+import cis5027.project.csvreader.SensorData;
 
 public class Messenger implements Runnable {
 	ServerApp app;

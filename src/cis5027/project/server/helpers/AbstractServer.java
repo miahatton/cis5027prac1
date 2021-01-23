@@ -1,6 +1,6 @@
 package cis5027.project.server.helpers;
 
-import cis5027.project.helpers.SensorData;
+import cis5027.project.csvreader.SensorData;
 import cis5027.project.server.ServerApp;
 
 abstract public class AbstractServer implements Runnable {

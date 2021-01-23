@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import cis5027.project.helpers.SensorData;
 import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
 

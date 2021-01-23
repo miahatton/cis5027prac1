@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import cis5027.project.csvreader.CsvReader;
-import cis5027.project.helpers.SensorData;
+import cis5027.project.csvreader.SensorData;
 import cis5027.project.server.helpers.AbstractServer;
 
 public class Server extends AbstractServer {
