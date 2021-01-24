@@ -26,26 +26,28 @@ public class FanClient extends AbstractClient {
 		try {
 			while ((msg = String.valueOf(reader.readObject())) != null) {
 
-				writer.writeObject("Reading received: " + msg);
+				sendMessageToServer("Reading received: " + msg);
 				
 				try {
 					double newTemperature = Double.parseDouble(msg);
 
 					displayMessage("Current temperature " + newTemperature);
 					
-					// set new light value
+					// set new temperature value
 					this.speedPanelInstance.convertReading(newTemperature);
 				} catch (NumberFormatException e) {
 					displayMessage("Unusual reading received ("+ msg+"), cannot be converted to double: " + e.toString());
 				}
 
 			} // close while
-		} catch(NullPointerException e1) {
-			displayMessage("Cannot set up networking because no connection was established.");
-		} catch(IOException e2) {
-			displayMessage("Error getting messages from server: " + e2.toString());
-		} catch (ClassNotFoundException e) {
-			displayMessage("Output stream not found.");
+		} catch(IOException e1) {
+			displayMessage("Error receiving message from server: " + e1.toString());
+			closeAll();
+			
+		} catch (ClassNotFoundException e2) {
+			displayMessage("Unusual reading received! Class cannot be found: " + e2.toString());
+			sendMessageToServer("Unusual reading");
+			//TODO handle this message at the server end.
 		}
 		
 	}

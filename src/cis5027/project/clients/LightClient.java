@@ -49,11 +49,11 @@ public class LightClient extends AbstractClient {
 			
 		} catch(IOException e) {
 			
-			displayMessage("Error receiving message from client: " + e.toString());
+			displayMessage("Error receiving message from server: " + e.toString());
 			closeAll();
 
 		} catch (ClassNotFoundException e) {
-			displayMessage("Unusual reading received!");
+			displayMessage("Unusual reading received! Class cannot be found: " + e.toString());
 			sendMessageToServer("Unusual reading");
 			//TODO handle this message at the server end.
 		}
