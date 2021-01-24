@@ -33,9 +33,11 @@ public class Messenger implements Runnable {
 	
 	public void run() {
 		
-		String message = "Sending reading to the "+ clientType + " client: [";
+		String message;
 		
 		while(clientConnected) {
+			
+			message = "Sending reading to the "+ clientType + " client: [";
 			
 			try {
 
@@ -64,21 +66,16 @@ public class Messenger implements Runnable {
 					app.displayMessage("Thread sleep interrupted");
 				}
 				
-			} catch (IOException e1) {
-				app.displayMessage("Error sending data to client: " + e1.toString());
+			} catch (SocketException e1) {
+				app.displayMessage(clientType + "client has closed connection.");
+				tryToClose();
+			} catch (IOException e2) {
+				app.displayMessage("Error receiving message from client: " + e2.toString());
+				tryToClose();
+			} catch(NullPointerException e3) {
 				
-				try {
-					closeAll();
-				} catch (IOException e2) {
-					
-					app.displayMessage("Error closing connections: " + e2.toString());
-					
-				}
-				
-				
-			} // end try/catch
-			  catch(NullPointerException e3) {
 				app.displayMessage("Null pointer exception: " + e3.toString());
+				
 			} finally {
 				
 				handleMessageFromClient();
@@ -89,41 +86,46 @@ public class Messenger implements Runnable {
 	
 	public void handleMessageFromClient() {
 		
-		String inwardMessage;
-		Object messageFromClient = null;
-		
-		try {
-			// check that message was received from the client
+		if(clientSocket!=null) {
+			
+			String inwardMessage;
+			Object messageFromClient = null;
+			
 			try {
-				messageFromClient = in.readObject();
-			} catch (ClassNotFoundException e1) {
-				throw new IOException(e1);
-			} 
+				// check that message was received from the client
+				try {
+					messageFromClient = in.readObject();
+				} catch (ClassNotFoundException e1) {
+					throw new IOException(e1);
+				} 
+					
+				inwardMessage = (String) messageFromClient;
 				
-			inwardMessage = (String) messageFromClient;
-			
-			app.displayMessage("Message received from client: " + inwardMessage);
-			
-			if (inwardMessage.equals("STOP")) {
+				app.displayMessage("Message received from client: [" + inwardMessage + "]");
 				
-				closeAll();
-				
-			} 	
-		} catch (SocketException e2) {
-			app.displayMessage(clientType + "client has closed connection.");
-			tryToClose();
-		} catch (IOException e4) {
-			app.displayMessage("Error receiving message from client: " + e4.toString());
-			tryToClose();
+				if (inwardMessage.equals("STOP")) {
+					
+					closeAll();
+					
+				} 	
+			} catch (SocketException e2) {
+				app.displayMessage(clientType + "client has closed connection.");
+				tryToClose();
+			} catch (IOException e4) {
+				app.displayMessage("Error receiving message from client: " + e4.toString());
+				tryToClose();
+			}
 		}
-	
 	}
 	
 	public void tryToClose() {
 		try {
 			closeAll();
 		} catch (IOException e) {	
-			app.displayMessage("Error closing connections: " + e.toString());
+			
+			if(!e.toString().equals("Socket closed")) {
+				app.displayMessage("Error closing connections: " + e.toString());
+			}
 		}
 		
 	}

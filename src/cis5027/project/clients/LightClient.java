@@ -1,6 +1,7 @@
 package cis5027.project.clients;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import cis5027.project.clients.helpers.AbstractClient;
 import cis5027.project.clients.helpers.ApplianceApp;
@@ -47,6 +48,11 @@ public class LightClient extends AbstractClient {
 				
 			}
 			
+		} catch(SocketException e) {
+			
+			displayMessage("Server connection closed.");
+			closeAll();
+
 		} catch(IOException e) {
 			
 			displayMessage("Error receiving message from server: " + e.toString());
@@ -54,8 +60,15 @@ public class LightClient extends AbstractClient {
 
 		} catch (ClassNotFoundException e) {
 			displayMessage("Unusual reading received! Class cannot be found: " + e.toString());
-			sendMessageToServer("Unusual reading");
-			//TODO handle this message at the server end.
+			
+			try {
+				sendMessageToServer("Unusual reading");
+				//TODO handle this message at the server end.
+			} catch (IOException ex) {
+				displayMessage("Error sending message to server.");
+				closeAll();
+			}
+			
 		}
 		
 	}

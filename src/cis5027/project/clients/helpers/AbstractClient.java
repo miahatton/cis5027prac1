@@ -68,16 +68,19 @@ public abstract class AbstractClient implements Runnable {
 	}
 
 	public void closeAll() {
-		
-		displayMessage("Closing connection...");
+
+		try {
+			// tell server to stop connection to this client
+			sendMessageToServer("STOP");
+		} catch (IOException e) {
+			displayMessage("Error sending STOP message to client");
+		}
 		
 		if(!stopClient) {
 			stopClient = true;
+			displayMessage("Closing connection...");
 		}
 
-		// tell server to stop connection to this client
-		sendMessageToServer("STOP");
-		
 		try {
 			// close the socket
 			if(this.socket != null) this.socket.close();
@@ -101,17 +104,9 @@ public abstract class AbstractClient implements Runnable {
 
 	}
 	
-	protected void sendMessageToServer(String msg) {
-		
-		try {
-			
-			writer.writeObject(clientType);
-			
-		} catch (IOException e) {
-			
-			displayMessage("Error sending message \"" + msg + "\" to server... " + e.toString());
-			closeAll();
-			
+	protected void sendMessageToServer (String msg) throws IOException {
+		if (!stopClient) {
+			writer.writeObject(msg);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package cis5027.project.clients;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import cis5027.project.clients.fanapp.components.SpeedPanel;
 import cis5027.project.clients.fanapp.frames.apps.FanApp;
@@ -24,30 +25,45 @@ public class FanClient extends AbstractClient {
 		String msg;
 		
 		try {
-			while ((msg = String.valueOf(reader.readObject())) != null) {
-
-				sendMessageToServer("Reading received: " + msg);
+			
+			while(!stopClient) {
 				
-				try {
-					double newTemperature = Double.parseDouble(msg);
+				while ((msg = String.valueOf(reader.readObject())) != null) {
 
-					displayMessage("Current temperature " + newTemperature);
+					sendMessageToServer("Reading received: " + msg);
 					
-					// set new temperature value
-					this.speedPanelInstance.convertReading(newTemperature);
-				} catch (NumberFormatException e) {
-					displayMessage("Unusual reading received ("+ msg+"), cannot be converted to double: " + e.toString());
-				}
+					try {
+						double newTemperature = Double.parseDouble(msg);
 
+						displayMessage("Current temperature " + newTemperature);
+						
+						// set new temperature value
+						this.speedPanelInstance.convertReading(newTemperature);
+					} catch (NumberFormatException e) {
+						displayMessage("Unusual reading received ("+ msg+"), cannot be converted to double: " + e.toString());
+					}
+
+				} // close while
+				
 			} // close while
-		} catch(IOException e1) {
-			displayMessage("Error receiving message from server: " + e1.toString());
+				
+		} catch(SocketException e1) {
+			displayMessage("Server connection closed.");
 			closeAll();
 			
-		} catch (ClassNotFoundException e2) {
-			displayMessage("Unusual reading received! Class cannot be found: " + e2.toString());
-			sendMessageToServer("Unusual reading");
-			//TODO handle this message at the server end.
+		}  catch(IOException e2) {
+			displayMessage("Error receiving message from server: " + e2.toString());
+			closeAll();
+			
+		} catch (ClassNotFoundException e3) {
+			displayMessage("Unusual reading received! Class cannot be found: " + e3.toString());
+			try {
+				sendMessageToServer("Unusual reading");
+				//TODO handle this message at the server end.
+			} catch (IOException ex) {
+				displayMessage("Error sending message to server.");
+				closeAll();
+			}
 		}
 		
 	}
