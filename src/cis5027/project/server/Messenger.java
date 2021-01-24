@@ -50,19 +50,6 @@ public class Messenger implements Runnable {
 				out.flush();
 		
 				server.app.displayMessage("Sending reading to the client of type " + clientType);
-					
-				// check that message was received from the client
-				
-				String inwardMessage = (String) in.readObject();
-				
-				app.displayMessage("Message received from client: " + inwardMessage);
-				
-				if (inwardMessage.equals("STOP")) {
-					
-					app.displayMessage("Closing connection to client of type " + clientType);
-					closeAll();
-					
-				} 
 
 				try {
 					Thread.sleep(delay);
@@ -71,20 +58,65 @@ public class Messenger implements Runnable {
 				}
 				
 			} catch (IOException e1) {
-					app.displayMessage("Error sending data to client: " + e1.toString());
+				app.displayMessage("Error sending data to client: " + e1.toString());
+				
+				try {
+					closeAll();
+				} catch (IOException e2) {
+					
+					app.displayMessage("Error closing connections: " + e2.toString());
+					
+				}
+				
+				
 			} // end try/catch
-			  catch (ClassNotFoundException e2) {
-				app.displayMessage("Unable to set up streams due to ClassNotFoundException..." + e2.toString());;
-			} catch(NullPointerException e3) {
+			  catch(NullPointerException e3) {
 				app.displayMessage("Null pointer exception: " + e3.toString());
-			}
-
-			
+			} finally {
+				
+				handleMessageFromClient();
+				
+			} 
 		}
+	}
+	
+	public void handleMessageFromClient() {
 		
+		String inwardMessage;
+		Object messageFromClient = null;
+		
+		try {
+			// check that message was received from the client
+			try {
+				messageFromClient = in.readObject();
+			} catch (ClassNotFoundException e1) {
+				throw new IOException(e1);
+			} 
+				
+			inwardMessage = (String) messageFromClient;
+			
+			app.displayMessage("Message received from client: " + inwardMessage);
+			
+			if (inwardMessage.equals("STOP")) {
+				
+				app.displayMessage("Closing connection to client of type " + clientType);
+				closeAll();
+				
+			} 	
+		} catch (IOException e2) {
+			app.displayMessage("Error getting message from client: " + e2.toString());
+			try {
+				closeAll();
+			} catch (IOException e3) {	
+				app.displayMessage("Error closing connections: " + e2.toString());
+			}
+		} 
+	
 	}
 	
 	public void closeAll() throws IOException {
+		
+		app.displayMessage("Closing connection to client...");
 		
 		try {
 			

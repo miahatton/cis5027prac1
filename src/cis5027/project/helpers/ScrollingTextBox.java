@@ -10,7 +10,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class ScrollingTextBox implements ChangeListener {
+public class ScrollingTextBox {
 
 	private JTextArea textBox;
 	private JScrollPane scrollPane;
@@ -27,7 +27,6 @@ public class ScrollingTextBox implements ChangeListener {
 		scrollPane = new JScrollPane(textBox);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.getViewport().addChangeListener(this);
 	}
 	
 	public JScrollPane getScrollPane() {
@@ -40,11 +39,8 @@ public class ScrollingTextBox implements ChangeListener {
 		textBox.append(msg + "\n");
 	}
 	
-	
-	@Override
-	public void stateChanged(ChangeEvent e) {
+	public void scrollToBotton() {
 		scrollBar = scrollPane.getVerticalScrollBar();
 		scrollBar.setValue(scrollBar.getMaximum());
-		
 	}
 }

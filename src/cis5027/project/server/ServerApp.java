@@ -122,6 +122,7 @@ public class ServerApp implements ActionListener {
 	
 	public void displayMessage(String message) {
 		textBox.displayMessage(message);
+		textBox.scrollToBotton();
 	}
 	
 	public class StartButtonListener implements ActionListener {
@@ -158,6 +159,9 @@ public class ServerApp implements ActionListener {
 	public void actionPerformed (ActionEvent e) {
 			
 			server.closeAll();
+			
+			// reset server reference
+			server = null;
 	}
 	
 	public String getFileLocation() {

@@ -2,7 +2,6 @@ package cis5027.project.clients;
 
 
 import java.awt.event.ActionEvent;
-import java.net.ConnectException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -94,24 +93,17 @@ public class ClientConnectPanel extends ValueButtonPanel {
 						app.displayMessage("Client type not recognised.");
 					}
 					
-					try {
+					client.initialiseClient();
 						
-						client.initialiseClient();
-						
-						Thread clientThread = new Thread(client);
-						clientThread.start();
+					Thread clientThread = new Thread(client);
+					clientThread.start();
 						
 						
-					} catch (NullPointerException e1) {
-						displayMessage("Nothing to connect to! Please start the server and check the port number.");
-						
-					} 
 					//TODO check what X and Y are hahahaha
 				} else displayMessage("Port must be between X and Y");
 				break;
 			case "STOP":
 				client.setStopClient(true);
-				// TODO stop the server
 				client.closeAll();
 				break;
 		
@@ -123,7 +115,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	
 	public void displayMessage(String msg) {
 		clientOutput.displayMessage(msg);
-		
+		clientOutput.scrollToBotton();
 	}
 	
 }

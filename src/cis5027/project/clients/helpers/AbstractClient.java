@@ -71,6 +71,10 @@ public abstract class AbstractClient implements Runnable {
 		
 		displayMessage("Closing connection...");
 		
+		if(!stopClient) {
+			stopClient = true;
+		}
+
 		// tell server to stop connection to this client
 		sendMessageToServer("STOP");
 		
@@ -106,6 +110,7 @@ public abstract class AbstractClient implements Runnable {
 		} catch (IOException e) {
 			
 			displayMessage("Error sending message \"" + msg + "\" to server... " + e.toString());
+			closeAll();
 			
 		}
 	}
