@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.csvreader.SensorData;
@@ -21,6 +22,8 @@ public class Server extends AbstractServer {
 	
 	CsvReader csvReader;
 	
+	private ArrayList<Messenger> messengerList;
+	
 	public Server(CsvReader csvReader, ServerApp app, int port, int delay) {
 		super(port);
 		
@@ -30,6 +33,8 @@ public class Server extends AbstractServer {
 		sending = false;
 		csvReader.setTarget(data);
 		this.delay = delay;
+		
+		messengerList = new ArrayList<Messenger>();
 		
 		Thread csvReaderThread = new Thread(csvReader);
 		csvReaderThread.start();
@@ -50,10 +55,15 @@ public class Server extends AbstractServer {
 			try {
 
 				Socket clientSocket = serverSocket.accept();
-	
-				Thread messengerThread = new Thread(new Messenger(this, clientSocket, data, delay));
 				
+				Messenger messenger = new Messenger(this, clientSocket, data, delay);
+				
+				
+				
+				Thread messengerThread = new Thread(messenger);
 				messengerThread.start();
+				
+				messengerList.add(messenger);
 		
 			} catch (IOException e) {
 				app.displayMessage("Error connecting to client: " + e.toString());
@@ -75,6 +85,36 @@ public class Server extends AbstractServer {
 
 	public ServerApp getApp() {
 		return this.app;
+	}
+
+
+	public void closeAll() {
+		
+		try {
+			
+			if (this.serverSocket != null) this.serverSocket.close();
+			this.stopServer = true;
+			
+		} catch (IOException e) {
+			
+			app.displayMessage("Error closing server connection... " + e.toString());
+			
+		} finally {
+
+			for (Messenger messenger: messengerList) {
+				
+				try {
+					messenger.closeAll();
+				} catch (Exception e) {	
+				}
+			}
+			
+			this.serverSocket = null;
+			
+			// close the csvReader.
+			this.csvReader.closeBuffer();
+		}
+		
 	}
 
 

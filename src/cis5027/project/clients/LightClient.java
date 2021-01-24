@@ -24,9 +24,9 @@ public class LightClient extends AbstractClient {
 		String msg;
 		
 		try {
-			while ((msg = String.valueOf(reader.readObject())) != null) {
+			while ((msg = String.valueOf(reader.readObject())) != null & !stopClient) {
 
-				writer.writeObject("Reading received: " + msg);
+				sendMessageToServer("Reading received: " + msg);
 				
 				try {
 					int newLightLevel = Integer.parseInt(msg);

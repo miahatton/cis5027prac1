@@ -110,6 +110,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 				} else displayMessage("Port must be between X and Y");
 				break;
 			case "STOP":
+				client.setStopClient(true);
 				// TODO stop the server
 				client.closeAll();
 				break;

@@ -19,17 +19,21 @@ public abstract class AbstractClient implements Runnable {
 	private String ip;
 	private int port;
 	
+	protected boolean stopClient;
+	
 	public AbstractClient(ClientConnectPanel cPanel, int port) {
 		this.cPanel = cPanel;
 		this.port = port;
 		this.ip = "127.0.0.1";
-
+		this.stopClient = true;
 	}
 	
 	public abstract void run();
 	
 	public void initialiseClient() {
 		try {
+			
+			this.stopClient = false;
 			
 			port = cPanel.getPortNumber();
 			// TODO better validation
@@ -43,8 +47,8 @@ public abstract class AbstractClient implements Runnable {
 				displayMessage("Set up IO streams");
 					
 				// Send client type to server
-				writer.writeObject(clientType);
-				
+				sendMessageToServer(clientType);
+
 			}
 			
 		} catch (ConnectException e1) {
@@ -67,6 +71,9 @@ public abstract class AbstractClient implements Runnable {
 		
 		displayMessage("Closing connection...");
 		
+		// tell server to stop connection to this client
+		sendMessageToServer("STOP");
+		
 		try {
 			// close the socket
 			if(this.socket != null) this.socket.close();
@@ -87,8 +94,24 @@ public abstract class AbstractClient implements Runnable {
 			this.writer = null;
 			this.reader = null;
 		}
+
+	}
+	
+	protected void sendMessageToServer(String msg) {
 		
-		
+		try {
+			
+			writer.writeObject(clientType);
+			
+		} catch (IOException e) {
+			
+			displayMessage("Error sending message \"" + msg + "\" to server... " + e.toString());
+			
+		}
+	}
+
+	public void setStopClient(Boolean stop) {
+		this.stopClient = stop;
 		
 	}
 }

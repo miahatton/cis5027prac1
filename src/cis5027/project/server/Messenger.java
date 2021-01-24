@@ -27,31 +27,10 @@ public class Messenger implements Runnable {
 		this.clientSocket = clientSocket;
 		this.data = data;
 		this.delay = delay;
+		connectToClient();
 	}
 	
 	public void run() {
-		
-		try {
-			
-			out = new ObjectOutputStream(clientSocket.getOutputStream());
-			in = new ObjectInputStream(clientSocket.getInputStream());
-			
-		} catch (IOException e) {
-			app.displayMessage("Error setting up IO streams to client");
-		}
-		
-		try {
-			clientType = (String) in.readObject();
-		} catch (ClassNotFoundException e1) {		
-			app.displayMessage("Cannot find class 'String'");	
-		} catch (IOException e2) {
-			app.displayMessage("Error getting client type from client.");	
-		}
-		
-		app.displayMessage("Connected to client of type " + clientType);
-		clientConnected = true;
-		
-		data.connectClient(clientType);
 		
 		while(clientConnected) {
 			
@@ -72,8 +51,19 @@ public class Messenger implements Runnable {
 		
 				server.app.displayMessage("Sending reading to the client of type " + clientType);
 					
-				app.displayMessage("Message received from client: " + (String) in.readObject());
+				// check that message was received from the client
 				
+				String inwardMessage = (String) in.readObject();
+				
+				app.displayMessage("Message received from client: " + inwardMessage);
+				
+				if (inwardMessage.equals("STOP")) {
+					
+					app.displayMessage("Closing connection to client of type " + clientType);
+					closeAll();
+					
+				} 
+
 				try {
 					Thread.sleep(delay);
 				} catch (InterruptedException e) {
@@ -84,8 +74,7 @@ public class Messenger implements Runnable {
 					app.displayMessage("Error sending data to client: " + e1.toString());
 			} // end try/catch
 			  catch (ClassNotFoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				app.displayMessage("Unable to set up streams due to ClassNotFoundException..." + e2.toString());;
 			} catch(NullPointerException e3) {
 				app.displayMessage("Null pointer exception: " + e3.toString());
 			}
@@ -93,8 +82,55 @@ public class Messenger implements Runnable {
 			
 		}
 		
-				
-			//TODO The server should stop communicating with the client (s) when the send the STOP command
+	}
+	
+	public void closeAll() throws IOException {
+		
+		try {
+			
+			// close the socket
+			if (this.clientSocket != null) this.clientSocket.close();
+			
+			// close the output stream
+			if (this.out != null) this.out.close();
+			
+			// close the input stream
+			if (this.in != null) this.in.close();
+			
+		} finally {
+			
+			this.clientSocket = null;
+			this.out = null;
+			this.in = null;
+			this.clientConnected = false;
+			
+		}
+		
+	}
+	
+	private void connectToClient() {
+		
+		try {
+			
+			out = new ObjectOutputStream(clientSocket.getOutputStream());
+			in = new ObjectInputStream(clientSocket.getInputStream());
+			
+		} catch (IOException e) {
+			app.displayMessage("Error setting up IO streams to client");
+		}
+		
+		try {
+			clientType = (String) in.readObject();
+		} catch (ClassNotFoundException e1) {		
+			app.displayMessage("Cannot find class 'String'");	
+		} catch (IOException e2) {
+			app.displayMessage("Error getting client type from client.");	
+		}
+		
+		app.displayMessage("Connected to client of type " + clientType + ". Port: " + clientSocket.getPort());
+		clientConnected = true;
+		
+		data.connectClient(clientType);
 	}
 	
 }

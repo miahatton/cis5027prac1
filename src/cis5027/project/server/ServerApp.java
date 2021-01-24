@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.helpers.ScrollingTextBox;
 
-public class ServerApp {
+public class ServerApp implements ActionListener {
 
 	CsvReader csvReader;
 	String defaultFileLoc = "inputs/sensor_data.csv";
@@ -36,6 +36,7 @@ public class ServerApp {
 
 		isFileLoaded = false;
 		delay = 3000; // TODO allow this to change.
+
 	}
 	
 	public void go() {
@@ -63,7 +64,7 @@ public class ServerApp {
 		
 		loadButton.addActionListener(new LoadButtonListener(this));
 		startButton.addActionListener(new StartButtonListener());
-		stopButton.addActionListener(new StopButtonListener());
+		stopButton.addActionListener(this);
 		
 		filePanel.add(fileBox);
 		fileBox.setText(defaultFileLoc);
@@ -79,7 +80,18 @@ public class ServerApp {
 		
 		frame.getContentPane().add(BorderLayout.NORTH, filePanel);
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if(server != null) {
+                	server.closeAll();
+                }
+            	System.exit(0);
+            }
+        });
+		
+		
 		frame.setSize(600,400);
 		
 	}
@@ -143,12 +155,9 @@ public class ServerApp {
 		}
 	}
 	
-	public class StopButtonListener implements ActionListener {
-		
-		public void actionPerformed (ActionEvent e) {
+	public void actionPerformed (ActionEvent e) {
 			
-			// TODO call server stop method.
-		}
+			server.closeAll();
 	}
 	
 	public String getFileLocation() {

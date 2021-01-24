@@ -163,6 +163,8 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 			this.br.close();
 		} catch (IOException e) {
 			System.err.println("[csv reader: ] error closing BufferedReader..." + e.toString());
+		} finally {
+			this.stopThread = true;
 		}
 		
 	}
@@ -186,6 +188,5 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		this.data = data;
 	}
 
-	
 
 }
