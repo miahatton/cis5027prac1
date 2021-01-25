@@ -34,7 +34,7 @@ public class ScrollingTextBox {
 		textBox.append(msg + "\n");
 	}
 	
-	public void scrollToBotton() {
+	public void scrollToBottom() {
 		scrollBar = scrollPane.getVerticalScrollBar();
 		scrollBar.setValue(scrollBar.getMaximum());
 	}

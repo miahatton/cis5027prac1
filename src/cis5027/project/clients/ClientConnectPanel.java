@@ -115,7 +115,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	
 	public void displayMessage(String msg) {
 		clientOutput.displayMessage(msg);
-		clientOutput.scrollToBotton();
+		clientOutput.scrollToBottom();
 	}
 	
 }

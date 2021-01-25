@@ -28,6 +28,9 @@ public class ServerApp implements ActionListener {
 	JTextField delayInput;
 	JFrame frame;
 	
+	JButton startButton;
+	JButton csvReaderFeedBtn;
+	
 	private static final int DEFAULT_DELAY = 3000;
 	private static final int MIN_PORT_NUM = 1024;
 	private static final int MAX_PORT_NUM = 65535;
@@ -53,7 +56,7 @@ public class ServerApp implements ActionListener {
 		
 		frame.setVisible(true);
 		
-		}
+	}
 	
 	public void draw() {
 		
@@ -66,16 +69,21 @@ public class ServerApp implements ActionListener {
 		portInput = new JTextField(5);
 		
 		JButton loadButton = new JButton("Load CSV");
-		JButton startButton = new JButton("Start Server");
 		JButton stopButton = new JButton("Stop Server");
 		JButton delayButton = new JButton("Set delay (ms)");
+		startButton = new JButton("Start Server");
+		csvReaderFeedBtn = new JButton("Open CSV feed");
+		
+		startButton.setEnabled(false);
+		csvReaderFeedBtn.setEnabled(false);
 		
 		textBox = new ScrollingTextBox(15,50);
 		
-		loadButton.addActionListener(new LoadButtonListener(this));
+		loadButton.addActionListener(new LoadButtonListener());
 		startButton.addActionListener(new StartButtonListener());
+		delayButton.addActionListener(new DelayButtonListener());
+		csvReaderFeedBtn.addActionListener(new csvListener());
 		stopButton.addActionListener(this);
-		delayButton.addActionListener(new DelayButtonListener(this));
 		
 		filePanel.add(fileBox);
 		fileBox.setText(defaultFileLoc);
@@ -91,6 +99,7 @@ public class ServerApp implements ActionListener {
 		portInput.setCaretPosition(portInput.getText().length());
 		mainPanel.add(startButton);
 		mainPanel.add(stopButton);
+		mainPanel.add(csvReaderFeedBtn);
 		mainPanel.add(textBox.getScrollPane());
 		
 		frame.getContentPane().add(BorderLayout.NORTH, filePanel);
@@ -113,16 +122,10 @@ public class ServerApp implements ActionListener {
 
 	
 	public class LoadButtonListener implements ActionListener {
-		
-		ServerApp app;
-		
-		public LoadButtonListener(ServerApp app) {
-			this.app = app;
-		}
-		
+
 		public void actionPerformed(ActionEvent e) {
 
-			csvReader = new CsvReader(app, fileBox.getText(), delay);
+			csvReader = new CsvReader(ServerApp.this, fileBox.getText(), delay);
 
 			//TODO check that file exists.
 			
@@ -132,12 +135,14 @@ public class ServerApp implements ActionListener {
 			
 			textBox.displayMessage("Loaded csv.");
 			isFileLoaded = true;
+			
+			startButton.setEnabled(true);
 		}
 	}
 	
 	public void displayMessage(String message) {
 		textBox.displayMessage(message);
-		textBox.scrollToBotton();
+		textBox.scrollToBottom();
 	}
 	
 	public class StartButtonListener implements ActionListener {
@@ -155,7 +160,7 @@ public class ServerApp implements ActionListener {
 					try {
 						port = Integer.parseInt(inputPortNumber);
 						
-						if (port < 1024 | port > 65535) {
+						if (port < MIN_PORT_NUM | port > MAX_PORT_NUM) {
 							throw new PortFormatException(inputPortNumber);
 						}
 						
@@ -187,15 +192,9 @@ public class ServerApp implements ActionListener {
 	
 	public class DelayButtonListener implements ActionListener {
 		
-		ServerApp app;
-		
-		public DelayButtonListener(ServerApp app) {
-			this.app = app;
-		}
-		
 		public void actionPerformed (ActionEvent e) {
 
-			String delayString = this.app.delayInput.getText().trim();
+			String delayString = delayInput.getText().trim();
 			int newDelay = -1;
 			try {
 				
@@ -210,10 +209,10 @@ public class ServerApp implements ActionListener {
 				} 
 
 				if (newDelay >= 0) { // check that delay is a positive number
-					this.app.delay = newDelay;
-					if(this.app.csvReader != null) this.app.csvReader.setDelay(newDelay);
-					if(this.app.server != null) this.app.server.setDelay(newDelay);
-					this.app.displayMessage("Delay set to " + newDelay + "ms.");
+					delay = newDelay;
+					if(csvReader != null) csvReader.setDelay(newDelay);
+					if(server != null) server.setDelay(newDelay);
+					displayMessage("Delay set to " + newDelay + "ms.");
 				} else {
 					throw new DelayFormatException(delayString);
 				}
@@ -222,6 +221,14 @@ public class ServerApp implements ActionListener {
 				JOptionPane.showMessageDialog(frame, ex2.toString(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			}
 
+		}
+	}
+	
+	public class csvListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			
+			csvReader.draw();
 		}
 	}
 	

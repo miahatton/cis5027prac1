@@ -38,6 +38,8 @@ public class Server extends AbstractServer {
 		
 		Thread csvReaderThread = new Thread(csvReader);
 		csvReaderThread.start();
+		app.csvReaderFeedBtn.setEnabled(true);
+		
 	}
 
 

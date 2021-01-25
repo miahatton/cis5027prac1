@@ -1,11 +1,13 @@
 package cis5027.project.csvreader;
 
 
+import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFrame;
 
+import cis5027.project.helpers.ScrollingTextBox;
 import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
 
@@ -22,6 +24,8 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	SensorData data;
 
 	JFrame displayFrame;
+	ScrollingTextBox displayBox;
+	boolean feedVisible;
 	
 	// Constructor
 	public CsvReader(String fileLocation) {
@@ -122,19 +126,21 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 				try {
 					// set current light level
 					lumens = Integer.parseInt(items[lightIndex]);
+					updateFeed("Light level: " + items[lightIndex], false);
 					
 				} catch (NumberFormatException e) {
 					
-					System.out.println("[csv reader: ] Error reading csv... light level " + errorString + "integer.");
+					updateFeed("Error reading csv... light level " + errorString + "integer.", true);
 				}
 				
 				try {
 					// set current temperature
 					temp = Double.parseDouble(items[tempIndex]);
+					updateFeed("Temperature: " + items[tempIndex], false);
 					
 				} catch (NumberFormatException e) {
 					
-					System.out.println("[csv reader: ] Error reading csv... temperature " + errorString + "double.");
+					updateFeed("Error reading csv... temperature " + errorString + "double.", true);
 				}
 				
 				data.setCurrentLightLevel(lumens);
@@ -152,6 +158,15 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 			System.err.println("[csv reader: ] Error reading file... " + ex.toString());
 		}
 		
+	}
+	
+	private void updateFeed(String msg, boolean isError) {
+		if(feedVisible) {
+			displayBox.displayMessage(msg);
+			displayBox.scrollToBottom();
+		} else if (isError) {
+			app.displayMessage("[Csv Reader: ] " + msg);
+		}
 	}
 	
 	public boolean getFileLoaded() {
@@ -174,9 +189,8 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	@Override
 	public void run() {
 		
-		draw();
-		
 		while(!stopThread) {
+			
 			readLine();
 			
 			try {
@@ -199,11 +213,21 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 	}
 	
-	private void draw() {
+	public void draw() {
 		
-		displayFrame = new JFrame();
+		displayFrame = new JFrame("CSV Reader Feed");
+		displayBox = new ScrollingTextBox(10,5);
+		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
+		displayFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+            	feedVisible = false;
+            }
+        });
 		
+		this.feedVisible = true;
+		displayFrame.setSize(200,200);
+		displayFrame.setVisible(true);
 	}
 
 
