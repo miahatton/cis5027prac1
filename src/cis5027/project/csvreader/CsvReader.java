@@ -14,7 +14,6 @@ import cis5027.project.server.helpers.AbstractFileReader;
 public class CsvReader extends AbstractFileReader implements Runnable {
 
 	private final String split = ",";
-	int delay; 
 	BufferedReader br;
 	int lightIndex;
 	int tempIndex;
@@ -216,7 +215,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	public void draw() {
 		
 		displayFrame = new JFrame("CSV Reader Feed");
-		displayBox = new ScrollingTextBox(10,5);
+		displayBox = new ScrollingTextBox(10,10);
 		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
 		displayFrame.addWindowListener(new java.awt.event.WindowAdapter() {

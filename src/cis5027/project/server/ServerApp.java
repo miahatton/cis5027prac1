@@ -211,7 +211,6 @@ public class ServerApp implements ActionListener {
 				if (newDelay >= 0) { // check that delay is a positive number
 					delay = newDelay;
 					if(csvReader != null) csvReader.setDelay(newDelay);
-					if(server != null) server.setDelay(newDelay);
 					displayMessage("Delay set to " + newDelay + "ms.");
 				} else {
 					throw new DelayFormatException(delayString);

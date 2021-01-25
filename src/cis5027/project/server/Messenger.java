@@ -17,17 +17,15 @@ public class Messenger implements Runnable {
 	ObjectOutputStream out;
 	ObjectInputStream in;
 	boolean stopConnection;
-	int delay;
 	
 	SensorData data;
 	
-	public Messenger(Server server, Socket clientSocket, SensorData data, int delay) {
+	public Messenger(Server server, Socket clientSocket, SensorData data) {
 		this.server = server;
 		this.app = server.getApp();
 		this.clientType = null;
 		this.clientSocket = clientSocket;
 		this.data = data;
-		this.delay = delay;
 		connectToClient();
 	}
 	
@@ -59,12 +57,6 @@ public class Messenger implements Runnable {
 				out.flush();
 		
 				server.app.displayMessage(message);
-
-				try {
-					Thread.sleep(delay);
-				} catch (InterruptedException e) {
-					app.displayMessage("Thread sleep interrupted");
-				}
 				
 			} catch (SocketException e1) {
 				app.displayMessage(clientType + "client has closed connection.");
@@ -180,10 +172,6 @@ public class Messenger implements Runnable {
 		
 		data.connectClient(clientType);
 	}
-	
-	public void setDelay(int newDelay) {
-		this.delay = newDelay;
-	}
-	
+
 }
 

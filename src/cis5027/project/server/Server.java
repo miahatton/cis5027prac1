@@ -15,7 +15,6 @@ public class Server extends AbstractServer {
 
 	ServerSocket serverSocket;
 	boolean sending;
-	int		delay;
 	
 	ObjectOutputStream out;
 	ObjectInputStream in;
@@ -32,7 +31,6 @@ public class Server extends AbstractServer {
 		data = new SensorData();	
 		sending = false;
 		csvReader.setTarget(data);
-		this.delay = delay;
 		
 		messengerList = new ArrayList<Messenger>();
 		
@@ -58,10 +56,8 @@ public class Server extends AbstractServer {
 
 				Socket clientSocket = serverSocket.accept();
 				
-				Messenger messenger = new Messenger(this, clientSocket, data, delay);
-				
-				
-				
+				Messenger messenger = new Messenger(this, clientSocket, data);
+
 				Thread messengerThread = new Thread(messenger);
 				messengerThread.start();
 				
@@ -118,17 +114,5 @@ public class Server extends AbstractServer {
 		}
 		
 	}
-
-
-	public void setDelay(int newDelay) {
-		
-		this.delay = newDelay;
-		
-		for(Messenger messenger: messengerList) {
-			messenger.setDelay(newDelay);
-		}
-		
-	}
-
 
 }
