@@ -4,6 +4,7 @@ package cis5027.project.csvreader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import javax.swing.JFrame;
 
 import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
@@ -20,6 +21,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	ServerApp app;
 	SensorData data;
 
+	JFrame displayFrame;
 	
 	// Constructor
 	public CsvReader(String fileLocation) {
@@ -171,6 +173,9 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 
 	@Override
 	public void run() {
+		
+		draw();
+		
 		while(!stopThread) {
 			readLine();
 			
@@ -191,6 +196,13 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	public void setDelay(int newDelay)  {
 
 		this.delay = newDelay;
+		
+	}
+	
+	private void draw() {
+		
+		displayFrame = new JFrame();
+		
 		
 	}
 

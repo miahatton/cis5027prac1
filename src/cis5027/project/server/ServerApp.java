@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cis5027.project.csvreader.CsvReader;
+import cis5027.project.helpers.PortFormatException;
 import cis5027.project.helpers.ScrollingTextBox;
 import cis5027.project.server.helpers.DelayFormatException;
 
@@ -145,18 +146,32 @@ public class ServerApp implements ActionListener {
 			
 			if (isFileLoaded & server == null) {
 				
+				int port = 0;
+				
 				try {
 					
-					int port = Integer.parseInt(portInput.getText());
+					String inputPortNumber = portInput.getText().trim();
+					
+					try {
+						port = Integer.parseInt(inputPortNumber);
+						
+						if (port < 1024 | port > 65535) {
+							throw new PortFormatException(inputPortNumber);
+						}
+						
+					} catch(NumberFormatException e1) {
+						throw new PortFormatException(inputPortNumber);
+					}
+	
 					server = new Server(csvReader, ServerApp.this, port, delay);
 					
 					Thread serverThread = new Thread(server);
 					serverThread.start();
 					
-				} catch (NumberFormatException ex) {
+				} catch (PortFormatException ex) {
 					
-					// TODO dialog box? and better validation
-					displayMessage("Port must be a number between X and Y");
+					JOptionPane.showMessageDialog(frame, ex.toString(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+					
 				}	
 				
 			} else if (server != null) {
@@ -204,7 +219,7 @@ public class ServerApp implements ActionListener {
 				}
 
 			} catch (DelayFormatException ex2) {
-				JOptionPane.showMessageDialog(frame, ex2.toString());
+				JOptionPane.showMessageDialog(frame, ex2.toString(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			}
 
 		}
