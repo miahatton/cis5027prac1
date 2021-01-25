@@ -8,6 +8,10 @@ public class PortFormatException extends Exception {
 		this.invalidPort = portInput;
 	}
 	
+	public PortFormatException(int portNum) {
+		this.invalidPort = String.valueOf(portNum);
+	}
+	
 	public String toString() {
 		return "Invalid input for port number: " + invalidPort + ". Must be an integer between 1024 and 65535.";
 	}

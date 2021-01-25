@@ -20,9 +20,9 @@ public class Messenger implements Runnable {
 	
 	SensorData data;
 	
-	public Messenger(Server server, Socket clientSocket, SensorData data) {
+	public Messenger(Server server, Socket clientSocket, SensorData data, ServerApp app) {
 		this.server = server;
-		this.app = server.getApp();
+		this.app = app;
 		this.clientType = null;
 		this.clientSocket = clientSocket;
 		this.data = data;

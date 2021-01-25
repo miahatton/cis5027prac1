@@ -9,20 +9,24 @@ import java.util.ArrayList;
 
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.csvreader.SensorData;
+import cis5027.project.helpers.PortFormatException;
 import cis5027.project.server.helpers.AbstractServer;
 
+/**
+ * @author miach
+ * The Server Class makes connections to clients and initialised the MEssenger Class that sends messages to the clients.
+ */
 public class Server extends AbstractServer {
-
-	ServerSocket serverSocket;
-	boolean sending;
 	
-	ObjectOutputStream out;
-	ObjectInputStream in;
+	private		CsvReader 			csvReader;
+	private 	SensorData 			data;
 	
-	CsvReader csvReader;
-	
+	// ArrayList to keep track of Messenger instances (each Messenger connects to one client)
 	private ArrayList<Messenger> messengerList;
 	
+	/*
+	 * Constructor
+	 */
 	public Server(CsvReader csvReader, ServerApp app, int port, int delay) {
 		super(port);
 		
@@ -36,7 +40,7 @@ public class Server extends AbstractServer {
 		
 		Thread csvReaderThread = new Thread(csvReader);
 		csvReaderThread.start();
-		app.csvReaderFeedBtn.setEnabled(true);
+		app.enableCsvButton(true);
 		
 	}
 
@@ -46,8 +50,10 @@ public class Server extends AbstractServer {
 		try {
 			initializeServer();
 			
-		} catch (IOException e) {
-			app.displayMessage("Exception: " + e.toString());
+		} catch (IOException e1) {
+			app.displayMessage("Exception: " + e1.toString());
+		} catch (PortFormatException e2) {
+			app.showUserErrorDialog("Invalid Input", e2.toString());
 		}
 		
 		while (!stopServer) {
@@ -56,7 +62,7 @@ public class Server extends AbstractServer {
 
 				Socket clientSocket = serverSocket.accept();
 				
-				Messenger messenger = new Messenger(this, clientSocket, data);
+				Messenger messenger = new Messenger(this, clientSocket, data, this.app);
 
 				Thread messengerThread = new Thread(messenger);
 				messengerThread.start();
@@ -69,23 +75,24 @@ public class Server extends AbstractServer {
 		}
 	}
 	
-	public void initializeServer() throws IOException {
+	/*
+	 * Initialises the server socket
+	 */
+	public void initializeServer() throws IOException, PortFormatException {
 
 		
-		if(serverSocket == null & port > 0) {
-			//TODO better validation
-			serverSocket = new ServerSocket(port);
-			
+		if(serverSocket == null) {
+			if(port >= app.getMinPortNum() & port <= app.getMaxPortNum()) {
+				serverSocket = new ServerSocket(port);
+			} else throw new PortFormatException(port);	
 		}
 		
 		this.stopServer = false;
 	}
 
-	public ServerApp getApp() {
-		return this.app;
-	}
-
-
+	/*
+	 * Closes server socket and all connections to clients.
+	 */
 	public void closeAll() {
 		
 		try {
@@ -99,12 +106,16 @@ public class Server extends AbstractServer {
 			
 		} finally {
 
+			/*
+			 * Loop through each messenger in the arraylist and close connection to the client
+			 */
+			
 			for (Messenger messenger: messengerList) {
 				
 				try {
 					messenger.closeAll();
 				} catch (Exception e) {	
-				}
+				} // Ignore all exceptions when closing clients.
 			}
 			
 			this.serverSocket = null;

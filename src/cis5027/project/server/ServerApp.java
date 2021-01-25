@@ -113,7 +113,7 @@ public class ServerApp implements ActionListener {
 
 	
 	/*
-	 *  Initiliazes the components that go on the GUI
+	 *  Initiliases the components that go on the GUI
 	 */
 	public void initializeGuiComponents() {
 		// input fields
@@ -172,7 +172,7 @@ public class ServerApp implements ActionListener {
 	public class LoadButtonListener implements ActionListener {
 
 		/*
-		 * On button click, initialize CSV reader, load file from selected location, and enable server start button.
+		 * On button click, initialise CSV reader, load file from selected location, and enable server start button.
 		 */
 		public void actionPerformed(ActionEvent e) {
 
@@ -204,7 +204,7 @@ public class ServerApp implements ActionListener {
 	public class StartButtonListener implements ActionListener {
 		
 		/*
-		 * Initializes server on given port and starts new server thread.
+		 * Initialises server on given port and starts new server thread.
 		 */
 		public void actionPerformed(ActionEvent e) {
 			
@@ -229,13 +229,15 @@ public class ServerApp implements ActionListener {
 	
 				} catch (PortFormatException ex) {
 					
-					JOptionPane.showMessageDialog(frame, ex.toString(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+					showUserErrorDialog("Invalid Input", ex.toString());
 					
 				}
 				
 				// initialise server
 				
 				server = new Server(csvReader, ServerApp.this, port, delay);
+				
+				// start server thread
 				
 				Thread serverThread = new Thread(server);
 				serverThread.start();
@@ -245,7 +247,7 @@ public class ServerApp implements ActionListener {
 			}
 			
 			else if (!isFileLoaded) {
-				displayMessage("Please load csv file before starting server");
+				showUserErrorDialog("Please load csv file before starting server", "No file found");
 			}
 
 		}
@@ -284,7 +286,7 @@ public class ServerApp implements ActionListener {
 				}
 
 			} catch (DelayFormatException ex2) {
-				JOptionPane.showMessageDialog(frame, ex2.toString(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+				showUserErrorDialog("Invalid Input", ex2.toString());
 			}
 
 		}
@@ -334,6 +336,15 @@ public class ServerApp implements ActionListener {
 	}
 	
 	/*
+	 * Display message dialog when error is caused by user input, to alert the user.
+	 * @param errorType
+	 * @param errorMessage
+	 */
+	public void showUserErrorDialog(String errorType, String errorMessage) {
+		JOptionPane.showMessageDialog(frame, errorMessage, errorType, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/*
 	 * Main function
 	 * Create instance of server app and display GUI.
 	 */
@@ -342,6 +353,26 @@ public class ServerApp implements ActionListener {
 		ServerApp serverApp = new ServerApp();
 		serverApp.draw(); 
 		
+	}
+
+	/*
+	 * Getters and setters
+	 */
+	
+	public int getMinPortNum() {
+		return MIN_PORT_NUM;
+	}
+
+	public int getMaxPortNum() {
+		return MAX_PORT_NUM;
+	}
+	
+	/*
+	 * Public method to enable the CsvReaderFeedBtn button
+	 * @param enable (boolean)
+	 */
+	public void enableCsvButton(boolean enable) {
+		this.csvReaderFeedBtn.setEnabled(enable);
 	}
 
 }
