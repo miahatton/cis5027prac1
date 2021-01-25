@@ -187,6 +187,12 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	public void setTarget(SensorData data) {
 		this.data = data;
 	}
+	
+	public void setDelay(int newDelay)  {
+
+		this.delay = newDelay;
+		
+	}
 
 
 }

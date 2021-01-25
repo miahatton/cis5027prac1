@@ -101,7 +101,7 @@ public class Messenger implements Runnable {
 					
 				inwardMessage = (String) messageFromClient;
 				
-				app.displayMessage("Message received from client: [" + inwardMessage + "]");
+				app.displayMessage("Message received from " + clientType + " client: [" + inwardMessage + "]");
 				
 				if (inwardMessage.equals("STOP")) {
 					
@@ -179,6 +179,10 @@ public class Messenger implements Runnable {
 		clientConnected = true;
 		
 		data.connectClient(clientType);
+	}
+	
+	public void setDelay(int newDelay) {
+		this.delay = newDelay;
 	}
 	
 }

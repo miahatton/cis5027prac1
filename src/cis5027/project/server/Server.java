@@ -118,4 +118,15 @@ public class Server extends AbstractServer {
 	}
 
 
+	public void setDelay(int newDelay) {
+		
+		this.delay = newDelay;
+		
+		for(Messenger messenger: messengerList) {
+			messenger.setDelay(newDelay);
+		}
+		
+	}
+
+
 }

@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cis5027.project.csvreader.CsvReader;
 import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.server.helpers.DelayFormatException;
 
 public class ServerApp implements ActionListener {
 
@@ -22,7 +24,12 @@ public class ServerApp implements ActionListener {
 	ScrollingTextBox textBox;
 	JTextField fileBox;
 	JTextField portInput;
+	JTextField delayInput;
 	JFrame frame;
+	
+	private static final int DEFAULT_DELAY = 3000;
+	private static final int MIN_PORT_NUM = 1024;
+	private static final int MAX_PORT_NUM = 65535;
 	
 	int delay;
 
@@ -35,7 +42,7 @@ public class ServerApp implements ActionListener {
 	public ServerApp () {
 
 		isFileLoaded = false;
-		delay = 3000; // TODO allow this to change.
+		delay = DEFAULT_DELAY; // default.
 
 	}
 	
@@ -54,22 +61,29 @@ public class ServerApp implements ActionListener {
 		JPanel filePanel = new JPanel();
 		
 		fileBox = new JTextField(20);
+		delayInput = new JTextField(5);
 		portInput = new JTextField(5);
 		
 		JButton loadButton = new JButton("Load CSV");
 		JButton startButton = new JButton("Start Server");
 		JButton stopButton = new JButton("Stop Server");
+		JButton delayButton = new JButton("Set delay (ms)");
 		
 		textBox = new ScrollingTextBox(15,50);
 		
 		loadButton.addActionListener(new LoadButtonListener(this));
 		startButton.addActionListener(new StartButtonListener());
 		stopButton.addActionListener(this);
+		delayButton.addActionListener(new DelayButtonListener(this));
 		
 		filePanel.add(fileBox);
 		fileBox.setText(defaultFileLoc);
 		fileBox.setCaretPosition(fileBox.getText().length());
 		filePanel.add(loadButton);
+		filePanel.add(delayInput);
+		delayInput.setText(String.valueOf(DEFAULT_DELAY));
+		delayInput.setCaretPosition(delayInput.getText().length());
+		filePanel.add(delayButton);
 		
 		mainPanel.add(portInput);
 		portInput.setText("5000");
@@ -151,6 +165,46 @@ public class ServerApp implements ActionListener {
 			
 			else if (!isFileLoaded) {
 				displayMessage("Please load csv file before starting server");
+			}
+
+		}
+	}
+	
+	public class DelayButtonListener implements ActionListener {
+		
+		ServerApp app;
+		
+		public DelayButtonListener(ServerApp app) {
+			this.app = app;
+		}
+		
+		public void actionPerformed (ActionEvent e) {
+
+			String delayString = this.app.delayInput.getText().trim();
+			int newDelay = -1;
+			try {
+				
+				try {
+					// check that the number is entered in correct format
+					newDelay = Integer.parseInt(delayString);
+					
+				} catch (NumberFormatException ex1) {
+					
+					throw new DelayFormatException(delayString);
+					
+				} 
+
+				if (newDelay >= 0) { // check that delay is a positive number
+					this.app.delay = newDelay;
+					if(this.app.csvReader != null) this.app.csvReader.setDelay(newDelay);
+					if(this.app.server != null) this.app.server.setDelay(newDelay);
+					this.app.displayMessage("Delay set to " + newDelay + "ms.");
+				} else {
+					throw new DelayFormatException(delayString);
+				}
+
+			} catch (DelayFormatException ex2) {
+				JOptionPane.showMessageDialog(frame, ex2.toString());
 			}
 
 		}
