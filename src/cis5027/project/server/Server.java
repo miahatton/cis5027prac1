@@ -28,7 +28,7 @@ public class Server extends AbstractServer {
 		
 		this.csvReader = csvReader;
 		this.app = app;
-		data = new SensorData();	
+		data = new SensorData(csvReader);	
 		sending = false;
 		csvReader.setTarget(data);
 		
@@ -111,6 +111,7 @@ public class Server extends AbstractServer {
 			
 			// close the csvReader.
 			this.csvReader.closeBuffer();
+			app.reset();
 		}
 		
 	}

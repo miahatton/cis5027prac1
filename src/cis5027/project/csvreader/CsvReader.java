@@ -159,7 +159,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 	}
 	
-	private void updateFeed(String msg, boolean isError) {
+	public void updateFeed(String msg, boolean isError) {
 		if(feedVisible) {
 			displayBox.displayMessage(msg);
 			displayBox.scrollToBottom();
@@ -215,7 +215,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 	public void draw() {
 		
 		displayFrame = new JFrame("CSV Reader Feed");
-		displayBox = new ScrollingTextBox(10,10);
+		displayBox = new ScrollingTextBox(20,20);
 		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
 		displayFrame.addWindowListener(new java.awt.event.WindowAdapter() {

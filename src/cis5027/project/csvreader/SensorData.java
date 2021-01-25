@@ -10,12 +10,15 @@ public class SensorData implements Serializable {
 	private boolean lightValueSet;
 	private boolean lightClientConnected;
 	private boolean tempClientConnected;
+	private CsvReader csvReader;
 	
-	public SensorData() {
+	public SensorData(CsvReader csvReader) {
 		this.tempValueSet = false;
 		this.lightValueSet = false;
 		this.lightClientConnected = false;
 		this.tempClientConnected = false;
+		
+		this.csvReader = csvReader;
 	}
 	
 	public synchronized void setCurrentTemperature(double temp) {
@@ -42,7 +45,7 @@ public class SensorData implements Serializable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted exception in getCurrentTemperature: " + e.toString());
+				csvReader.updateFeed("Interrupted exception in getCurrentTemperature: " + e.toString(), true);
 			}
 		}
 		tempValueSet = false;
@@ -56,7 +59,7 @@ public class SensorData implements Serializable {
 			try{
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted exception in setValues: " + e.toString());
+				csvReader.updateFeed("Interrupted exception in setValues: " + e.toString(), true);
 			}	
 		}
 
@@ -74,7 +77,7 @@ public class SensorData implements Serializable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted exception in getCurrentTemperature: " + e.toString());
+				csvReader.updateFeed("Interrupted exception in getCurrentTemperature: " + e.toString(), true);
 			}
 		}
 		lightValueSet = false;
@@ -83,7 +86,7 @@ public class SensorData implements Serializable {
 	}
 
 	public void connectClient(String clientType){
-		System.out.println("connecting client to data");
+
 		switch (clientType) {
 		
 		case "light":

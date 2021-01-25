@@ -228,6 +228,7 @@ public class ServerApp implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			
 			csvReader.draw();
+			displayMessage("Load CSV file to continue.");
 		}
 	}
 	
@@ -243,10 +244,18 @@ public class ServerApp implements ActionListener {
 		return fileBox.getText();
 	}
 	
+	public void reset() {
+		
+		startButton.setEnabled(false);
+		csvReaderFeedBtn.setEnabled(false);
+		
+	}
+	
 	public static void main(String[] args) {
 		
 		ServerApp serverApp = new ServerApp();
 		serverApp.go(); 
 		
 	}
+
 }
