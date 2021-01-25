@@ -27,7 +27,7 @@ public class SensorData implements Serializable {
 			try{
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted exception in setValues: " + e.toString());
+				csvReader.updateFeed("Interrupted exception in SensorData setCurrentTemperature method: " + e.toString(), true);
 			}	
 		}
 		
@@ -45,7 +45,7 @@ public class SensorData implements Serializable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("Interrupted exception in getCurrentTemperature: " + e.toString(), true);
+				csvReader.updateFeed("Interrupted exception in SensorData getCurrentTemperature: " + e.toString(), true);
 			}
 		}
 		tempValueSet = false;
@@ -59,7 +59,7 @@ public class SensorData implements Serializable {
 			try{
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("Interrupted exception in setValues: " + e.toString(), true);
+				csvReader.updateFeed("Interrupted exception in SensorData setCurrentLightLevel method: " + e.toString(), true);
 			}	
 		}
 
