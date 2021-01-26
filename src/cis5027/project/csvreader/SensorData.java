@@ -19,6 +19,7 @@ public class SensorData implements Serializable {
 		this.tempClientConnected = false;
 		
 		this.csvReader = csvReader;
+		csvReader.setTarget(this);
 	}
 	
 	public synchronized void setCurrentTemperature(double temp) {
