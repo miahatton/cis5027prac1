@@ -14,6 +14,9 @@ abstract public class AbstractFileReader {
 	abstract public void loadFile(boolean fetchHeader);
 	abstract public void closeBuffer();
 	
+	/*
+	 * Constructor
+	 */
 	public AbstractFileReader(String fileLocation, String fileExtension) {
 		this.fileLocation = fileLocation;
 		this.fileExtension = fileExtension;
@@ -21,11 +24,18 @@ abstract public class AbstractFileReader {
 		delay = 1000; // default
 	}
 	
+	/*
+	 * Overload constructor with delay parameter - for setting custom delay in ms
+	 */
 	public AbstractFileReader(String fileLocation, String fileExtension, int delay) {
 		this.fileExtension = fileExtension;
 		setFileLocation(fileLocation);
 		this.delay = delay;
 	}
+	
+	/*
+	 * Getters and setters
+	 */
 	
 	// Getter for file location
 	public String getFileLocation() {

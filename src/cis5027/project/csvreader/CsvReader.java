@@ -10,39 +10,51 @@ import javax.swing.JFrame;
 import cis5027.project.helpers.ScrollingTextBox;
 import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
+import cis5027.project.server.helpers.CsvHeaderException;
 
 public class CsvReader extends AbstractFileReader implements Runnable {
 
-	private final String split = ",";
-	BufferedReader br;
-	int lightIndex;
-	int tempIndex;
-	boolean fileLoaded;
-	boolean stopThread;
-	ServerApp app;
-	SensorData data;
+	private final 	String 			split = ","; // a csv always has a comma as delimiter by definition
+	private 		BufferedReader 	br;
+	private 		int 			lightIndex;
+	private 		int 			tempIndex;
+	private 		boolean 		fileLoaded;
+	private 		boolean 		stopThread;
+	public			ServerApp 		app;
+	public 			SensorData 		data;
 
+	/*
+	 * Instance variables for the UI feed where csv readings can be viewed.
+	 */
 	JFrame displayFrame;
 	ScrollingTextBox displayBox;
 	boolean feedVisible;
 	
-	// Constructor
+	/*
+	 * Constructor
+	 */
 	public CsvReader(String fileLocation) {
 		super(fileLocation, ".csv");
 	}
 	
-	// Overload constructor with ability to choose delay time
+	/*
+	 * Overload constructor with ability to choose delay time
+	 */
 	public CsvReader(ServerApp app, String fileLocation, int delay) {
 		super(fileLocation, ".csv", delay);
 		this.app = app;
 	}
 
 
-	private int[] getColumnHeaders(String line, String split) {
+	/*
+	 * Find the column number where the light and temperature data is stored (in case a different csv is passed or the csv is modified)
+	 * @param line - a line of the csv
+	 * @param split - the delimiter
+	 */
+	private int[] getColumnHeaders(String line, String split) throws CsvHeaderException {
 		
 		boolean lightFound = false;
 		boolean tempFound = false;
-		String errorString = " column header not found. Please ensure csv includes column header: ";
 		
 		//TODO what if the file has NO column headers? Can we set a default? maybe a try/catch ParseInt - if it works we can return the default values.
 		
@@ -69,26 +81,34 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		}			
 		
 		if(!lightFound) {
-			System.err.println("[csv reader: ] Error: Light level" + errorString);
+			throw new CsvHeaderException("light");
 		}
 		
 		if(!tempFound) {
-			System.err.println("[csv reader: ] Error: Temperature" + errorString);
+			throw new CsvHeaderException("temperature");
 		}
 		
 		return lightTempIndices;
 		
 	}
 	
+	/*
+	 * Prepares to read CSV file line by line.
+	 * @param fetchHeader - boolean value, true if we need to get the indices of the light and temperature columns
+	 */
 	public void loadFile (boolean fetchHeader) {
+		
+		String errorType = "File format error";
 			
 		try {
 			
+			// initialise buffered reader
 			br = new BufferedReader(new FileReader(this.file));
 			
 			// read the first line
 			String headerRow = br.readLine();
 			
+			// only continue if first line is not empty
 			if(headerRow != null) {
 				
 				if(fetchHeader) { // we can skip this if we already know the index of light and temperature in csv
@@ -99,11 +119,13 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 					this.tempIndex = lightTempIndices[1];
 				}
 			
-			} else System.err.println("[csv reader: ] csv file is empty!");
+			} else app.showUserErrorDialog(errorType, "[csv reader: ] csv file is empty!");
 			
-		} catch (IOException e) {
-			System.err.println("[csv reader: ] error reading file... " + e.toString());
-		} 
+		} catch (IOException e1) {
+			app.showUserErrorDialog(errorType, "[csv reader: ] error reading file... " + e1.toString());
+		} catch (CsvHeaderException e2) {
+			app.showUserErrorDialog(errorType, e2.toString());
+		}
 		
 		fileLoaded = true;
 
@@ -178,7 +200,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		try {
 			this.br.close();
 		} catch (IOException e) {
-			System.err.println("[csv reader: ] error closing BufferedReader..." + e.toString());
+			app.displayMessage("[csv reader: ] error closing BufferedReader..." + e.toString());
 		} finally {
 			this.stopThread = true;
 		}

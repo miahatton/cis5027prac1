@@ -195,6 +195,7 @@ public class Messenger implements Runnable {
 			app.displayMessage("Error setting up IO streams to client");
 		}
 		
+		// Wait for message from client. Client will send either "light" or "fan".
 		try {
 			clientType = (String) in.readObject();
 		} catch (ClassNotFoundException e1) {		
