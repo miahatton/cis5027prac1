@@ -8,6 +8,10 @@ import java.net.SocketException;
 
 import cis5027.project.csvreader.SensorData;
 
+/**
+ * @author miach
+ * Each instance of the Messenger class connects to a client, sends readings to the client and waits for a response.
+ */
 public class Messenger implements Runnable {
 	ServerApp app;
 	Server server;
@@ -20,43 +24,59 @@ public class Messenger implements Runnable {
 	
 	SensorData data;
 	
+	/*
+	 * Constructor
+	 */
 	public Messenger(Server server, Socket clientSocket, SensorData data, ServerApp app) {
 		this.server = server;
 		this.app = app;
 		this.clientType = null;
 		this.clientSocket = clientSocket;
+		
+		// link the Messenger to the SensorData object so that it can access readings.
 		this.data = data;
 		connectToClient();
 	}
 	
+	/*
+	 * While connected to a client, the Messenger object gets the current light or temperature reading (depending on client type) and sends to the client.
+	 * It waits for a response before repeating.
+	 */
 	public void run() {
 		
-		String message;
+		String notification;
 		
 		while(clientConnected) {
 			
-			message = "Sending reading to the "+ clientType + " client: [";
+			notification = "Sending reading to the "+ clientType + " client: [";
 			
 			try {
 
+				/*
+				 * This block is synchronized so that the csvreader and messenger do not try to access the SensorData object at the same time.
+				 */
 				synchronized(data) {
 					switch(clientType) {
 					case "light":
+						// get light level variable from SensorData object
 						int lightLevel = data.getCurrentLightLevel();
+						// send to client
 						out.writeObject(lightLevel);
-						message += ("Light level = " + String.valueOf(lightLevel) + "]");
+						notification += ("Light level = " + String.valueOf(lightLevel) + "]");
 						break;
 					case "fan":
+						// get temperature variable from SensorData object
 						double temperature = data.getCurrentTemperature();
+						// send to client
 						out.writeObject(temperature);
-						message += ("Temperature = " + String.valueOf(temperature) + "]");
+						notification += ("Temperature = " + String.valueOf(temperature) + "]");
 						break;
 					}
 				}
 
 				out.flush();
 		
-				server.app.displayMessage(message);
+				server.app.displayMessage(notification);
 				
 			} catch (SocketException e1) {
 				app.displayMessage(clientType + "client has closed connection.");
@@ -70,13 +90,17 @@ public class Messenger implements Runnable {
 				
 			} finally {
 				
+				// wait for a response before continuing, in case client sends "STOP" message (connection closed)
 				handleMessageFromClient();
 				
 			} 
 		}
 	}
 	
-	public void handleMessageFromClient() {
+	/*
+	 * When a message is received from the client, display it. If the message is "STOP", close the connection.
+	 */
+	private void handleMessageFromClient() {
 		
 		if(clientSocket!=null) {
 			
@@ -91,10 +115,12 @@ public class Messenger implements Runnable {
 					throw new IOException(e1);
 				} 
 					
+				// cast message to String.
 				inwardMessage = (String) messageFromClient;
 				
 				app.displayMessage("Message received from " + clientType + " client: [" + inwardMessage + "]");
 				
+				// close connection if message is "STOP"
 				if (inwardMessage.equals("STOP")) {
 					
 					closeAll();
@@ -110,6 +136,9 @@ public class Messenger implements Runnable {
 		}
 	}
 	
+	/*
+	 * Handles errors on attempts to close connections.
+	 */
 	public void tryToClose() {
 		try {
 			closeAll();
@@ -122,7 +151,10 @@ public class Messenger implements Runnable {
 		
 	}
 	
-	public void closeAll() throws IOException {
+	/*
+	 * Closes connection to client and sets socket and IO streams to null.
+	 */
+	private void closeAll() throws IOException {
 		
 		app.displayMessage("Closing connection to " + clientType + " client...");
 		
@@ -139,6 +171,7 @@ public class Messenger implements Runnable {
 			
 		} finally {
 			
+			// set socket and IO Streams to null no matter what.
 			this.clientSocket = null;
 			this.out = null;
 			this.in = null;
@@ -148,6 +181,9 @@ public class Messenger implements Runnable {
 		
 	}
 	
+	/*
+	 * Sets up IO streams for client and waits for message from client to say what type of client it is (light or fan).
+	 */
 	private void connectToClient() {
 		
 		try {
@@ -170,6 +206,10 @@ public class Messenger implements Runnable {
 		app.displayMessage("Connected to client of type " + clientType + ". Port: " + clientSocket.getPort());
 		clientConnected = true;
 		
+		/*
+		 * Let the SensorData object know that this type of client is connected.
+		 * Now it will wait for the Messenger to read the data for this client type before attempting to write a new value.
+		 */
 		data.connectClient(clientType);
 	}
 

@@ -2,7 +2,6 @@ package cis5027.project.server.helpers;
 
 import java.net.ServerSocket;
 
-import cis5027.project.csvreader.SensorData;
 import cis5027.project.server.ServerApp;
 
 /**

@@ -1,8 +1,6 @@
 package cis5027.project.server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -131,7 +129,7 @@ public class Server extends AbstractServer {
 			for (Messenger messenger: messengerList) {
 				
 				try {
-					messenger.closeAll();
+					messenger.tryToClose();
 				} catch (Exception e) {	
 				} // Ignore all exceptions when closing clients.
 			}
