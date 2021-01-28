@@ -12,36 +12,28 @@ import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
 import cis5027.project.server.helpers.CsvHeaderException;
 
-public class CsvReader extends AbstractFileReader implements Runnable {
-
-	private final 	String 			split = ","; // a csv always has a comma as delimiter by definition
+public class CsvReader extends AbstractFileReader {
+	
 	private 		BufferedReader 	br;
 	private 		int 			lightIndex;
 	private 		int 			tempIndex;
-	private 		boolean 		fileLoaded;
 	private 		boolean 		stopThread;
 	public			ServerApp 		app;
-	public 			SensorData 		data;
 
-	/*
-	 * Instance variables for the UI feed where csv readings can be viewed.
-	 */
-	JFrame displayFrame;
-	ScrollingTextBox displayBox;
-	boolean feedVisible;
 	
 	/*
 	 * Constructor
 	 */
-	public CsvReader(String fileLocation) {
-		super(fileLocation, ".csv");
+	public CsvReader(ServerApp app, String fileLocation) {
+		super(fileLocation, ".csv", "CSV", ",");
+		this.app = app;
 	}
 	
 	/*
 	 * Overload constructor with ability to choose delay time
 	 */
 	public CsvReader(ServerApp app, String fileLocation, int delay) {
-		super(fileLocation, ".csv", delay);
+		super(fileLocation, ".csv", "CSV", ",", delay);
 		this.app = app;
 	}
 
@@ -58,8 +50,8 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 		//TODO what if the file has NO column headers? Can we set a default? maybe a try/catch ParseInt - if it works we can return the default values.
 		
-		int[] lightTempIndices = {-1, -1}; // default in case headers not found
-		String[] allHeaders = line.split(split); // split first line into array
+		int[] lightTempIndices = {-1, -1}; 			// default in case headers not found
+		String[] allHeaders = line.split(split); 	// split first line into array
 		
 		// loop through all headers on first line
 		for (int i = 0; i < allHeaders.length; i++) {
@@ -92,6 +84,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 	}
 	
+	@Override
 	/*
 	 * Prepares to read CSV file line by line.
 	 * @param fetchHeader - boolean value, true if we need to get the indices of the light and temperature columns
@@ -131,6 +124,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 
 	}
 
+	@Override
 	public void readLine() {
 		
 		String nextLine;
@@ -181,6 +175,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 	}
 	
+	@Override
 	public void updateFeed(String msg, boolean isError) {
 		if(feedVisible) {
 			displayBox.displayMessage(msg);
@@ -190,11 +185,7 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		}
 	}
 	
-	public boolean getFileLoaded() {
-		
-		return this.fileLoaded;
-	}
-	
+	@Override
 	public void closeBuffer() {
 		
 		try {
@@ -224,32 +215,9 @@ public class CsvReader extends AbstractFileReader implements Runnable {
 		
 	}
 
-	public void setTarget(SensorData data) {
-		this.data = data;
-	}
 	
-	public void setDelay(int newDelay)  {
+	
 
-		this.delay = newDelay;
-		
-	}
-	
-	public void draw() {
-		
-		displayFrame = new JFrame("CSV Reader Feed");
-		displayBox = new ScrollingTextBox(20,20);
-		displayFrame.getContentPane().add(displayBox.getScrollPane());
-		
-		displayFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
-            	feedVisible = false;
-            }
-        });
-		
-		this.feedVisible = true;
-		displayFrame.setSize(200,200);
-		displayFrame.setVisible(true);
-	}
 
 
 }
