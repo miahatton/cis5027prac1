@@ -9,7 +9,7 @@ public class DelayFormatException extends Exception {
 	}
 
 	public String toString() {
-		return "Invalid input for delay: " + inputDelay + ". Must be a positive integer.";
+		return "Invalid input for delay: " + inputDelay + "s. Must be a positive integer.";
 	}
 	
 }

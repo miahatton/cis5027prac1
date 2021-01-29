@@ -122,7 +122,7 @@ public class ServerApp implements ActionListener {
 		// buttons
 		loadButton = new JButton("Load CSV");
 		stopButton = new JButton("Stop Server");
-		delayButton = new JButton("Set delay (ms)");
+		delayButton = new JButton("Set delay (s)");
 		startButton = new JButton("Start Server");
 		csvReaderFeedBtn = new JButton("Open CSV feed");
 				
@@ -277,8 +277,8 @@ public class ServerApp implements ActionListener {
 
 				if (newDelay >= 0) { // check that delay is a positive number
 					delay = newDelay;
-					if(csvReader != null) csvReader.setDelay(newDelay);
-					displayMessage("Delay set to " + newDelay + "ms.");
+					if(csvReader != null) csvReader.setDelay(newDelay*1000); // convert to ms
+					displayMessage("Delay set to " + newDelay + " seconds.");
 				} else {
 					throw new DelayFormatException(delayString);
 				}
