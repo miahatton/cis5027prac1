@@ -8,7 +8,13 @@ import java.net.Socket;
 
 import cis5027.project.clients.ClientConnectPanel;
 
+/**
+ * @author miahatton
+ * Abstract client class that handles setting up and closing network streams.
+ */
 public abstract class AbstractClient implements Runnable {
+	
+	private static final String IP = "127.0.0.1";
 	
 	protected ClientConnectPanel cPanel;
 	protected ObjectInputStream reader;
@@ -16,20 +22,29 @@ public abstract class AbstractClient implements Runnable {
 
 	protected Socket socket;
 	protected String clientType;
-	private String ip;
+	
 	private int port;
 	
 	protected boolean stopClient;
 	
+	/*
+	 * Constructor
+	 * @param cPanel - ClientConnectPanel instance where messages are displayed
+	 * @param port - port number for socket.
+	 */
 	public AbstractClient(ClientConnectPanel cPanel, int port) {
 		this.cPanel = cPanel;
 		this.port = port;
-		this.ip = "127.0.0.1";
 		this.stopClient = true;
 	}
 	
+	@Override
 	public abstract void run();
 	
+	/*
+	 * Sets up socket and IO streams.
+	 * Tells the server what type of client it is.
+	 */
 	public void initialiseClient() {
 		try {
 			
@@ -39,7 +54,7 @@ public abstract class AbstractClient implements Runnable {
 			// TODO better validation
 			if (port > 0) {
 					
-				this.socket = new Socket(ip, port);
+				this.socket = new Socket(IP, port);
 				displayMessage("Created socket");
 					
 				this.writer = new ObjectOutputStream(this.socket.getOutputStream());
@@ -57,23 +72,29 @@ public abstract class AbstractClient implements Runnable {
 			
 		}catch(IOException e2) {
 			
-			//TODO improve
-			e2.printStackTrace();
+			displayMessage("Error connecting to server: " + e2.toString());
 		}
 	}
 	
+	/*
+	 * Displays message on client connect panel of client.
+	 */
 	public void displayMessage(String msg) {
 		
 		cPanel.displayMessage(msg);
 	}
 
+	/*
+	 * Closes socket and IO streams
+	 * Sends message to server to stop incoming messages.
+	 */
 	public void closeAll() {
 
 		try {
 			// tell server to stop connection to this client
 			sendMessageToServer("STOP");
 		} catch (IOException e) {
-			displayMessage("Error sending STOP message to client");
+			displayMessage("Error sending STOP message to client: " + e.toString());
 		}
 		
 		if(!stopClient) {
@@ -96,7 +117,7 @@ public abstract class AbstractClient implements Runnable {
 			displayMessage("Error closing client..." + e.toString());
 			
 		} finally {
-			// set the streams and socket to null either way
+			// set the streams and socket to null whatever happens
 			this.socket = null;
 			this.writer = null;
 			this.reader = null;
@@ -104,12 +125,20 @@ public abstract class AbstractClient implements Runnable {
 
 	}
 	
+	/*
+	 * Sends a message to the server via the output stream
+	 * @param msg
+	 * @throws IOException
+	 */
 	protected void sendMessageToServer (String msg) throws IOException {
 		if (!stopClient) {
 			writer.writeObject(msg);
 		}
 	}
 
+	/*
+	 * Setter for stopClient.
+	 */
 	public void setStopClient(Boolean stop) {
 		this.stopClient = stop;
 		

@@ -8,11 +8,22 @@ import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.lightapp.components.BrightnessPanel;
 import cis5027.project.clients.lightapp.frames.apps.LightApp;
 
+/**
+ * @author miahatton
+ * Light client that implements run() method. Receives light level values from server.
+ */
+
 public class LightClient extends AbstractClient {
 
 	private BrightnessPanel brightnessPanelInstance;
 	private LightApp app;
 	
+	/*
+	 * Constructor
+	 * @param cPanel - client connect panel where messages are displayed
+	 * @param port - port number for socket.
+	 * @app - ApplianceApp for this client.
+	 */
 	public LightClient(ClientConnectPanel cPanel, int port, ApplianceApp app) {
 		
 		super(cPanel, port);
@@ -21,16 +32,19 @@ public class LightClient extends AbstractClient {
 		this.brightnessPanelInstance = this.app.getBrightnessPanelInstance();
 	}
 	
+	@Override
 	public void run() {
 		
 		String msg;
 		
 		try {
 			
+			// loop while socket and IO streams are connected
 			while(!stopClient) {
 				
 				while ((msg = String.valueOf(reader.readObject())) != null) {
 
+					// return the message to the Server to confirm receipt.
 					sendMessageToServer("Reading received: " + msg);
 					
 					try {
