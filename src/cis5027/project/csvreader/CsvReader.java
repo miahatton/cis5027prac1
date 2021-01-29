@@ -84,11 +84,12 @@ public class CsvReader extends AbstractFileReader {
 		
 	}
 	
-	@Override
+	
 	/*
 	 * Prepares to read CSV file line by line.
 	 * @param fetchHeader - boolean value, true if we need to get the indices of the light and temperature columns
 	 */
+	@Override
 	public void loadFile (boolean fetchHeader) {
 		
 		String errorType = "File format error";
@@ -124,6 +125,10 @@ public class CsvReader extends AbstractFileReader {
 
 	}
 
+	/*
+	 * Reads the next line of the CSV and stores the values in the SensorData object.
+	 * If the bottom of the file is reached, the file is re-loaded and this method is called again.
+	 */
 	@Override
 	public void readLine() {
 		
@@ -136,6 +141,7 @@ public class CsvReader extends AbstractFileReader {
 			// read the next line
 			if ((nextLine = this.br.readLine()) != null) {
 				
+				// Array to store each value in the row
 				String[] items = nextLine.split(split);
 				
 				try {
@@ -175,16 +181,25 @@ public class CsvReader extends AbstractFileReader {
 		
 	}
 	
+	/*
+	 * Displays values read and errors thrown by the CSV reader if the feed is visible.
+	 * If the feed is not visible and the message is an error, display the error in the server app instead.
+	 * @param msg - message to display
+	 * @param isError - boolean value to store whether or not the message is an error
+	 */
 	@Override
 	public void updateFeed(String msg, boolean isError) {
 		if(feedVisible) {
 			displayBox.displayMessage(msg);
 			displayBox.scrollToBottom();
 		} else if (isError) {
-			app.displayMessage("[Csv Reader: ] " + msg);
+			app.displayMessage("[csv Reader: ] " + msg);
 		}
 	}
 	
+	/*
+	 * Closes the BufferedReader stream
+	 */
 	@Override
 	public void closeBuffer() {
 		
@@ -198,6 +213,9 @@ public class CsvReader extends AbstractFileReader {
 		
 	}
 
+	/*
+	 * Continuously reads each row in the file with the delay provided.
+	 */
 	@Override
 	public void run() {
 		

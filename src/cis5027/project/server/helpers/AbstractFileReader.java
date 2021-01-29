@@ -57,12 +57,18 @@ abstract public class AbstractFileReader implements Runnable {
 		this.delay = delay;
 	}
 	
+	/*
+	 * Generates UI for viewing the values as they are read from the CSV. 
+	 * Used for testing. 
+	 * Can be viewed by clicking the "Open CSV feed" button on the server app.
+	 */
 	public void draw() {
 		
 		displayFrame = new JFrame(fileType + "Reader Feed");
 		displayBox = new ScrollingTextBox(20,20);
 		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
+		// stop the fileReader from updating the feed if it is closed.
 		displayFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
             	feedVisible = false;
@@ -70,7 +76,7 @@ abstract public class AbstractFileReader implements Runnable {
         });
 		
 		this.feedVisible = true;
-		displayFrame.setSize(200,200);
+		displayFrame.setSize(20,20);
 		displayFrame.setVisible(true);
 	}
 	
@@ -94,16 +100,19 @@ abstract public class AbstractFileReader implements Runnable {
 		}
 	}
 	
+	// link fileReader to data object where values are stored
 	public void setTarget(SensorData data) {
 		this.data = data;
 	}
 	
+	// setter for delay variable
 	public void setDelay(int newDelay)  {
 
 		this.delay = newDelay;
 		
 	}
 	
+	//getter for fileLoaded variable
 	public boolean getFileLoaded() {
 		
 		return this.fileLoaded;
