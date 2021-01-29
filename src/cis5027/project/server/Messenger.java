@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-import cis5027.project.csvreader.SensorData;
-
 /**
  * @author miahatton
  * Each instance of the Messenger class connects to a client, sends readings to the client and waits for a response.

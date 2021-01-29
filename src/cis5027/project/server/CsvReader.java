@@ -1,11 +1,10 @@
-package cis5027.project.csvreader;
+package cis5027.project.server;
 
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
 import cis5027.project.server.helpers.CsvHeaderException;
 
@@ -58,31 +57,39 @@ public class CsvReader extends AbstractFileReader {
 		int[] lightTempIndices = {-1, -1}; 			// default in case headers not found
 		String[] allHeaders = line.split(split); 	// split first line into array
 		
-		// loop through all headers on first line
-		for (int i = 0; i < allHeaders.length; i++) {
-				
-			// if the header is light level, its index is stored at index 0 of lightTempIndices.
-			if(allHeaders[i].toLowerCase().equals("light level")) {
+		if (allHeaders.length > 1) { // if there actually is a comma in the first line!
+			
+			// loop through all headers on first line
+			for (int i = 0; i < allHeaders.length; i++) {
 					
-				lightTempIndices[0] = i; // index of light level header
-				lightFound = true;
+				// if the header is light level, its index is stored at index 0 of lightTempIndices.
+				if(allHeaders[i].toLowerCase().equals("light level")) {
+						
+					lightTempIndices[0] = i; // index of light level header
+					lightFound = true;
+						
+					// if the header is temperature, its index is stored at index 1 of lightTempIndices.
+				} else if (allHeaders[i].toLowerCase().equals("temperature")) {
+						
+					lightTempIndices[1] = i; // index of temperature header
+					tempFound = true;
+						
+				}
 					
-				// if the header is temperature, its index is stored at index 1 of lightTempIndices.
-			} else if (allHeaders[i].toLowerCase().equals("temperature")) {
-					
-				lightTempIndices[1] = i; // index of temperature header
-				tempFound = true;
-					
-			}
-				
-		}			
-		
-		if(!lightFound) {
-			throw new CsvHeaderException("light");
+			}			
 		}
 		
-		if(!tempFound) {
+		
+		if(!lightFound & !tempFound) {
+			throw new CsvHeaderException("light and temperature");
+		}
+		
+		else if(!tempFound) {
 			throw new CsvHeaderException("temperature");
+		}
+		
+		else if(!lightFound) {
+			throw new CsvHeaderException("light");
 		}
 		
 		return lightTempIndices;
@@ -110,7 +117,7 @@ public class CsvReader extends AbstractFileReader {
 			// only continue if first line is not empty
 			if(headerRow != null) {
 				
-				if(fetchHeader) { // we can skip this if we already know the index of light and temperature in csv
+				if(fetchHeader) { // we can skip this if we already know the index of light and temperature in the csv
 					
 					// get indexes of relevant column headers (light level, temperature)
 					int[] lightTempIndices = getColumnHeaders(headerRow, this.split);

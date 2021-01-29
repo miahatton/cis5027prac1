@@ -5,8 +5,8 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import cis5027.project.csvreader.SensorData;
 import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.server.SensorData;
 
 /**
  * @author miahatton
