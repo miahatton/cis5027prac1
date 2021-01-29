@@ -11,7 +11,7 @@ import cis5027.project.helpers.PortFormatException;
 import cis5027.project.server.helpers.AbstractServer;
 
 /**
- * @author miach
+ * @author miahatton
  * The Server Class makes connections to clients and initialised the MEssenger Class that sends messages to the clients.
  */
 public class Server extends AbstractServer {

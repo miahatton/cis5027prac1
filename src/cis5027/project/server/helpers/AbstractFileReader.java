@@ -8,21 +8,30 @@ import javax.swing.JFrame;
 import cis5027.project.csvreader.SensorData;
 import cis5027.project.helpers.ScrollingTextBox;
 
+/**
+ * @author miahatton
+ * Abstract file reader class extended by CSV reader class.
+ * Includes generic method draw() for generating UI feed, and getters and setters.
+ */
 abstract public class AbstractFileReader implements Runnable {
 
 	protected 	File 			file;
+	protected 	String 			fileLocation;
+	
 	protected 	int 			delay; 
 	protected 	BufferedReader 	br;
-	protected 	final String 			fileExtension;
-	protected 	String 			fileLocation;
-	protected 	String 			split;
-	protected 	String 			fileType;
 	public 		SensorData 		data;
 	protected	boolean 		fileLoaded;
 	
 	/*
-	 * Instance variables for the UI feed where readings can be viewed.
+	 * These instance variables are final because they relate to the type of 
+	 * file reader and shouldn't be changed once file reader is initialised.
 	 */
+	protected 	final String 	fileExtension;
+	protected 	final String 	split;
+	protected 	final String 	fileType;
+	
+	// Instance variables for the UI feed where readings can be viewed.
 	protected JFrame 				displayFrame;
 	protected ScrollingTextBox 		displayBox;
 	protected boolean 				feedVisible;
@@ -37,10 +46,10 @@ abstract public class AbstractFileReader implements Runnable {
 	abstract public void run();
 	
 	/*
-	 * Constructor with default delay of 1000 ms
+	 * Constructor with default delay of 1000 ms.
 	 */
 	public AbstractFileReader(String fileLocation, String fileExtension, String fileType, String split)  {
-		this(fileLocation, fileExtension, fileType, split, 1000);
+		this(fileLocation, fileExtension, fileType, split, 1000); 
 	}
 	
 	/*

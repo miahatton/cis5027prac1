@@ -1,16 +1,21 @@
 package cis5027.project.csvreader;
 
 
-import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import javax.swing.JFrame;
 
-import cis5027.project.helpers.ScrollingTextBox;
 import cis5027.project.server.ServerApp;
 import cis5027.project.server.helpers.AbstractFileReader;
 import cis5027.project.server.helpers.CsvHeaderException;
+
+/**
+ * @author miahatton
+ * The CSV reader class handles the input file. 
+ * It loads the given CSV file and reads it line by line with the given delay
+ * After each line is read the temperature and light values are stored in a SensorData object.
+ * The CSV reader runs in a separate thread to free up the buttons on the Server App.
+ */
 
 public class CsvReader extends AbstractFileReader {
 	

@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import cis5027.project.server.ServerApp;
 
 /**
- * @author miach
+ * @author miahatton
  * Abstract server class. Server class extends this class.
  */
 

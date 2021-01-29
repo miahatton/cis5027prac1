@@ -16,7 +16,7 @@ import cis5027.project.helpers.ScrollingTextBox;
 import cis5027.project.server.helpers.DelayFormatException;
 
 /**
- * @author miach
+ * @author miahatton
  * This class launches the GUI for the server, from which the CSV reader and server itself are launched.
  */
 
