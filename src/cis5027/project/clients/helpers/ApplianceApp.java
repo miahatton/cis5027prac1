@@ -3,6 +3,7 @@ package cis5027.project.clients.helpers;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import cis5027.project.clients.ClientConnectPanel;
 
@@ -30,6 +31,15 @@ public abstract class ApplianceApp extends JFrame {
 	
 	public void displayMessage(String msg) {
 		cPanel.displayMessage(msg);
+	}
+	
+	/*
+	 * Display message dialog when error is caused by user input, to alert the user.
+	 * @param errorType
+	 * @param errorMessage
+	 */
+	public void showUserErrorDialog(String errorType, String errorMessage) {
+		JOptionPane.showMessageDialog(this, errorMessage, errorType, JOptionPane.ERROR_MESSAGE);
 	}
 	
 }

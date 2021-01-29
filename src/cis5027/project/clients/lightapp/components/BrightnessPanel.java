@@ -99,15 +99,16 @@ public class BrightnessPanel extends ValueButtonPanel {
 	
 	public void convertReading(int lumens) {
 		
-		// map the full range of possible readings (from around 20 to around 70) to a value between 0 and 100
+		// map the full range of possible readings (from around 10 to around 1000) to a value between 0 and 100
+		int newBrightness;
 		
 		try {
 		
-		int newBrightness = (Integer) Math.round(100 - (lumens/10)); // map range 0->1000 to range 100->0
+			newBrightness = (Integer) Math.round(100 - (lumens/10)); // map range 0->1000 to range 100->0
 		
-		if(newBrightness != Integer.parseInt(textField.getText())) {
+			if(newBrightness != Integer.parseInt(textField.getText())) {
 				setBrightnessAndInputField(newBrightness);
-		}
+			}
 		
 		} catch (NumberFormatException e1) {
 			app.displayMessage("Bad reading received! Cannot convert " + lumens + ":  " + e1.toString());

@@ -40,7 +40,7 @@ public class FanClient extends AbstractClient {
 						// set new temperature value
 						this.speedPanelInstance.convertReading(newTemperature);
 					} catch (NumberFormatException e) {
-						displayMessage("Unusual reading received ("+ msg+"), cannot be converted to double: " + e.toString());
+						displayMessage("Unusual reading received (" + msg + "), cannot be converted to double: " + e.toString());
 					}
 
 				} // close while
