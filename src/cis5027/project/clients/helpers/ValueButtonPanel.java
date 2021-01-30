@@ -35,6 +35,9 @@ abstract public class ValueButtonPanel extends JPanel implements ActionListener 
 		this.add(button);
 	}
 	
+	/**
+	 * Adds action listeners to buttons
+	 */
 	abstract protected void setButtonActions();
 	
 }

@@ -6,32 +6,27 @@ import java.awt.event.ActionListener;
 import cis5027.project.clients.fanapp.frames.apps.FanApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 
-public class SpeedPanel extends ValueButtonPanel implements ActionListener {
+/**
+ * @author thanu
+ * @author miahatton
+ * The SpeedPanel class updates the delay of the Fan instance either based on user input or input from the server.
+ * Adapted from SpeedPanel class provided by Thanuja Mallikarachchi (Cardiff Metropolitan University)
+ */
+public class SpeedPanel extends ValueButtonPanel {
 	
 	private Fan			fanInstance;
 	private FanApp		app;
 	private int			lastValidValue;
-			
+	
+	
 	public SpeedPanel(Fan fanObj, String labelText, String defaultVal, String btnText) {
 		super(labelText, defaultVal, btnText);
 		setButtonActions();
 		this.fanInstance = fanObj;
 		lastValidValue = Integer.parseInt(textField.getText());
 	}
-
-	public void setFanAppInstance(FanApp fanAppInstance) {
-		this.app = fanAppInstance;
-	}
-
-	public void setFanInstance(Fan fanInstance) {
-		this.fanInstance = fanInstance;
-	}
 	
-	
-	public String getFanSpeedValue() {
-		return textField.getText();
-	}
-	
+	@Override
 	protected void setButtonActions() {
 		
 		button.addActionListener(this);
@@ -43,11 +38,13 @@ public class SpeedPanel extends ValueButtonPanel implements ActionListener {
 		
 		try {
 			int timervalue = Integer.parseInt(textField.getText());
+			if(timervalue < 0) {
+				throw new DelayInputException();
+			}
 			fanInstance.setFanSpeed(timervalue);
 			lastValidValue = timervalue;
 		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			app.displayMessage("Please enter an integer value for delay.");
+			app.showUserErrorDialog("Input error", "Please enter an integer value for delay.");
 			textField.setText(Integer.toString(lastValidValue));
 		}
 		
@@ -68,4 +65,19 @@ public class SpeedPanel extends ValueButtonPanel implements ActionListener {
 		textField.setText(String.valueOf(newSpeed));
 		fanInstance.setFanSpeed(newSpeed);
 	}
+
+	public void setFanAppInstance(FanApp fanAppInstance) {
+		this.app = fanAppInstance;
+	}
+
+	public void setFanInstance(Fan fanInstance) {
+		this.fanInstance = fanInstance;
+	}
+	
+	
+	public String getFanSpeedValue() {
+		return textField.getText();
+	}
+
+	
 }

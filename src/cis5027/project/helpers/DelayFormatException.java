@@ -1,4 +1,4 @@
-package cis5027.project.server.helpers;
+package cis5027.project.helpers;
 
 /**
  * @author miahatton
@@ -6,21 +6,20 @@ package cis5027.project.server.helpers;
  * "Delay" must be an integer greater than 0.
  */
 
-public class DelayFormatException extends Exception {
+public class DelayFormatException extends UserInputException {
 
-	String inputDelay;
-	
 	/*
 	 * Constructor
 	 * @param delayText - the value in the text box on the server app that caused the error.
 	 */
 	public DelayFormatException(String delayText) {
-		this.inputDelay = delayText;
+		super(delayText);
+		this.inputType = "delay";
+		
+		// The rule to be displayed to the user - this must be a positive integer.
+		this.rule = "a positive integer";
+		
 	}
 
-	@Override
-	public String toString() {
-		return "Invalid input for delay: " + inputDelay + "s. Must be a positive integer.";
-	}
 	
 }

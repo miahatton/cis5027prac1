@@ -10,9 +10,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cis5027.project.helpers.DelayFormatException;
 import cis5027.project.helpers.PortFormatException;
 import cis5027.project.helpers.ScrollingTextBox;
-import cis5027.project.server.helpers.DelayFormatException;
 
 /**
  * @author miahatton
