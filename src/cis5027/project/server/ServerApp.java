@@ -239,6 +239,11 @@ public class ServerApp implements ActionListener {
 				Thread serverThread = new Thread(server);
 				serverThread.start();
 				
+				displayMessage("Server running.");
+				startButton.setEnabled(false);
+				stopButton.setEnabled(true);
+				
+				
 			} else if (server != null) {
 				displayMessage("Server already running!");
 			}
@@ -290,7 +295,7 @@ public class ServerApp implements ActionListener {
 	}
 	
 	/*
-	 * Class that implements action listener for "show CSV feed" button
+	 * Class that implements action listener for "show CSV feed" button. Used for testing and debugging.
 	 */
 	public class csvListener implements ActionListener {
 
@@ -300,7 +305,6 @@ public class ServerApp implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			
 			csvReader.draw();
-			displayMessage("Load CSV file to continue.");
 		}
 	}
 	

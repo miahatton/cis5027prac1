@@ -73,8 +73,8 @@ abstract public class AbstractFileReader implements Runnable {
 	 */
 	public void draw() {
 		
-		displayFrame = new JFrame(fileType + "Reader Feed");
-		displayBox = new ScrollingTextBox(20,20);
+		displayFrame = new JFrame(fileType + " Reader Feed");
+		displayBox = new ScrollingTextBox(1,1);
 		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
 		// stop the fileReader from updating the feed if it is closed.
@@ -85,7 +85,7 @@ abstract public class AbstractFileReader implements Runnable {
         });
 		
 		this.feedVisible = true;
-		displayFrame.setSize(20,20);
+		displayFrame.setSize(200,200);
 		displayFrame.setVisible(true);
 	}
 	
