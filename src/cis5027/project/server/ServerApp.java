@@ -143,7 +143,7 @@ public class ServerApp implements ActionListener {
 		fileBox.setText(DEFAULT_FILE_LOCATION);
 		fileBox.setCaretPosition(fileBox.getText().length());
 		
-		delayInput.setText(String.valueOf(DEFAULT_DELAY));
+		delayInput.setText(String.valueOf(DEFAULT_DELAY/1000));
 		delayInput.setCaretPosition(delayInput.getText().length());
 		
 		portInput.setText(String.valueOf(DEFAULT_PORT));
@@ -251,7 +251,7 @@ public class ServerApp implements ActionListener {
 	}
 	
 	/*
-	 * Class that implements action listener for button that sets CSV reader delay in ms
+	 * Class that implements action listener for button that sets CSV reader delay in s
 	 */
 	public class DelayButtonListener implements ActionListener {
 		
@@ -266,7 +266,7 @@ public class ServerApp implements ActionListener {
 				
 				try {
 					// check that the number is entered in correct format
-					newDelay = Integer.parseInt(delayString);
+					newDelay = Integer.parseInt(delayString) * 1000;  // convert to ms
 					
 				} catch (NumberFormatException ex1) {
 					
@@ -276,8 +276,8 @@ public class ServerApp implements ActionListener {
 
 				if (newDelay >= 0) { // check that delay is a positive number
 					delay = newDelay;
-					if(csvReader != null) csvReader.setDelay(newDelay*1000); // convert to ms
-					displayMessage("Delay set to " + newDelay + " seconds.");
+					if(csvReader != null) csvReader.setDelay(delay);
+					displayMessage("Delay set to " + newDelay/1000 + " seconds.");
 				} else {
 					throw new DelayFormatException(delayString);
 				}
