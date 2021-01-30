@@ -4,15 +4,26 @@ import java.awt.event.ActionEvent;
 
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.clients.lightapp.frames.apps.LightApp;
+import cis5027.project.helpers.BrightnessFormatException;
 
+/**
+ * @author miahatton
+ * The Brightness Panel updates the brightness of the Light instance based on user input or input from the server.
+ */
 public class BrightnessPanel extends ValueButtonPanel {
 
 	// label, text input, and button
 	private 	Light		lightInstance;
-	private 	String 		inputBoxLastValidText; 		// used to hold valid value in case of error
+	private 	String 		lastValidInput; 		// used to hold valid value in case of error
 	private		LightApp	app;	
 	
-	// constructor
+	/**
+	 * Constructor
+	 * @param light			instance of Light class
+	 * @param labelText		text displayed next to input field
+	 * @param defaultVal	default text value in input field
+	 * @param btnText		button text
+	 */
 	public BrightnessPanel(Light light, String labelText, String defaultVal, String btnText) {
 	
 		// call super constructor
@@ -23,20 +34,19 @@ public class BrightnessPanel extends ValueButtonPanel {
 		this.lightInstance = light;
 
 		// store valid text value
-		inputBoxLastValidText = textField.getText();
+		lastValidInput = defaultVal;
 
 	}
 	
+	/**
+	 * Given the new value of Brightness, update the light brightness and the text field
+	 * @param newVal
+	 */
 	public void setBrightnessAndInputField(int newVal) {
 		
-		// TODO make this a superclass method that can also be applied to fan - I think it will be useful for final proj.
 		textField.setText(Integer.toString(newVal));
 		setBrightness(newVal);
 		
-	}
-
-	public int getBrightnessInputText() {
-		return Integer.parseInt(textField.getText());
 	}
 	
 	@Override
@@ -49,21 +59,39 @@ public class BrightnessPanel extends ValueButtonPanel {
 
 
 	@Override
+	/**
+	 * When button is clicked (or user hits return in input field):
+	 * 		* attempt to convert input brightness to integer
+	 * 		* validate input
+	 * 		* if successful, update the brightness of the light
+	 * 		* else display a user error message and update lastValidInput value
+	 */
 	public void actionPerformed(ActionEvent arg0) {
+		
+		String inputText = textField.getText();
+		
 		try {
-			
-			// convert text to integer
-			int newBrightness = Integer.parseInt(textField.getText());
-			
-			setBrightness(newBrightness);
-			
-		} catch (NumberFormatException e) {
-			
-			app.displayMessage("Not a number! Please enter a number between 0 and 100.");
+			try {
+				
+				// convert text to integer
+				int newBrightness = Integer.parseInt(inputText);
+				
+				// validate value
+				if (newBrightness >=0 & newBrightness <= 100) {
+					setBrightness(newBrightness);
+				}
+				else throw new BrightnessFormatException(inputText);
+				
+			} catch (NumberFormatException e) {
+				
+				throw new BrightnessFormatException(inputText);
+				
+			} 
+		} catch (BrightnessFormatException e2) {
+			app.showUserErrorDialog("Input error", "Not a number! Please enter a number between 0 and 100.");
 			// replace text with last valid value used.
-			textField.setText(inputBoxLastValidText);
-			
-		} 
+			textField.setText(lastValidInput);
+		}
 		
 	}
 	
@@ -84,18 +112,16 @@ public class BrightnessPanel extends ValueButtonPanel {
 			lightInstance.setLightColor(newBrightness);
 			
 			// note that this value was successful
-			inputBoxLastValidText = textField.getText();
+			lastValidInput = textField.getText();
 			
 		} catch (IllegalArgumentException e) {
 			
 			// replace text with last valid value used.
-			textField.setText(inputBoxLastValidText);
+			textField.setText(lastValidInput);
 			
 		} 
 		
 	} 
-
-
 	
 	public void convertReading(int lumens) {
 		
@@ -115,6 +141,12 @@ public class BrightnessPanel extends ValueButtonPanel {
 		} 
 		
 	}
+	
+
+	public int getBrightnessInputText() {
+		return Integer.parseInt(textField.getText());
+	}
+
 	
 	public void setLightApp(LightApp app) {
 		this.app = app;

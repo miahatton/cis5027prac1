@@ -7,7 +7,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import cis5027.project.clients.helpers.ApplianceApp;
-import cis5027.project.clients.lightapp.components.BrightnessAdjustPanel;
 import cis5027.project.clients.lightapp.components.BrightnessPanel;
 import cis5027.project.clients.lightapp.components.Light;
 import cis5027.project.clients.lightapp.components.LightPanel;
@@ -29,7 +28,6 @@ public class LightApp extends ApplianceApp {
 	
 	private	LightPanel 				lPanel;
 	private	BrightnessPanel 		bPanel;
-	private	BrightnessAdjustPanel 	aPanel;
 	private	Light 					lightInstance;
 	
 	/*
@@ -47,9 +45,6 @@ public class LightApp extends ApplianceApp {
 		
 		setSize(400,500);
 		
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-		
 		// initialise light panel
 		lPanel = new LightPanel(400, 380);
 		getContentPane().add(BorderLayout.CENTER, lPanel);
@@ -59,15 +54,9 @@ public class LightApp extends ApplianceApp {
 		// initialise brightness panel
 		bPanel = new BrightnessPanel(lightInstance, "Set brightness %", "100", "Set Brightness");
 		bPanel.setLightApp(this);
-		
-		// initialise brightness adjustment panel
-		aPanel = new BrightnessAdjustPanel(lightInstance, bPanel);
-		
-		// add brightness panels to top panel
-		topPanel.add(bPanel);
-		topPanel.add(aPanel);
-		// add top panel to JFrame content pane
-		getContentPane().add(BorderLayout.NORTH, topPanel);
+
+		// add light panel to top of JFrame content pane
+		getContentPane().add(BorderLayout.NORTH, bPanel);
 	}
 		
 	/*
