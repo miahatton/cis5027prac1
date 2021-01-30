@@ -6,11 +6,22 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+/**
+ * @author miahatton
+ * Abstract class extended by FanPanel and LightPanel class.
+ * It's a JPanel that displays an instance of an Appliance subclass.
+ */
 public class AppliancePanel extends JPanel {
 
 	protected Appliance applianceInstance;
 	protected Color backgroundColor;
 	
+	/**
+	 * Constructor
+	 * @param width
+	 * @param height
+	 * @param bgColor		[background colour]
+	 */
 	public AppliancePanel(int width, int height, Color bgColor) {
 		
 		setPreferredSize(new Dimension(width, height));
@@ -18,6 +29,10 @@ public class AppliancePanel extends JPanel {
 
 	}
 	
+	/**
+	 * Getter for appliance instance
+	 * @return Appliance instance
+	 */
 	public Appliance getApplianceInstance() {
 		
 		return this.applianceInstance;

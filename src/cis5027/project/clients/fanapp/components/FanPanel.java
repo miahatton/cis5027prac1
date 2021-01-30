@@ -9,12 +9,22 @@ import javax.swing.Timer;
 import cis5027.project.clients.helpers.AppliancePanel;
 
 
+/**
+ * @author thanu
+ * The FanPanel has a timer that periodically updates the angle of the fan blades, i.e. animating the fan.
+ * Created by Thanuja Mallikarachchi (Cardiff Metropolitan University)
+ */
 public class FanPanel extends AppliancePanel implements ActionListener {
 	
 	Timer timer;
 	
 	private final static int DEFAULT_DELAY_TIME = 10;
 
+	/**
+	 * Constructor
+	 * @param width
+	 * @param height
+	 */
 	public FanPanel(int width, int height) {
 
 		super(width, height, Color.white);
@@ -27,7 +37,10 @@ public class FanPanel extends AppliancePanel implements ActionListener {
 		timer.start();
 	}
 	
-	
+	/**
+	 * Sets the delay of the timer and restarts it
+	 * @param delay
+	 */
 	public void setTimer(int delay) {		
 		timer.setDelay(delay);
         timer.setInitialDelay(delay * 10);

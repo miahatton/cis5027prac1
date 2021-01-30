@@ -11,6 +11,7 @@ import cis5027.project.clients.helpers.Appliance;
 /**
  * @author thanu
  * The Fan class draws the fan that is animated by the FanPanel class.
+ * Created by Thanuja Mallikarachchi (Cardiff Metropolitan University)
  */
 
 public class Fan extends Appliance {
