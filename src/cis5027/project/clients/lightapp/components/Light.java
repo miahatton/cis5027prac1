@@ -8,7 +8,6 @@ import java.awt.geom.Point2D;
 
 import cis5027.project.clients.helpers.Appliance;
 
-//import cis5027.project.lightapp.components.LightPanel;
 
 public class Light extends Appliance {
 	
@@ -47,8 +46,6 @@ public class Light extends Appliance {
 	
 	// constructor
 	public Light(int width, int height, int num) {
-		
-		// TODO add error handling to this - at what point will circle size be < 1 px?
 
 		if(num > 0) {
 			

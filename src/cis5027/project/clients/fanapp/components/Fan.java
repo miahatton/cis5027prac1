@@ -8,6 +8,11 @@ import java.awt.RenderingHints;
 
 import cis5027.project.clients.helpers.Appliance;
 
+/**
+ * @author thanu
+ * The Fan class draws the fan that is animated by the FanPanel class.
+ */
+
 public class Fan extends Appliance {
 	
 	private final int triWidth = 20, triHeight = 40; //Wing triangle variables
@@ -18,14 +23,10 @@ public class Fan extends Appliance {
 		
 	private	int fanSpeed;
 	
-	public int getFanSpeed() {
-		return fanSpeed;
-	}
-
-	public void setFanSpeed(int speed) {
-		this.fanSpeed = speed;
-	}
 	
+	/*
+	 * Constructor
+	 */
 	public Fan(int centerX, int centerY) {
 
 		this.centerX = centerX;
@@ -33,10 +34,19 @@ public class Fan extends Appliance {
 		
 	}
 	
+	/*
+	 * Update the angle of the fan blades
+	 */
 	public void update() {
 		angle = addRad(angle, 0.1);
 	}
 	
+	/*
+	 * Increase the angle
+	 * @param current
+	 * @param addition
+	 * @returns new value of angle
+	 */
 	private double addRad(double current, double addition) {
 		double value = current + addition;
 		
@@ -45,8 +55,9 @@ public class Fan extends Appliance {
 		return value;
 	}
 	
-	
-
+	/*
+	 * Draw the fan
+	 */
 	public void draw(Graphics g) {
 		
 		g.setColor(new Color(0, 0, 0));
@@ -75,5 +86,17 @@ public class Fan extends Appliance {
 			//Rotate on top of the existing rotation. Rotate 45 degrees
 			gx.rotate(Math.PI / 2, centerX, centerY);
 		}
+	}
+	
+	/*
+	 * Getters and setters
+	 */
+	
+	public int getFanSpeed() {
+		return fanSpeed;
+	}
+
+	public void setFanSpeed(int speed) {
+		this.fanSpeed = speed;
 	}
 }
