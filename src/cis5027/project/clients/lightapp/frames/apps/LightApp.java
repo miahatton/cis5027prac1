@@ -4,7 +4,6 @@ package cis5027.project.clients.lightapp.frames.apps;
 import java.awt.BorderLayout;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import cis5027.project.clients.helpers.ApplianceApp;
@@ -14,24 +13,39 @@ import cis5027.project.clients.lightapp.components.Light;
 import cis5027.project.clients.lightapp.components.LightPanel;
 
 
+/**
+ * @author miahatton
+ * The LightApp is the frame that holds the light components:
+ * 		* Brightness Panel
+ * 		* Brightness Adjust Panel
+ * 		* Light
+ * 		* ClientConnectPanel (added by the abstract superclass)
+ * Main method initialises the frame and draws the components.
+ */
+
 public class LightApp extends ApplianceApp {
 	
 	private static LightApp		lightUiInstance;
 	
-	LightPanel lPanel;
-	BrightnessPanel bPanel;
-	BrightnessAdjustPanel aPanel;
-	Light lightInstance;
+	private	LightPanel 				lPanel;
+	private	BrightnessPanel 		bPanel;
+	private	BrightnessAdjustPanel 	aPanel;
+	private	Light 					lightInstance;
 	
+	/*
+	 * Constructor
+	 */
 	public LightApp() {
 
 		this.clientType = "light";
 	}
 	
+	/*
+	 * Adds the components to the frame
+	 */
 	protected void draw() {
 		
 		setSize(400,500);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -56,7 +70,9 @@ public class LightApp extends ApplianceApp {
 		getContentPane().add(BorderLayout.NORTH, topPanel);
 	}
 		
-	// main
+	/*
+	 * Main method initialises LightApp and calls the superclass go() method (which calls the draw() method)
+	 */
 	public static void main(String[] args) {
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -69,6 +85,9 @@ public class LightApp extends ApplianceApp {
 
 	}
 
+	/*
+	 * Get the current LightApp instance
+	 */
 	public static LightApp getUiInstance() {
 
 
@@ -80,6 +99,9 @@ public class LightApp extends ApplianceApp {
 		
 	}
 	
+	/*
+	 * Getter for BrightnessPanel
+	 */
 	public BrightnessPanel getBrightnessPanelInstance() {
 		return this.bPanel;
 	}
