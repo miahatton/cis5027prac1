@@ -7,6 +7,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 
 import cis5027.project.clients.ClientConnectPanel;
+import cis5027.project.helpers.PortFormatException;
 
 /**
  * @author miahatton
@@ -51,20 +52,21 @@ public abstract class AbstractClient implements Runnable {
 			this.stopClient = false;
 			
 			port = cPanel.getPortNumber();
+			
 			// TODO better validation
-			if (port > 0) {
+			this.socket = new Socket(IP, port);
+			displayMessage("Created socket");
 					
-				this.socket = new Socket(IP, port);
-				displayMessage("Created socket");
+			this.writer = new ObjectOutputStream(this.socket.getOutputStream());
+			this.reader = new ObjectInputStream(this.socket.getInputStream());
+			displayMessage("Set up IO streams");
 					
-				this.writer = new ObjectOutputStream(this.socket.getOutputStream());
-				this.reader = new ObjectInputStream(this.socket.getInputStream());
-				displayMessage("Set up IO streams");
-					
-				// Send client type to server
-				sendMessageToServer(clientType);
-
-			}
+			// Send client type to server
+			sendMessageToServer(clientType);
+			
+		} catch (PortFormatException ex) {
+			
+			cPanel.showUserErrorDialog("Input error", ex.toString());
 			
 		} catch (ConnectException e1) {
 			
