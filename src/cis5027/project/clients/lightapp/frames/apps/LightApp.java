@@ -18,7 +18,7 @@ import cis5027.project.clients.lightapp.components.LightPanel;
  * The LightApp is the frame that holds the light components:
  * 		* Brightness Panel
  * 		* Brightness Adjust Panel
- * 		* Light
+ * 		* Light Panel
  * 		* ClientConnectPanel (added by the abstract superclass)
  * Main method initialises the frame and draws the components.
  */

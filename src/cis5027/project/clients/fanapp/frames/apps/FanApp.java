@@ -10,15 +10,27 @@ import cis5027.project.clients.fanapp.components.SpeedPanel;
 import cis5027.project.clients.helpers.ApplianceApp;
 
 
+/**
+ * @author thanu
+ * @author miahatton
+ * Adapted from FanApp class provided by Thanuja Mallikarachchi (Cardiff Metropolitan University)
+ * The FanApp is the frame that holds the light components:
+ * 		* Speed Panel
+ * 		* Fan Panel
+ * 		* ClientConnectPanel (added by the abstract superclass)
+ */
 public class FanApp extends ApplianceApp {
 	
 	// static instance to support singleton
-	private static FanApp	fanui_instance;
+	private static FanApp	fanUiInstance;
 	
-	private FanPanel 		fan_panel;
-	private SpeedPanel		speed_panel;
-	private Fan				fan_instance;
+	private FanPanel 		fanPanel;
+	private SpeedPanel		speedPanel;
+	private Fan				fanInstance;
 	
+	/*
+	 * Main method initialises FanApp and calls superclass go() method
+	 */
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
@@ -35,11 +47,11 @@ public class FanApp extends ApplianceApp {
 	 * @return an instance of AppFrame class. 
 	 */
 	public static FanApp getUiInstance() {
-		if(fanui_instance == null) {
-			fanui_instance = new FanApp();
+		if(fanUiInstance == null) {
+			fanUiInstance = new FanApp();
 		}
 		
-		return fanui_instance;
+		return fanUiInstance;
 	}
 	
 	/**
@@ -50,23 +62,26 @@ public class FanApp extends ApplianceApp {
 		this.clientType = "fan";
 	}
 	
+	
+	/*
+	 * Adds components to the frame
+	 */
 	protected void draw() {
 		
-		fan_panel = new FanPanel(300, 300); // size of panel
-		fan_instance = (Fan) fan_panel.getApplianceInstance();
-		speed_panel = new SpeedPanel(fan_instance, "Fan speed (delay in ms): ", "10", "Set speed");
-		speed_panel.setFanAppInstance(this);		
+		fanPanel = new FanPanel(300, 300); // size of panel
+		fanInstance = (Fan) fanPanel.getApplianceInstance();
+		speedPanel = new SpeedPanel(fanInstance, "Fan speed (delay in ms): ", "10", "Set speed");
+		speedPanel.setFanAppInstance(this);		
 		
-		add(speed_panel, BorderLayout.NORTH);
-		add(fan_panel, BorderLayout.CENTER);
-		
-		setVisible(true);
-		pack();
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+		add(speedPanel, BorderLayout.NORTH);
+		add(fanPanel, BorderLayout.CENTER);
 	}
 
+	
+	/*
+	 * Getter for speed_panel
+	 */
 	public SpeedPanel getSpeedPanelInstance() {
-		return this.speed_panel;
+		return this.speedPanel;
 	}
 }
