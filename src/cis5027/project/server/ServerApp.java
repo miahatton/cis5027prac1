@@ -310,6 +310,8 @@ public class ServerApp implements ActionListener {
 	public void actionPerformed (ActionEvent e) {
 			
 			server.closeAll();
+			startButton.setEnabled(true);
+			stopButton.setEnabled(false);
 			
 			// reset server reference
 			server = null;
