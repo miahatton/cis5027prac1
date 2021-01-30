@@ -1,5 +1,6 @@
 package cis5027.project.clients;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketException;
 
@@ -47,7 +48,7 @@ public class FanClient extends AbstractClient {
 				
 			} // close while
 				
-		} catch(SocketException e1) {
+		} catch(SocketException | EOFException e1) {
 			displayMessage("Server connection closed.");
 			closeAll();
 			

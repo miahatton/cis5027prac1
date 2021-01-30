@@ -1,5 +1,6 @@
 package cis5027.project.clients;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketException;
 
@@ -62,7 +63,7 @@ public class LightClient extends AbstractClient {
 				
 			}
 			
-		} catch(SocketException e) {
+		} catch(SocketException | EOFException e) {
 			
 			displayMessage("Server connection closed.");
 			closeAll();

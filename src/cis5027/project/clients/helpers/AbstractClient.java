@@ -113,6 +113,8 @@ public abstract class AbstractClient implements Runnable {
 			
 			// close the output stream
 			if(this.writer != null) this.writer.close();
+			
+			displayMessage("All connections closed.");
 		
 		} catch (IOException e) {
 			
