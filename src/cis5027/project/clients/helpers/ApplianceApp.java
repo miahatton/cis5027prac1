@@ -32,6 +32,17 @@ public abstract class ApplianceApp extends JFrame {
 		
 		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 		pack();
+		
+		// When the window is closed, stop the client.
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if(client != null) {
+                	client.closeAll();
+                }
+            	System.exit(0);
+            }
+        });
+		
 		setVisible(true);
 	}
 	
