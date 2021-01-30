@@ -40,7 +40,7 @@ public class ScrollingTextBox {
 		return this.scrollPane;
 	}
 	
-	/*
+	/**
 	 * Adds given message to the text box
 	 * @param msg
 	 */

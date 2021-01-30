@@ -14,7 +14,7 @@ abstract public class UserInputException extends Exception {
 	protected String inputType;
 	protected String rule;
 	
-	/*
+	/**
 	 * Constructor
 	 * @param inputText - the value in the text box that caused the error.
 	 */

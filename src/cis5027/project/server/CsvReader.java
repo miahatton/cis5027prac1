@@ -25,16 +25,21 @@ public class CsvReader extends AbstractFileReader {
 	public			ServerApp 		app;
 
 	
-	/*
+	/**
 	 * Constructor
+	 * @param app
+	 * @param fileLocation
 	 */
 	public CsvReader(ServerApp app, String fileLocation) {
 		super(fileLocation, ".csv", "CSV", ",");
 		this.app = app;
 	}
 	
-	/*
+	/**
 	 * Overload constructor with ability to choose delay time
+	 * @param app
+	 * @param fileLocation
+	 * @param delay
 	 */
 	public CsvReader(ServerApp app, String fileLocation, int delay) {
 		super(fileLocation, ".csv", "CSV", ",", delay);
@@ -42,7 +47,7 @@ public class CsvReader extends AbstractFileReader {
 	}
 
 
-	/*
+	/**
 	 * Find the column number where the light and temperature data is stored (in case a different csv is passed or the csv is modified)
 	 * @param line - a line of the csv
 	 * @param split - the delimiter
@@ -97,7 +102,7 @@ public class CsvReader extends AbstractFileReader {
 	}
 	
 	
-	/*
+	/**
 	 * Prepares to read CSV file line by line.
 	 * @param fetchHeader - boolean value, true if we need to get the indices of the light and temperature columns
 	 */
@@ -193,7 +198,7 @@ public class CsvReader extends AbstractFileReader {
 		
 	}
 	
-	/*
+	/**
 	 * Displays values read and errors thrown by the CSV reader if the feed is visible.
 	 * If the feed is not visible and the message is an error, display the error in the server app instead.
 	 * @param msg - message to display

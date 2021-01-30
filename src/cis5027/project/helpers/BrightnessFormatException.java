@@ -11,6 +11,10 @@ package cis5027.project.helpers;
  */
 public class BrightnessFormatException extends UserInputException {
 
+	/**
+	 * Constructor
+	 * @param inputText		The invalid text that caused the error
+	 */
 	public BrightnessFormatException(String inputText) {
 		super(inputText);
 		this.inputType = "brightness";
