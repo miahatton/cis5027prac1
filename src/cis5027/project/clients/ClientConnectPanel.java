@@ -2,6 +2,7 @@ package cis5027.project.clients;
 
 
 import java.awt.event.ActionEvent;
+import java.net.ConnectException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

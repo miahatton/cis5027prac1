@@ -48,18 +48,17 @@ public abstract class AbstractClient implements Runnable {
 	 */
 	public void initialiseClient() {
 		try {
-			
-			this.stopClient = false;
-			
+	
 			port = cPanel.getPortNumber();
 			
-			// TODO better validation
 			this.socket = new Socket(IP, port);
 			displayMessage("Created socket");
 					
 			this.writer = new ObjectOutputStream(this.socket.getOutputStream());
 			this.reader = new ObjectInputStream(this.socket.getInputStream());
 			displayMessage("Set up IO streams");
+			
+			this.stopClient = false;
 					
 			// Send client type to server
 			sendMessageToServer(clientType);

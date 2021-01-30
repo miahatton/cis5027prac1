@@ -22,6 +22,8 @@ abstract public class AbstractFileReader implements Runnable {
 	protected 	BufferedReader 	br;
 	public 		SensorData 		data;
 	protected	boolean 		fileLoaded;
+
+	protected	String 			feedText;
 	
 	/*
 	 * These instance variables are final because they relate to the type of 
@@ -75,6 +77,7 @@ abstract public class AbstractFileReader implements Runnable {
 		
 		displayFrame = new JFrame(fileType + " Reader Feed");
 		displayBox = new ScrollingTextBox(1,1);
+		displayBox.displayMessage(feedText);
 		displayFrame.getContentPane().add(displayBox.getScrollPane());
 		
 		// stop the fileReader from updating the feed if it is closed.
@@ -85,6 +88,7 @@ abstract public class AbstractFileReader implements Runnable {
         });
 		
 		this.feedVisible = true;
+		displayBox.scrollToBottom();
 		displayFrame.setSize(200,200);
 		displayFrame.setVisible(true);
 	}

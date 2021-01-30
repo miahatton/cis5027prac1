@@ -24,7 +24,6 @@ public class CsvReader extends AbstractFileReader {
 	private 		boolean 		stopThread;
 	public			ServerApp 		app;
 
-	
 	/**
 	 * Constructor
 	 * @param app
@@ -33,6 +32,7 @@ public class CsvReader extends AbstractFileReader {
 	public CsvReader(ServerApp app, String fileLocation) {
 		super(fileLocation, ".csv", "CSV", ",");
 		this.app = app;
+		feedText = "";
 	}
 	
 	/**
@@ -211,7 +211,10 @@ public class CsvReader extends AbstractFileReader {
 			displayBox.scrollToBottom();
 		} else if (isError) {
 			app.displayMessage("[csv Reader: ] " + msg);
-		}
+		} 
+		
+		feedText += msg+"\n"; // save the message either way in case the feed is opened later
+		
 	}
 	
 	/*
@@ -219,6 +222,11 @@ public class CsvReader extends AbstractFileReader {
 	 */
 	@Override
 	public void closeBuffer() {
+		
+		// if the feed is open, close it
+		if(feedVisible) {
+			displayFrame.dispose();
+		}
 		
 		try {
 			this.br.close();
