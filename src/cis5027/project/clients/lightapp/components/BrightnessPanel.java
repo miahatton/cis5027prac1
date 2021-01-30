@@ -38,17 +38,6 @@ public class BrightnessPanel extends ValueButtonPanel {
 
 	}
 	
-	/**
-	 * Given the new value of Brightness, update the light brightness and the text field
-	 * @param newVal
-	 */
-	public void setBrightnessAndInputField(int newVal) {
-		
-		textField.setText(Integer.toString(newVal));
-		setBrightness(newVal);
-		
-	}
-	
 	@Override
 	protected void setButtonActions() {
 		// action listener for button
@@ -95,37 +84,37 @@ public class BrightnessPanel extends ValueButtonPanel {
 		
 	}
 	
-	public void setBrightness(int newBrightness) {
+	/**
+	 * Sets the brightness of the light instance and saves the value as the last valid input.
+	 * @param newBrightness
+	 */
+	public void setBrightness(int newBrightness) throws BrightnessFormatException {
 		
 		try {
-			
-			// Don't let brightness go above 100 or below 0	
-			if (newBrightness > 100) {
-				textField.setText("100");
-				newBrightness = 100;
-			} else if (newBrightness < 0) {
-				textField.setText("0");
-				newBrightness = 0;
-			}
 			
 			// set new light colour
 			lightInstance.setLightColor(newBrightness);
 			
 			// note that this value was successful
-			lastValidInput = textField.getText();
+			lastValidInput = Integer.toString(newBrightness);
 			
 		} catch (IllegalArgumentException e) {
 			
-			// replace text with last valid value used.
-			textField.setText(lastValidInput);
+			throw new BrightnessFormatException(Integer.toString(newBrightness));
 			
 		} 
 		
 	} 
 	
+	/**
+	 * Accepts values passed from the server via the LightClient class and adjusts the lighting
+	 * The lights dim and brighten on a continuous scale to maintain brightness.
+	 * The light readings from the server range from 0 to 1000, this range is mapped to the light's possible brightness values
+	 * between 100 and 0.
+	 * @param lumens		reading from server
+	 */
 	public void convertReading(int lumens) {
 		
-		// map the full range of possible readings (from around 10 to around 1000) to a value between 0 and 100
 		int newBrightness;
 		
 		try {
@@ -133,7 +122,13 @@ public class BrightnessPanel extends ValueButtonPanel {
 			newBrightness = (Integer) Math.round(100 - (lumens/10)); // map range 0->1000 to range 100->0
 		
 			if(newBrightness != Integer.parseInt(textField.getText())) {
-				setBrightnessAndInputField(newBrightness);
+				textField.setText(Integer.toString(newBrightness));
+				try {
+
+					setBrightness(newBrightness);
+				} catch (BrightnessFormatException e) {
+					throw new NumberFormatException(); 	// on this occasion it is not actually user input that causes the error
+				}
 			}
 		
 		} catch (NumberFormatException e1) {
@@ -142,12 +137,9 @@ public class BrightnessPanel extends ValueButtonPanel {
 		
 	}
 	
-
-	public int getBrightnessInputText() {
-		return Integer.parseInt(textField.getText());
-	}
-
-	
+	/*
+	 * Sets LightApp instance.
+	 */
 	public void setLightApp(LightApp app) {
 		this.app = app;
 	}
