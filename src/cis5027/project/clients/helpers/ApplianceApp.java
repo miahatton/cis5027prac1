@@ -7,7 +7,8 @@ import javax.swing.JOptionPane;
 
 import cis5027.project.clients.ClientConnectPanel;
 
-/*
+/**
+ * @author miahatton
  * Abstract class extended by the LightApp and FanApp classes
  * The class implements a GUI to control the light and fan clients and display the light/fan objects.
  */

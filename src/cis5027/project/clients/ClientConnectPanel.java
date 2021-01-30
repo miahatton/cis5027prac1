@@ -80,7 +80,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 				try {
 					port = getPortNumber();
 				} catch (PortFormatException ex) {
-					app.showUserErrorDialog("Input error", e.toString());
+					showUserErrorDialog("Input error", e.toString());
 				}
 				
 				switch (clientType) {
@@ -91,7 +91,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 						client = new FanClient(ClientConnectPanel.this, port, app);
 						break;
 					default:
-						app.displayMessage("Client type not recognised.");
+						displayMessage("Client type not recognised.");
 				}
 					
 				client.initialiseClient();
@@ -117,6 +117,16 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	public void displayMessage(String msg) {
 		clientOutput.displayMessage(msg);
 		clientOutput.scrollToBottom();
+	}
+	
+	/*
+	 * Calls the app's showUserErrorDialog method, making it available to the client
+	 * @param errorType
+	 * @param msg
+	 */
+	
+	public void showUserErrorDialog(String errorType, String msg) {
+		app.showUserErrorDialog(errorType, msg);
 	}
 
 	/*
