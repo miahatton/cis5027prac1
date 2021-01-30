@@ -22,6 +22,8 @@ public class Messenger implements Runnable {
 	
 	SensorData data;
 	
+	boolean clientClosedConnection = false; 	// tracks whether or not connection has been closed by client.
+	
 	/**
 	 * Constructor
 	 * @param server
@@ -82,6 +84,7 @@ public class Messenger implements Runnable {
 				
 			} catch (SocketException e1) {
 				app.displayMessage(clientType + "client has closed connection.");
+				clientClosedConnection = true;
 				tryToClose();
 			} catch (IOException e2) {
 				app.displayMessage("Error receiving message from client: " + e2.toString());
@@ -124,12 +127,13 @@ public class Messenger implements Runnable {
 				
 				// close connection if message is "STOP"
 				if (inwardMessage.equals("STOP")) {
-					
+					clientClosedConnection = true;
 					closeAll();
 					
 				} 	
 			} catch (SocketException e2) {
-				app.displayMessage(clientType + "client has closed connection.");
+				app.displayMessage(clientType + " client has closed connection.");
+				clientClosedConnection = true;
 				tryToClose();
 			} catch (IOException e4) {
 				app.displayMessage("Error receiving message from client: " + e4.toString());
@@ -146,7 +150,7 @@ public class Messenger implements Runnable {
 			closeAll();
 		} catch (IOException e) {	
 			
-			if(!e.toString().equals("Socket closed")) {
+			if(!clientClosedConnection) {
 				app.displayMessage("Error closing connections: " + e.toString());
 			}
 		}
@@ -178,7 +182,9 @@ public class Messenger implements Runnable {
 			this.out = null;
 			this.in = null;
 			this.clientConnected = false;
-			
+			// remove self from Server's list of Messengers
+			server.removeMessenger(this);
+			app.displayMessage("Connection to "  + clientType + " client closed.");
 		}
 		
 	}

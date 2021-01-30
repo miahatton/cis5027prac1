@@ -161,5 +161,14 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		} 
 		
 	}
+
+	/**
+	 * Resets the buttons when the client connections have closed.
+	 * Start button should be enabled, stop button disabled.
+	 */
+	public void resetButtons() {
+		stopButton.setEnabled(false);
+		button.setEnabled(true);		
+	}
 	
 }

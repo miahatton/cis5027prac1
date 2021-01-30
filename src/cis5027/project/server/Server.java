@@ -61,7 +61,7 @@ public class Server extends AbstractServer {
 		} catch (PortFormatException e2) {
 			app.showUserErrorDialog("Invalid Input", e2.toString());
 		}
-		
+
 		/*
 		 * Loop until server is stopped.
 		 */
@@ -69,8 +69,8 @@ public class Server extends AbstractServer {
 			
 			try {
 				
-				// TODO there should only be <=2 clients connected.
-				//if (messengerList.size()<2) {
+				// There should only be <=2 clients connected.
+				if (messengerList.size() < 2) {
 					Socket clientSocket = serverSocket.accept();
 					
 					Messenger messenger = new Messenger(this, clientSocket, data, this.app);
@@ -79,11 +79,16 @@ public class Server extends AbstractServer {
 					messengerThread.start();
 					
 					messengerList.add(messenger);
-				//}
+				}
 		
 			} catch (IOException e) {
-				app.displayMessage("Error connecting to client: " + e.toString());
+				if(!stopServer) { // if the server has been stopped then that explains the exception.
+					
+					app.displayMessage("Error connecting to client: " + e.toString());
+					
+				}
 			}
+
 		}
 	}
 	
@@ -124,10 +129,10 @@ public class Server extends AbstractServer {
 			 * Loop through each messenger in the arraylist and close connection to the client
 			 */
 			
-			for (Messenger messenger: messengerList) {
+			while (messengerList.size() > 0) {
 				
 				try {
-					messenger.tryToClose();
+					messengerList.get(0).tryToClose();
 				} catch (Exception e) {	
 				} // Ignore all exceptions when closing clients.
 			}
@@ -138,6 +143,15 @@ public class Server extends AbstractServer {
 			this.csvReader.closeBuffer();
 			app.reset();
 		}
+		
+	}
+
+	/**
+	 * Removes a Messenger from the ArrayList when the connection is closed.
+	 * @param messenger
+	 */
+	public void removeMessenger(Messenger messenger) {
+		this.messengerList.remove(messenger);
 		
 	}
 

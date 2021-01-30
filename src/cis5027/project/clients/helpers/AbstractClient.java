@@ -125,6 +125,7 @@ public abstract class AbstractClient implements Runnable {
 			this.socket = null;
 			this.writer = null;
 			this.reader = null;
+			cPanel.resetButtons();
 		}
 
 	}

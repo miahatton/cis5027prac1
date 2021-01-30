@@ -127,6 +127,9 @@ public class ServerApp implements ActionListener {
 				
 		// disable server start button until csv file is loaded
 		startButton.setEnabled(false);
+		
+		// disable server stop button until server has started
+		stopButton.setEnabled(false);
 				
 		// disable csvReader feed until thread has started
 		csvReaderFeedBtn.setEnabled(false);

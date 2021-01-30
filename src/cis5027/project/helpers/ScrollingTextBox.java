@@ -52,7 +52,6 @@ public class ScrollingTextBox {
 	/*
 	 * Scroll to bottom of text box
 	 */
-	//TODO it's scrolling too early.
 	public void scrollToBottom() {
 		scrollBar = scrollPane.getVerticalScrollBar();
 		scrollBar.setValue(scrollBar.getMaximum());
