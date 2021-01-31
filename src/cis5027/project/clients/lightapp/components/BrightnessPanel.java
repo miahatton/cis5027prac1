@@ -2,9 +2,9 @@ package cis5027.project.clients.lightapp.components;
 
 import java.awt.event.ActionEvent;
 
+import cis5027.project.clients.helpers.BrightnessFormatException;
 import cis5027.project.clients.helpers.ValueButtonPanel;
 import cis5027.project.clients.lightapp.frames.apps.LightApp;
-import cis5027.project.helpers.BrightnessFormatException;
 
 /**
  * @author miahatton

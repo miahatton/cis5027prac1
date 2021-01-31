@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import cis5027.project.clients.fanapp.frames.apps.FanApp;
 import cis5027.project.clients.helpers.ValueButtonPanel;
-import cis5027.project.helpers.DelayFormatException;
+import cis5027.project.clients.helpers.DelayFormatException;
 
 /**
  * @author thanu

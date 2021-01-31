@@ -8,7 +8,7 @@ package cis5027.project.server.helpers;
 
 public class CsvHeaderException extends Exception {
 
-	String headerType;
+	private String headerType;
 	
 	/*
 	 * Constructor

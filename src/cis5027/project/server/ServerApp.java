@@ -10,9 +10,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cis5027.project.helpers.DelayFormatException;
-import cis5027.project.helpers.PortFormatException;
-import cis5027.project.helpers.ScrollingTextBox;
+import cis5027.project.server.helpers.DelayFormatException;
+import cis5027.project.server.helpers.PortFormatException;
+import cis5027.project.server.helpers.ScrollingTextBox;
 
 /**
  * @author miahatton
@@ -161,34 +161,12 @@ public class ServerApp implements ActionListener {
 		loadButton.addActionListener(new LoadButtonListener());
 		startButton.addActionListener(new StartButtonListener());
 		delayButton.addActionListener(new DelayButtonListener());
-		csvReaderFeedBtn.addActionListener(new csvListener());
+		csvReaderFeedBtn.addActionListener(new CsvListener());
 		stopButton.addActionListener(this);
 		
 	}
 	
-	/*
-	 * Inner class with action listener for the load button
-	 */
-	public class LoadButtonListener implements ActionListener {
-
-		/*
-		 * On button click, initialise CSV reader, load file from selected location, and enable server start button.
-		 */
-		public void actionPerformed(ActionEvent e) {
-
-			csvReader = new CsvReader(ServerApp.this, fileBox.getText(), delay);
-
-			//TODO check that file exists.
-			
-			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
-				
-			csvReader.loadFile(true);
-			
-			textBox.displayMessage("Loaded csv.");
-			isFileLoaded = true;
-			startButton.setEnabled(true);
-		}
-	}
+	
 	
 	/*
 	 * Adds message to the scrolling text box to update user
@@ -197,6 +175,83 @@ public class ServerApp implements ActionListener {
 		textBox.displayMessage(message);
 		textBox.scrollToBottom();
 	}
+	
+	
+	
+	/*
+	 * Tell the server to stop using the "Stop server" button
+	 */
+	public void actionPerformed (ActionEvent e) {
+			
+			server.closeAll();
+			startButton.setEnabled(true);
+			stopButton.setEnabled(false);
+			
+			// reset server reference
+			server = null;
+	}
+	
+	/*
+	 * @return the text from the file location box
+	 */
+	public String getFileLocation() {
+		return fileBox.getText();
+	}
+	
+	/*
+	 * Resets the app if the server is closed, so that it can be restarted
+	 */
+	public void reset() {
+		
+		startButton.setEnabled(false);
+		csvReaderFeedBtn.setEnabled(false);
+		portInput.setEditable(true);
+		
+	}
+	
+	/*
+	 * Display message dialog when error is caused by user input, to alert the user.
+	 * @param errorType
+	 * @param errorMessage
+	 */
+	public void showUserErrorDialog(String errorType, String errorMessage) {
+		JOptionPane.showMessageDialog(frame, errorMessage, errorType, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/*
+	 * Main function
+	 * Create instance of server app and display GUI.
+	 */
+	public static void main(String[] args) {
+		
+		ServerApp serverApp = new ServerApp();
+		serverApp.draw(); 
+		
+	}
+
+	/*
+	 * Getters and setters
+	 */
+	
+	public int getMinPortNum() {
+		return MIN_PORT_NUM;
+	}
+
+	public int getMaxPortNum() {
+		return MAX_PORT_NUM;
+	}
+	
+	/*
+	 * Public method to enable the CsvReaderFeedBtn button
+	 * @param enable (boolean)
+	 */
+	public void enableCsvButton(boolean enable) {
+		this.csvReaderFeedBtn.setEnabled(enable);
+	}
+
+	/*
+	 * Inner classes
+	 */
 	
 	/*
 	 * This class implements an action listener for the start server button
@@ -301,7 +356,7 @@ public class ServerApp implements ActionListener {
 	/*
 	 * Class that implements action listener for "show CSV feed" button. Used for testing and debugging.
 	 */
-	public class csvListener implements ActionListener {
+	public class CsvListener implements ActionListener {
 
 		/*
 		 *  generates GUI for CSV Reader.
@@ -313,74 +368,27 @@ public class ServerApp implements ActionListener {
 	}
 	
 	/*
-	 * Tell the server to stop using the "Stop server" button
+	 * Inner class with action listener for the load button
 	 */
-	public void actionPerformed (ActionEvent e) {
+	public class LoadButtonListener implements ActionListener {
+
+		/*
+		 * On button click, initialise CSV reader, load file from selected location, and enable server start button.
+		 */
+		public void actionPerformed(ActionEvent e) {
+
+			csvReader = new CsvReader(ServerApp.this, fileBox.getText(), delay);
+
+			//TODO check that file exists.
 			
-			server.closeAll();
+			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
+				
+			csvReader.loadFile(true);
+			
+			textBox.displayMessage("Loaded csv.");
+			isFileLoaded = true;
 			startButton.setEnabled(true);
-			stopButton.setEnabled(false);
-			
-			// reset server reference
-			server = null;
+		}
 	}
 	
-	/*
-	 * @return the text from the file location box
-	 */
-	public String getFileLocation() {
-		return fileBox.getText();
-	}
-	
-	/*
-	 * Resets the app if the server is closed, so that it can be restarted
-	 */
-	public void reset() {
-		
-		startButton.setEnabled(false);
-		csvReaderFeedBtn.setEnabled(false);
-		portInput.setEditable(true);
-		
-	}
-	
-	/*
-	 * Display message dialog when error is caused by user input, to alert the user.
-	 * @param errorType
-	 * @param errorMessage
-	 */
-	public void showUserErrorDialog(String errorType, String errorMessage) {
-		JOptionPane.showMessageDialog(frame, errorMessage, errorType, JOptionPane.ERROR_MESSAGE);
-	}
-	
-	/*
-	 * Main function
-	 * Create instance of server app and display GUI.
-	 */
-	public static void main(String[] args) {
-		
-		ServerApp serverApp = new ServerApp();
-		serverApp.draw(); 
-		
-	}
-
-	/*
-	 * Getters and setters
-	 */
-	
-	public int getMinPortNum() {
-		return MIN_PORT_NUM;
-	}
-
-	public int getMaxPortNum() {
-		return MAX_PORT_NUM;
-	}
-	
-	/*
-	 * Public method to enable the CsvReaderFeedBtn button
-	 * @param enable (boolean)
-	 */
-	public void enableCsvButton(boolean enable) {
-		this.csvReaderFeedBtn.setEnabled(enable);
-	}
-
 }

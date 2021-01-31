@@ -5,8 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import cis5027.project.helpers.PortFormatException;
 import cis5027.project.server.helpers.AbstractServer;
+import cis5027.project.server.helpers.PortFormatException;
 
 /**
  * @author miahatton

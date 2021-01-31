@@ -2,9 +2,9 @@ package cis5027.project.clients.fanapp.frames.apps;
 
 
 import java.awt.BorderLayout;
-import javax.swing.JFrame;
 
 import cis5027.project.clients.fanapp.components.Fan;
+import cis5027.project.clients.fanapp.components.FanClientConnectPanel;
 import cis5027.project.clients.fanapp.components.FanPanel;
 import cis5027.project.clients.fanapp.components.SpeedPanel;
 import cis5027.project.clients.helpers.ApplianceApp;
@@ -17,7 +17,7 @@ import cis5027.project.clients.helpers.ApplianceApp;
  * The FanApp is the frame that holds the light components:
  * 		* Speed Panel
  * 		* Fan Panel
- * 		* ClientConnectPanel (added by the abstract superclass)
+ * 		* ClientConnectPanel 
  */
 public class FanApp extends ApplianceApp {
 	
@@ -75,6 +75,11 @@ public class FanApp extends ApplianceApp {
 		
 		add(speedPanel, BorderLayout.NORTH);
 		add(fanPanel, BorderLayout.CENTER);
+		
+		cPanel = new FanClientConnectPanel("Choose port number: ", "Start Client");
+		cPanel.setApp(this);
+		
+		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 
 	

@@ -3,12 +3,10 @@ package cis5027.project.clients.lightapp.frames.apps;
 
 import java.awt.BorderLayout;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.lightapp.components.BrightnessPanel;
 import cis5027.project.clients.lightapp.components.Light;
+import cis5027.project.clients.lightapp.components.LightClientConnectPanel;
 import cis5027.project.clients.lightapp.components.LightPanel;
 
 
@@ -18,7 +16,7 @@ import cis5027.project.clients.lightapp.components.LightPanel;
  * 		* Brightness Panel
  * 		* Brightness Adjust Panel
  * 		* Light Panel
- * 		* ClientConnectPanel (added by the abstract superclass)
+ * 		* ClientConnectPanel
  * Main method initialises the frame and draws the components.
  */
 
@@ -30,11 +28,12 @@ public class LightApp extends ApplianceApp {
 	private	BrightnessPanel 		bPanel;
 	private	Light 					lightInstance;
 	
+	
+	
 	/*
 	 * Constructor
 	 */
 	public LightApp() {
-
 		this.clientType = "light";
 	}
 	
@@ -57,6 +56,11 @@ public class LightApp extends ApplianceApp {
 
 		// add light panel to top of JFrame content pane
 		getContentPane().add(BorderLayout.NORTH, bPanel);
+		
+		cPanel = new LightClientConnectPanel("Choose port number: ", "Start Client");
+		cPanel.setApp(this);
+		
+		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 		
 	/*

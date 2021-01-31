@@ -6,9 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 
-import cis5027.project.clients.ClientConnectPanel;
-import cis5027.project.helpers.PortFormatException;
-
 /**
  * @author miahatton
  * Abstract client class that handles setting up and closing network streams.
@@ -17,7 +14,7 @@ public abstract class AbstractClient implements Runnable {
 	
 	private static final String IP = "127.0.0.1";
 	
-	protected ClientConnectPanel cPanel;
+	protected AbstractClientConnectPanel cPanel;
 	protected ObjectInputStream reader;
 	protected ObjectOutputStream writer;
 
@@ -33,7 +30,7 @@ public abstract class AbstractClient implements Runnable {
 	 * @param cPanel - ClientConnectPanel instance where messages are displayed
 	 * @param port - port number for socket.
 	 */
-	public AbstractClient(ClientConnectPanel cPanel, int port) {
+	public AbstractClient(AbstractClientConnectPanel cPanel, int port) {
 		this.cPanel = cPanel;
 		this.port = port;
 		this.stopClient = true;

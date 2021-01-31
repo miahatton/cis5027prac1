@@ -5,8 +5,6 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import cis5027.project.clients.ClientConnectPanel;
-
 /**
  * @author miahatton
  * Abstract class extended by the LightApp and FanApp classes
@@ -15,7 +13,7 @@ import cis5027.project.clients.ClientConnectPanel;
 public abstract class ApplianceApp extends JFrame {
 
 	public 		AbstractClient 		client;
-	protected 	ClientConnectPanel 	cPanel;
+	protected 	AbstractClientConnectPanel 	cPanel;
 	protected 	int 				port;
 	protected 	String 				ip;
 	
@@ -25,12 +23,8 @@ public abstract class ApplianceApp extends JFrame {
 	 * Calls the draw method to set up GUI and adds a ClientConnectPanel instance to connect to the server.
 	 */
 	public void go() {
+		
 		draw();
-		
-		cPanel = new ClientConnectPanel("Choose port number: ", "Start Client", this.clientType);
-		cPanel.setApp(this);
-		
-		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 		pack();
 		
 		// When the window is closed, stop the client.

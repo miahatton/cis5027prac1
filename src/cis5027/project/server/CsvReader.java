@@ -18,7 +18,6 @@ import cis5027.project.server.helpers.CsvHeaderException;
 
 public class CsvReader extends AbstractFileReader {
 	
-	private 		BufferedReader 	br;
 	private 		int 			lightIndex;
 	private 		int 			tempIndex;
 	private 		boolean 		stopThread;
@@ -57,7 +56,6 @@ public class CsvReader extends AbstractFileReader {
 		boolean lightFound = false;
 		boolean tempFound = false;
 		
-		//TODO what if the file has NO column headers? Can we set a default? maybe a try/catch ParseInt - if it works we can return the default values.
 		
 		int[] lightTempIndices = {-1, -1}; 			// default in case headers not found
 		String[] allHeaders = line.split(split); 	// split first line into array

@@ -11,16 +11,15 @@ import java.net.SocketException;
  * Each instance of the Messenger class connects to a client, sends readings to the client and waits for a response.
  */
 public class Messenger implements Runnable {
-	ServerApp app;
-	Server server;
-	boolean clientConnected;
-	String clientType;
-	Socket clientSocket;
-	ObjectOutputStream out;
-	ObjectInputStream in;
-	boolean stopConnection;
+	private ServerApp app;
+	private Server server;
+	private boolean clientConnected;
+	private String clientType;
+	private Socket clientSocket;
+	private ObjectOutputStream out;
+	private ObjectInputStream in;
 	
-	SensorData data;
+	private SensorData data;
 	
 	boolean clientClosedConnection = false; 	// tracks whether or not connection has been closed by client.
 	

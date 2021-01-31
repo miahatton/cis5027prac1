@@ -1,6 +1,7 @@
 <project name="Client" basedir="." default="main">
 
-    <property name="src.dir"     value="src/cis5027/project/"/>
+    <property name="src.dir1"     value="src/cis5027/project/clients/lightapp"/>
+    <property name="src.dir2"     value="src/cis5027/project/clients/helpers"/>
     <property name="build.dir"   value="build_light_client"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
@@ -14,7 +15,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+        <javac srcdir="${src.dir1}:${src.dir2}" destdir="${classes.dir}"/>
     </target>
 
     <target name="jar" depends="compile">

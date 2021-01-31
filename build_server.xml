@@ -1,6 +1,6 @@
 <project name="Server" basedir="." default="main">
 
-    <property name="src.dir"     value="src/cis5027/project/"/>
+    <property name="src.dir"     value="src/cis5027/project/server"/>
     <property name="build.dir"   value="build_server"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
