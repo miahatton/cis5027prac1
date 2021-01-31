@@ -24,6 +24,7 @@ public abstract class AbstractClient implements Runnable {
 	private int port;
 	
 	protected boolean stopClient;
+	private boolean connectionsClosed;
 	
 	/*
 	 * Constructor
@@ -34,6 +35,7 @@ public abstract class AbstractClient implements Runnable {
 		this.cPanel = cPanel;
 		this.port = port;
 		this.stopClient = true;
+		this.connectionsClosed = false;
 	}
 	
 	@Override
@@ -43,7 +45,7 @@ public abstract class AbstractClient implements Runnable {
 	 * Sets up socket and IO streams.
 	 * Tells the server what type of client it is.
 	 */
-	public void initialiseClient() {
+	public void initialiseClient() throws ConnectException {
 		try {
 	
 			port = cPanel.getPortNumber();
@@ -66,7 +68,7 @@ public abstract class AbstractClient implements Runnable {
 			
 		} catch (ConnectException e1) {
 			
-			displayMessage("Nothing to connect to! Please check the port number and ensure server is connected.");
+			throw new ConnectException();
 			
 		}catch(IOException e2) {
 			
@@ -88,16 +90,16 @@ public abstract class AbstractClient implements Runnable {
 	 */
 	public void closeAll() {
 
+		if(!stopClient) {
+			stopClient = true;
+			displayMessage("Closing connection...");
+		}
+		
 		try {
 			// tell server to stop connection to this client
 			sendMessageToServer("STOP");
 		} catch (IOException e) {
 			displayMessage("Error sending STOP message to client: " + e.toString());
-		}
-		
-		if(!stopClient) {
-			stopClient = true;
-			displayMessage("Closing connection...");
 		}
 
 		try {
@@ -110,7 +112,11 @@ public abstract class AbstractClient implements Runnable {
 			// close the output stream
 			if(this.writer != null) this.writer.close();
 			
-			displayMessage("All connections closed.");
+			if(!connectionsClosed) {
+				connectionsClosed = true;	
+				displayMessage("All connections closed."); // only send this message once
+			}
+			
 		
 		} catch (IOException e) {
 			

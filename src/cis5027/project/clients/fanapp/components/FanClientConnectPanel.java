@@ -4,16 +4,16 @@
  */
 package cis5027.project.clients.fanapp.components;
 
-import java.awt.event.ActionEvent;
+import java.net.ConnectException;
 
 import cis5027.project.clients.fanapp.FanClient;
 import cis5027.project.clients.helpers.AbstractClientConnectPanel;
 import cis5027.project.clients.helpers.PortFormatException;
-import cis5027.project.clients.lightapp.LightClient;
 
 /**
  * @author miahatton
- *
+ * FanClientConnectPanel class is a JPanel containing buttons to connect to server and output text box.
+ * It implements the actionPerformed method of the abstract class which implements ActionListener/
  */
 public class FanClientConnectPanel extends AbstractClientConnectPanel {
 
@@ -22,39 +22,23 @@ public class FanClientConnectPanel extends AbstractClientConnectPanel {
 		super(labelText, btnText);
 	}
 	
-	/*
-	 * Performs a different sequence depending on button clicked.
-	 * If START then initialises client and starts client thread.
-	 * If STOP then closes connections to the server.
-	 */
-	public void actionPerformed(ActionEvent e) { 
+	protected void startClient() {
+		try {
+			port = getPortNumber();
 			
-		switch(e.getActionCommand()) {
-		
-			case "START":
-				
-				try {
-					port = getPortNumber();
-				} catch (PortFormatException ex) {
-					showUserErrorDialog("Input error", e.toString());
-				}
-				
-				client = new FanClient(this, port, app);
-				client.initialiseClient();
-				Thread clientThread = new Thread(client);
-				clientThread.start();
-				stopButton.setEnabled(true);
-				button.setEnabled(false); // disable start button
-				break;
-				
-			case "STOP":
-				stopButton.setEnabled(false);
-				button.setEnabled(true);
-				client.setStopClient(true);
-				client.closeAll();
-				break;
+			client = new FanClient(this, port, app);
+			client.initialiseClient();
+			Thread clientThread = new Thread(client);
+			clientThread.start();
+			stopButton.setEnabled(true);
+			button.setEnabled(false); // disable start button
+			
+		} catch (PortFormatException ex) {
+			showUserErrorDialog("Input error", ex.toString());
+		} catch (ConnectException ex2) {
+			displayMessage("Nothing to connect to! Please check the port number and ensure server is connected.");
 		}
-						
 	}
+	
 }
 

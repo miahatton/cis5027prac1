@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cis5027.project.server.helpers.AbstractFileReader;
 import cis5027.project.server.helpers.DelayFormatException;
 import cis5027.project.server.helpers.PortFormatException;
 import cis5027.project.server.helpers.ScrollingTextBox;
@@ -31,11 +32,11 @@ public class ServerApp implements ActionListener {
 	
 	// Csv reader and server
 	public		Server 				server;
-	public		CsvReader 			csvReader;
+	public		AbstractFileReader 	fileReader;
 
 	// buttons
 	private		JButton 			startButton;
-	private		JButton 			csvReaderFeedBtn;
+	private		JButton 			fileReaderFeedBtn;
 	private		JButton				loadButton;
 	private 	JButton				stopButton;
 	private 	JButton				delayButton;
@@ -86,7 +87,7 @@ public class ServerApp implements ActionListener {
 		mainPanel.add(portInput);
 		mainPanel.add(startButton);
 		mainPanel.add(stopButton);
-		mainPanel.add(csvReaderFeedBtn);
+		mainPanel.add(fileReaderFeedBtn);
 		mainPanel.add(textBox.getScrollPane());
 		
 		// add panels to frame
@@ -123,7 +124,7 @@ public class ServerApp implements ActionListener {
 		stopButton = new JButton("Stop Server");
 		delayButton = new JButton("Set delay (s)");
 		startButton = new JButton("Start Server");
-		csvReaderFeedBtn = new JButton("Open CSV feed");
+		fileReaderFeedBtn = new JButton("Open CSV feed");
 				
 		// disable server start button until csv file is loaded
 		startButton.setEnabled(false);
@@ -132,7 +133,7 @@ public class ServerApp implements ActionListener {
 		stopButton.setEnabled(false);
 				
 		// disable csvReader feed until thread has started
-		csvReaderFeedBtn.setEnabled(false);
+		fileReaderFeedBtn.setEnabled(false);
 				
 		// all system messages and errors will display in here
 		textBox = new ScrollingTextBox(15,50);
@@ -161,7 +162,7 @@ public class ServerApp implements ActionListener {
 		loadButton.addActionListener(new LoadButtonListener());
 		startButton.addActionListener(new StartButtonListener());
 		delayButton.addActionListener(new DelayButtonListener());
-		csvReaderFeedBtn.addActionListener(new CsvListener());
+		fileReaderFeedBtn.addActionListener(new CsvListener());
 		stopButton.addActionListener(this);
 		
 	}
@@ -204,7 +205,7 @@ public class ServerApp implements ActionListener {
 	public void reset() {
 		
 		startButton.setEnabled(false);
-		csvReaderFeedBtn.setEnabled(false);
+		fileReaderFeedBtn.setEnabled(false);
 		portInput.setEditable(true);
 		
 	}
@@ -246,7 +247,7 @@ public class ServerApp implements ActionListener {
 	 * @param enable (boolean)
 	 */
 	public void enableCsvButton(boolean enable) {
-		this.csvReaderFeedBtn.setEnabled(enable);
+		this.fileReaderFeedBtn.setEnabled(enable);
 	}
 
 	/*
@@ -278,6 +279,20 @@ public class ServerApp implements ActionListener {
 							throw new PortFormatException(inputPortNumber);
 						}
 						
+						// initialise server
+						
+						server = new Server(fileReader, ServerApp.this, port, delay);
+						
+						// start server thread
+						
+						Thread serverThread = new Thread(server);
+						serverThread.start();
+						
+						displayMessage("Server running.");
+						startButton.setEnabled(false);
+						stopButton.setEnabled(true);
+						portInput.setEditable(false); // can't change the port once the server is running
+						
 					} catch(NumberFormatException e1) {
 						throw new PortFormatException(inputPortNumber);
 					}
@@ -287,22 +302,7 @@ public class ServerApp implements ActionListener {
 					showUserErrorDialog("Invalid Input", ex.toString());
 					
 				}
-				
-				// initialise server
-				
-				server = new Server(csvReader, ServerApp.this, port, delay);
-				
-				// start server thread
-				
-				Thread serverThread = new Thread(server);
-				serverThread.start();
-				
-				displayMessage("Server running.");
-				startButton.setEnabled(false);
-				stopButton.setEnabled(true);
-				portInput.setEditable(false); // can't change the port once the server is running
-				
-				
+
 			} else if (server != null) {
 				displayMessage("Server already running!");
 			}
@@ -340,7 +340,7 @@ public class ServerApp implements ActionListener {
 
 				if (newDelay >= 0) { // check that delay is a positive number
 					delay = newDelay;
-					if(csvReader != null) csvReader.setDelay(delay);
+					if(fileReader != null) fileReader.setDelay(delay);
 					displayMessage("Delay set to " + newDelay/1000 + " seconds.");
 				} else {
 					throw new DelayFormatException(delayString);
@@ -363,7 +363,7 @@ public class ServerApp implements ActionListener {
 		 */
 		public void actionPerformed(ActionEvent e) {
 			
-			csvReader.draw();
+			fileReader.draw();
 		}
 	}
 	
@@ -377,13 +377,13 @@ public class ServerApp implements ActionListener {
 		 */
 		public void actionPerformed(ActionEvent e) {
 
-			csvReader = new CsvReader(ServerApp.this, fileBox.getText(), delay);
+			fileReader = new CsvReader(ServerApp.this, fileBox.getText(), delay);
 
 			//TODO check that file exists.
 			
-			textBox.displayMessage("Loading csv file from " + csvReader.getFileLocation());
+			textBox.displayMessage("Loading csv file from " + fileReader.getFileLocation());
 				
-			csvReader.loadFile(true);
+			fileReader.loadFile(true);
 			
 			textBox.displayMessage("Loaded csv.");
 			isFileLoaded = true;

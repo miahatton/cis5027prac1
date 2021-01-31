@@ -2,6 +2,8 @@ package cis5027.project.server;
 
 import java.io.Serializable;
 
+import cis5027.project.server.helpers.AbstractFileReader;
+
 /**
  * @author miahatton
  * The SensorData class stores data sent by the csv reader for the server to read and send to the clients
@@ -25,20 +27,20 @@ public class SensorData implements Serializable {
 	private boolean tempClientConnected;
 	
 	// CsvReader instance
-	private CsvReader csvReader;
+	private AbstractFileReader fileReader;
 	
 	/**
 	 * Constructor
 	 * @param csvReader		Link the SensorData object to the CsvReader providing the values
 	 */
-	public SensorData(CsvReader csvReader) {
+	public SensorData(AbstractFileReader fileReader) {
 		this.tempValueSet = false;
 		this.lightValueSet = false;
 		this.lightClientConnected = false;
 		this.tempClientConnected = false;
 		
-		this.csvReader = csvReader;
-		csvReader.setTarget(this);
+		this.fileReader = fileReader;
+		fileReader.setTarget(this);
 	}
 	
 	/**
@@ -53,7 +55,7 @@ public class SensorData implements Serializable {
 			try{
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("[SensorData: ] Interrupted exception in setCurrentTemperature method: " + e.toString(), true);
+				fileReader.updateFeed("[SensorData: ] Interrupted exception in setCurrentTemperature method: " + e.toString(), true);
 			}	
 		}
 		
@@ -76,7 +78,7 @@ public class SensorData implements Serializable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("[SensorData: ] Interrupted exception in getCurrentTemperature: " + e.toString(), true);
+				fileReader.updateFeed("[SensorData: ] Interrupted exception in getCurrentTemperature: " + e.toString(), true);
 			}
 		}
 		tempValueSet = false;
@@ -96,7 +98,7 @@ public class SensorData implements Serializable {
 			try{
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("[SensorData: ] Interrupted exception in setCurrentLightLevel method: " + e.toString(), true);
+				fileReader.updateFeed("[SensorData: ] Interrupted exception in setCurrentLightLevel method: " + e.toString(), true);
 			}	
 		}
 
@@ -119,7 +121,7 @@ public class SensorData implements Serializable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				csvReader.updateFeed("[SensorData: ] Interrupted exception in getCurrentTemperature method: " + e.toString(), true);
+				fileReader.updateFeed("[SensorData: ] Interrupted exception in getCurrentTemperature method: " + e.toString(), true);
 			}
 		}
 		lightValueSet = false;

@@ -1,14 +1,21 @@
 package cis5027.project.clients.helpers;
 
+import java.awt.event.ActionEvent;
+import java.net.ConnectException;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import cis5027.project.clients.lightapp.LightClient;
 
 
 
 /**
  * @author miahatton
  * ClientConnectPanel class is a JPanel containing buttons to connect to server and output text box.
+ * This is the abstract superclass inherited by the FanClientConnectPanel and LightClientConnectPanel
+ * It cannot be instantiated because it needs to initialise a Client subclass depending on the app.
  */
 abstract public class AbstractClientConnectPanel extends ValueButtonPanel {
 
@@ -24,6 +31,8 @@ abstract public class AbstractClientConnectPanel extends ValueButtonPanel {
 	protected 	AbstractClient client;
 	protected 	int port;
 	protected 	JButton stopButton;
+	
+	abstract protected void startClient();
 	
 	/*
 	 * Constructor
@@ -59,6 +68,42 @@ abstract public class AbstractClientConnectPanel extends ValueButtonPanel {
 		button.addActionListener(this);
 		stopButton.addActionListener(this);
 	}
+	
+	
+	/*
+	 * Performs a different sequence depending on button clicked.
+	 * If START then initialises client and starts client thread.
+	 * If STOP then closes connections to the server.
+	 */
+	public void actionPerformed(ActionEvent e) { 
+			
+		switch(e.getActionCommand()) {
+		
+			case "START":
+				startClient();
+				break;
+				
+			case "STOP":
+				stopClient();
+				break;
+				
+			default:
+				app.displayMessage("Client type not recognised!");
+		}
+						
+	}
+	
+	/**
+	 * Resets buttons so that client can be started but not stopped. Call closeAll().
+	 */
+	protected void stopClient() {
+		stopButton.setEnabled(false);
+		button.setEnabled(true);
+		client.setStopClient(true);
+		client.closeAll();
+	}
+	
+	
 	
 	/*
 	 * Outputs messages to the user via the scrolling text box.

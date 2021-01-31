@@ -1,6 +1,6 @@
 package cis5027.project.clients.lightapp.components;
 
-import java.awt.event.ActionEvent;
+import java.net.ConnectException;
 
 import cis5027.project.clients.helpers.AbstractClientConnectPanel;
 import cis5027.project.clients.helpers.PortFormatException;
@@ -17,39 +17,22 @@ public class LightClientConnectPanel extends AbstractClientConnectPanel {
 		super(labelText, btnText);
 	}
 	
-	/*
-	 * Performs a different sequence depending on button clicked.
-	 * If START then initialises client and starts client thread.
-	 * If STOP then closes connections to the server.
-	 */
-	public void actionPerformed(ActionEvent e) { 
+	protected void startClient() {
+		try {
+			port = getPortNumber();
 			
-		switch(e.getActionCommand()) {
-		
-			case "START":
-				
-				try {
-					port = getPortNumber();
-				} catch (PortFormatException ex) {
-					showUserErrorDialog("Input error", e.toString());
-				}
-				
-				client = new LightClient(this, port, app);
-				client.initialiseClient();
-				Thread clientThread = new Thread(client);
-				clientThread.start();
-				stopButton.setEnabled(true);
-				button.setEnabled(false); // disable start button
-				break;
-				
-			case "STOP":
-				stopButton.setEnabled(false);
-				button.setEnabled(true);
-				client.setStopClient(true);
-				client.closeAll();
-				break;
+			client = new LightClient(this, port, app);
+			client.initialiseClient();
+			Thread clientThread = new Thread(client);
+			clientThread.start();
+			stopButton.setEnabled(true);
+			button.setEnabled(false); // disable start button
+			
+		} catch (PortFormatException ex) {
+			showUserErrorDialog("Input error", ex.toString());
+		} catch (ConnectException ex2) {
+			displayMessage("Nothing to connect to! Please check the port number and ensure server is connected.");
 		}
-						
 	}
 	
 }

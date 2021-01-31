@@ -219,6 +219,7 @@ public class Messenger implements Runnable {
 		 * Now it will wait for the Messenger to read the data for this client type before attempting to write a new value.
 		 */
 		data.connectClient(clientType);
+		
 	}
 
 }

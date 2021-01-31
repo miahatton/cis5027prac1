@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import cis5027.project.server.helpers.AbstractFileReader;
 import cis5027.project.server.helpers.AbstractServer;
 import cis5027.project.server.helpers.PortFormatException;
 
@@ -14,7 +15,7 @@ import cis5027.project.server.helpers.PortFormatException;
  */
 public class Server extends AbstractServer {
 	
-	private		CsvReader 			csvReader;
+	private		AbstractFileReader 			fileReader;
 	private 	SensorData 			data;
 	
 	// ArrayList to keep track of Messenger instances (each Messenger connects to one client)
@@ -23,21 +24,21 @@ public class Server extends AbstractServer {
 	/*
 	 * Constructor
 	 */
-	public Server(CsvReader csvReader, ServerApp app, int port, int delay) {
+	public Server(AbstractFileReader fileReader, ServerApp app, int port, int delay) {
 		super(port);
 		
-		this.csvReader = csvReader;
+		this.fileReader = fileReader;
 		this.app = app;
 		sending = false;
 		
 		// create SensorData object 
-		data = new SensorData(csvReader);	
+		data = new SensorData(fileReader);	
 		
 		// arraylist to store Messenger instances (one per client connected)
 		messengerList = new ArrayList<Messenger>();
 		
 		// start the CSV reader in a separate thread so that it updates SensorData values independently of what the client/server are doing.
-		Thread csvReaderThread = new Thread(csvReader);
+		Thread csvReaderThread = new Thread(this.fileReader);
 		csvReaderThread.start();
 		
 		// once the CSV reader thread has started the feed can be opened so enable the button
@@ -140,7 +141,7 @@ public class Server extends AbstractServer {
 			this.serverSocket = null;
 			
 			// close the csvReader.
-			this.csvReader.closeBuffer();
+			this.fileReader.closeBuffer();
 			app.reset();
 		}
 		

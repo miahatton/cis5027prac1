@@ -20,11 +20,11 @@ public class LightClient extends AbstractClient {
 	private BrightnessPanel brightnessPanelInstance;
 	private LightApp app;
 	
-	/*
+	/**
 	 * Constructor
 	 * @param cPanel - client connect panel where messages are displayed
 	 * @param port - port number for socket.
-	 * @app - ApplianceApp for this client.
+	 * @param app - ApplianceApp for this client.
 	 */
 	public LightClient(AbstractClientConnectPanel cPanel, int port, ApplianceApp app) {
 		
