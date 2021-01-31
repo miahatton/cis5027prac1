@@ -2,8 +2,6 @@ package cis5027.project.server;
 
 import java.io.Serializable;
 
-import cis5027.project.server.helpers.AbstractFileReader;
-
 /**
  * @author miahatton
  * The SensorData class stores data sent by the csv reader for the server to read and send to the clients

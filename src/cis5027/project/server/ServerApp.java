@@ -6,14 +6,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import cis5027.project.server.helpers.AbstractFileReader;
-import cis5027.project.server.helpers.DelayFormatException;
-import cis5027.project.server.helpers.PortFormatException;
-import cis5027.project.server.helpers.ScrollingTextBox;
 
 /**
  * @author miahatton
@@ -40,6 +36,7 @@ public class ServerApp implements ActionListener {
 	private		JButton				loadButton;
 	private 	JButton				stopButton;
 	private 	JButton				delayButton;
+	private		JLabel 				portLabel;
 	
 	// Other GUI components
 	public 		ScrollingTextBox 	textBox;
@@ -84,6 +81,7 @@ public class ServerApp implements ActionListener {
 		filePanel.add(delayButton);
 		
 		// add components to bottom panel
+		mainPanel.add(portLabel);
 		mainPanel.add(portInput);
 		mainPanel.add(startButton);
 		mainPanel.add(stopButton);
@@ -117,6 +115,8 @@ public class ServerApp implements ActionListener {
 		// input fields
 		fileBox = new JTextField(20);
 		delayInput = new JTextField(5);
+		
+		portLabel = new JLabel("Port number");
 		portInput = new JTextField(5);
 				
 		// buttons

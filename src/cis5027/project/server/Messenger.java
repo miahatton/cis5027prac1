@@ -131,7 +131,7 @@ public class Messenger implements Runnable {
 					
 				} 	
 			} catch (SocketException e2) {
-				app.displayMessage(clientType + " client has closed connection.");
+				app.displayMessage("The " + clientType + " client has closed connection.");
 				clientClosedConnection = true;
 				tryToClose();
 			} catch (IOException e4) {

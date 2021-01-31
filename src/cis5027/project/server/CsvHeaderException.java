@@ -1,4 +1,4 @@
-package cis5027.project.server.helpers;
+package cis5027.project.server;
 
 /**
  * @author miahatton

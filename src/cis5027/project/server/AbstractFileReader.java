@@ -1,11 +1,9 @@
-package cis5027.project.server.helpers;
+package cis5027.project.server;
 
 import java.io.BufferedReader;
 import java.io.File;
 
 import javax.swing.JFrame;
-
-import cis5027.project.server.SensorData;
 
 /**
  * @author miahatton
