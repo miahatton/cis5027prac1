@@ -27,7 +27,7 @@ public abstract class ApplianceApp extends JFrame {
 	public void go() {
 		draw();
 		
-		cPanel = new ClientConnectPanel("Choose port number: ", "5000", "Start Client", this.clientType);
+		cPanel = new ClientConnectPanel("Choose port number: ", "Start Client", this.clientType);
 		cPanel.setApp(this);
 		
 		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());

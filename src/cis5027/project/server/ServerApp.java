@@ -24,7 +24,7 @@ public class ServerApp implements ActionListener {
 
 	// constants
 	private static final String DEFAULT_FILE_LOCATION = "inputs/sensor_data.csv";
-	private static final int	DEFAULT_PORT = 5000;
+	private static final String	DEFAULT_PORT = "5000";
 	private static final int 	DEFAULT_DELAY = 3000;
 	private static final int 	MIN_PORT_NUM = 1024;
 	private static final int 	MAX_PORT_NUM = 65535;
@@ -149,7 +149,7 @@ public class ServerApp implements ActionListener {
 		delayInput.setText(String.valueOf(DEFAULT_DELAY/1000));
 		delayInput.setCaretPosition(delayInput.getText().length());
 		
-		portInput.setText(String.valueOf(DEFAULT_PORT));
+		portInput.setText(DEFAULT_PORT);
 		portInput.setCaretPosition(portInput.getText().length());
 	}
 	
@@ -245,6 +245,7 @@ public class ServerApp implements ActionListener {
 				displayMessage("Server running.");
 				startButton.setEnabled(false);
 				stopButton.setEnabled(true);
+				portInput.setEditable(false); // can't change the port once the server is running
 				
 				
 			} else if (server != null) {
@@ -338,6 +339,7 @@ public class ServerApp implements ActionListener {
 		
 		startButton.setEnabled(false);
 		csvReaderFeedBtn.setEnabled(false);
+		portInput.setEditable(true);
 		
 	}
 	

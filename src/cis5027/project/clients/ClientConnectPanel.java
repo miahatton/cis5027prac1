@@ -21,6 +21,11 @@ import cis5027.project.helpers.ScrollingTextBox;
  */
 public class ClientConnectPanel extends ValueButtonPanel {
 
+	// constants
+	private static final String	DEFAULT_PORT = "5000";
+	private static final int 	MIN_PORT_NUM = 1024;
+	private static final int 	MAX_PORT_NUM = 65535;
+	
 	String lastReading;
 	ScrollingTextBox	clientOutput;
 	ApplianceApp app;
@@ -38,9 +43,9 @@ public class ClientConnectPanel extends ValueButtonPanel {
 	 * @param btnText
 	 * @param type - the type of client connecting
 	 */
-	public ClientConnectPanel(String labelText, String defaultVal, String btnText, String type) {
+	public ClientConnectPanel(String labelText, String btnText, String type) {
 		
-		super(labelText, defaultVal, btnText);
+		super(labelText, DEFAULT_PORT, btnText);
 		this.clientType = type;
 		
 		stopButton = new JButton("Stop client");
@@ -150,7 +155,7 @@ public class ClientConnectPanel extends ValueButtonPanel {
 		try {
 			port = Integer.parseInt(textField.getText());
 			
-			if (port <1024 | port > 65535) {
+			if (port <MIN_PORT_NUM | port > MIN_PORT_NUM) {
 				throw new PortFormatException(port);
 			}
 			else {
