@@ -1,9 +1,11 @@
-package cis5027.project.server;
+package cis5027.project.server.helpers;
 
 import java.io.BufferedReader;
 import java.io.File;
 
 import javax.swing.JFrame;
+
+import cis5027.project.server.SensorData;
 
 /**
  * @author miahatton
@@ -38,11 +40,11 @@ abstract public class AbstractFileReader implements Runnable {
 	/*
 	 * Abstract methods
 	 */
-	abstract public void loadFile(boolean fetchHeader);
-	abstract public void readLine();
-	abstract public void closeBuffer();
-	abstract public void updateFeed(String msg, boolean isError);
-	abstract public void run();
+	abstract public 	void loadFile(boolean fetchHeader);
+	abstract protected 	void readLine();
+	abstract public 	void closeBuffer();
+	abstract public 	void updateFeed(String msg, boolean isError);
+	abstract public 	void run();
 	
 	/*
 	 * Constructor with default delay of 1000 ms.

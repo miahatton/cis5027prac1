@@ -11,6 +11,7 @@ import cis5027.project.clients.helpers.ApplianceApp;
 import cis5027.project.clients.helpers.AbstractClientConnectPanel;
 
 public class FanClient extends AbstractClient {
+	
 	private SpeedPanel speedPanelInstance;
 	private FanApp app;
 	

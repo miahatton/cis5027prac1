@@ -21,7 +21,6 @@ public class Light extends Appliance {
 	
 	// adjustable color value
 	private Color 	lightColor;
-	private int 	incrementer = (int) 0.1 * MAX_BRIGHTNESS; 
 	
 	// width and height of panel where lights are drawn
 	private int 	panelWidth;
@@ -124,9 +123,6 @@ public class Light extends Appliance {
 		return lightColor.getRed();  // red and green always equal and maximum values in Color() call
 	}
 
-	public int getIncrementer() {
-		return incrementer;
-	}
 
 
 }

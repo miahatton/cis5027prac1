@@ -79,7 +79,7 @@ public class Messenger implements Runnable {
 
 				out.flush();
 		
-				server.app.displayMessage(notification);
+				app.displayMessage(notification);
 				
 			} catch (SocketException e1) {
 				app.displayMessage(clientType + "client has closed connection.");

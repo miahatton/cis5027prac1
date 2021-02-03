@@ -99,5 +99,6 @@ public class Fan extends Appliance {
 
 	public void setFanSpeed(int speed) {
 		this.fanSpeed = speed;
+		((FanPanel) this.panel).setTimer(this.fanSpeed);
 	}
 }

@@ -16,7 +16,7 @@ import cis5027.project.clients.helpers.AppliancePanel;
  */
 public class FanPanel extends AppliancePanel implements ActionListener {
 	
-	Timer timer;
+	private Timer timer;
 	
 	private final static int DEFAULT_DELAY_TIME = 10;
 

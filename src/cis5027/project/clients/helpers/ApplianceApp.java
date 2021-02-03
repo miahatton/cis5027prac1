@@ -42,6 +42,11 @@ public abstract class ApplianceApp extends JFrame {
 	
 	abstract protected void draw();
 	
+	/**
+	 * The subclasses must initialise an object of type AbstractClientConnectPanel (or subclass) and associate the panel with itself.
+	 */
+	abstract protected void initialiseCPanel();
+	
 	/*
 	 * Allows messages to be displayed to the user
 	 * @param msg
@@ -58,5 +63,7 @@ public abstract class ApplianceApp extends JFrame {
 	public void showUserErrorDialog(String errorType, String errorMessage) {
 		JOptionPane.showMessageDialog(this, errorMessage, errorType, JOptionPane.ERROR_MESSAGE);
 	}
+	
+
 	
 }

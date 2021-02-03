@@ -1,4 +1,4 @@
-package cis5027.project.server;
+package cis5027.project.server.helpers;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;

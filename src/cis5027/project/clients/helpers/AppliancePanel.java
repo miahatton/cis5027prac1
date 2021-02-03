@@ -49,6 +49,5 @@ public class AppliancePanel extends JPanel {
 
 	}
 	
-
 	
 }

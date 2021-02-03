@@ -37,7 +37,7 @@ public class SpeedPanel extends ValueButtonPanel {
 	/**
 	 * When the button is clicked (or user hits return in text field)
 	 * 		* get the text from the text field
-	 * 		* attempt to conver to integer
+	 * 		* attempt to convert to integer
 	 * 		* if successful, update fan speed
 	 * 		* if unsuccessful, show user error message and set text field to last valid value.
 	 */
@@ -81,9 +81,9 @@ public class SpeedPanel extends ValueButtonPanel {
 		
 		// check against thresholds
 		if(newTemperature<18) {
-			newSpeed = 1000; // effectively turn the fan off if the temperature gets too low
+			newSpeed = 500; // effectively turn the fan off if the temperature gets too low
 		} else if (newTemperature < 24) {	
-			newSpeed = 100; // comfortable working temperature
+			newSpeed = 50; // comfortable working temperature
 		} else if (newTemperature < 27) {
 			newSpeed = 20; // getting warm
 		} else newSpeed = 1; // 27 degrees is far too hot!

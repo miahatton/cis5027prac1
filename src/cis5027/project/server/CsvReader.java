@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import cis5027.project.server.helpers.AbstractFileReader;
+import cis5027.project.server.helpers.CsvHeaderException;
+
 /**
  * @author miahatton
  * The CSV reader class handles the input file. 
@@ -142,7 +145,7 @@ public class CsvReader extends AbstractFileReader {
 	 * If the bottom of the file is reached, the file is re-loaded and this method is called again.
 	 */
 	@Override
-	public void readLine() {
+	protected void readLine() {
 		
 		String nextLine;
 		String errorString = " value cannot be converted to ";

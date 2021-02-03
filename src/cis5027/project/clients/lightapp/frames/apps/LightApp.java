@@ -57,10 +57,17 @@ public class LightApp extends ApplianceApp {
 		// add light panel to top of JFrame content pane
 		getContentPane().add(BorderLayout.NORTH, bPanel);
 		
-		cPanel = new LightClientConnectPanel("Choose port number: ", "Start Client");
-		cPanel.setApp(this);
+		initialiseCPanel();
 		
 		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
+	}
+	
+	/**
+	 * Inititalise the cPanel as a FanClientConnectPanel
+	 */
+	protected void initialiseCPanel() {
+		cPanel = new LightClientConnectPanel("Choose port number: ", "Start Client");
+		cPanel.setApp(this);
 	}
 		
 	/*

@@ -76,12 +76,19 @@ public class FanApp extends ApplianceApp {
 		add(speedPanel, BorderLayout.NORTH);
 		add(fanPanel, BorderLayout.CENTER);
 		
-		cPanel = new FanClientConnectPanel("Choose port number: ", "Start Client");
-		cPanel.setApp(this);
+		initialiseCPanel();
 		
 		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 
+	/**
+	 * Inititalise the cPanel as a FanClientConnectPanel
+	 */
+	protected void initialiseCPanel() {
+		cPanel = new FanClientConnectPanel("Choose port number: ", "Start Client");
+		cPanel.setApp(this);
+	}
+	
 	
 	/*
 	 * Getter for speed_panel
