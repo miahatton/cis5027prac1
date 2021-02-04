@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import cis5027.project.clients.lightapp.components.Light;
+
 /**
  * @author miahatton
  * Abstract class extended by the LightApp and FanApp classes
@@ -43,9 +45,12 @@ public abstract class ApplianceApp extends JFrame {
 	abstract protected void draw();
 	
 	/**
-	 * The subclasses must initialise an object of type AbstractClientConnectPanel (or subclass) and associate the panel with itself.
+	 * The subclasses must initialise panels of the correct type
 	 */
 	abstract protected void initialiseCPanel();
+	abstract protected void initialiseAppliancePanel();
+	abstract protected void initialiseValueButtonPanel();
+	abstract public void main();
 	
 	/*
 	 * Allows messages to be displayed to the user

@@ -68,17 +68,13 @@ public class FanApp extends ApplianceApp {
 	 */
 	protected void draw() {
 		
-		fanPanel = new FanPanel(300, 300); // size of panel
+		initialiseAppliancePanel();
 		fanInstance = (Fan) fanPanel.getApplianceInstance();
-		speedPanel = new SpeedPanel(fanInstance, "Fan speed (delay in ms): ", "10", "Set speed");
-		speedPanel.setFanAppInstance(this);		
 		
-		add(speedPanel, BorderLayout.NORTH);
-		add(fanPanel, BorderLayout.CENTER);
+		initialiseValueButtonPanel();
 		
 		initialiseCPanel();
 		
-		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 
 	/**
@@ -87,8 +83,26 @@ public class FanApp extends ApplianceApp {
 	protected void initialiseCPanel() {
 		cPanel = new FanClientConnectPanel("Choose port number: ", "Start Client");
 		cPanel.setApp(this);
+		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 	
+	/**
+	 * Initialise the appliance panel as a fan panel
+	 */
+	protected void initialiseAppliancePanel() {
+		fanPanel = new FanPanel(300, 300); // size of panel
+		add(fanPanel, BorderLayout.CENTER);
+	}
+	
+	/**
+	 * Initialise the value button panel as a speed panel
+	 */
+	protected void initialiseValueButtonPanel() {
+		speedPanel = new SpeedPanel(fanInstance, "Fan speed (delay in ms): ", "10", "Set speed");
+		speedPanel.setFanAppInstance(this);		
+		
+		add(speedPanel, BorderLayout.NORTH);
+	}
 	
 	/*
 	 * Getter for speed_panel

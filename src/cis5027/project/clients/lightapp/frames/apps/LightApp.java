@@ -44,32 +44,46 @@ public class LightApp extends ApplianceApp {
 		
 		setSize(400,500);
 		
-		// initialise light panel
-		lPanel = new LightPanel(400, 380);
-		getContentPane().add(BorderLayout.CENTER, lPanel);
+		initialiseAppliancePanel();
 		
 		lightInstance = (Light) lPanel.getApplianceInstance();
 				
+		initialiseValueButtonPanel();
+		
+		initialiseCPanel();
+	}
+	
+	/**
+	 * Inititalise the cPanel as a LightClientConnectPanel
+	 */
+	protected void initialiseCPanel() {
+		cPanel = new LightClientConnectPanel("Choose port number: ", "Start Client");
+		cPanel.setApp(this);
+		
+		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
+	}
+	
+	/**
+	 * Initialise the lPanel as a LightPanel
+	 */
+	protected void initialiseAppliancePanel() {
+		// initialise light panel
+		lPanel = new LightPanel(400, 380);
+		getContentPane().add(BorderLayout.CENTER, lPanel);
+	}
+	
+	/**
+	 * Initialise the value button panel as a BrightnessPanel	
+	 */
+	protected void initialiseValueButtonPanel() {
 		// initialise brightness panel
 		bPanel = new BrightnessPanel(lightInstance, "Set brightness %", "100", "Set Brightness");
 		bPanel.setLightApp(this);
 
 		// add light panel to top of JFrame content pane
 		getContentPane().add(BorderLayout.NORTH, bPanel);
-		
-		initialiseCPanel();
-		
-		getContentPane().add(BorderLayout.SOUTH, cPanel.getContainerPanel());
 	}
 	
-	/**
-	 * Inititalise the cPanel as a FanClientConnectPanel
-	 */
-	protected void initialiseCPanel() {
-		cPanel = new LightClientConnectPanel("Choose port number: ", "Start Client");
-		cPanel.setApp(this);
-	}
-		
 	/*
 	 * Main method initialises LightApp and calls the superclass go() method (which calls the draw() method)
 	 */
