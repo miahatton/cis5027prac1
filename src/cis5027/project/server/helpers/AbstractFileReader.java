@@ -2,6 +2,7 @@ package cis5027.project.server.helpers;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.JFrame;
 
@@ -40,7 +41,7 @@ abstract public class AbstractFileReader implements Runnable {
 	/*
 	 * Abstract methods
 	 */
-	abstract public 	void loadFile(boolean fetchHeader);
+	abstract public 	void loadFile(boolean fetchHeader) throws FileNotFoundException;
 	abstract protected 	void readLine();
 	abstract public 	void closeBuffer();
 	abstract public 	void updateFeed(String msg, boolean isError);

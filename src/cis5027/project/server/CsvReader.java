@@ -2,6 +2,7 @@ package cis5027.project.server;
 
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -105,7 +106,7 @@ public class CsvReader extends AbstractFileReader {
 	 * @param fetchHeader - boolean value, true if we need to get the indices of the light and temperature columns
 	 */
 	@Override
-	public void loadFile (boolean fetchHeader) {
+	public void loadFile (boolean fetchHeader) throws FileNotFoundException {
 		
 		String errorType = "File format error";
 			
@@ -130,6 +131,8 @@ public class CsvReader extends AbstractFileReader {
 			
 			} else app.showUserErrorDialog(errorType, "[csv reader: ] csv file is empty!");
 			
+		} catch (FileNotFoundException ex) {
+			throw ex;
 		} catch (IOException e1) {
 			app.showUserErrorDialog(errorType, "[csv reader: ] error reading file... " + e1.toString());
 		} catch (CsvHeaderException e2) {

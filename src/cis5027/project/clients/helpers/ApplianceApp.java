@@ -50,7 +50,6 @@ public abstract class ApplianceApp extends JFrame {
 	abstract protected void initialiseCPanel();
 	abstract protected void initialiseAppliancePanel();
 	abstract protected void initialiseValueButtonPanel();
-	abstract public void main();
 	
 	/*
 	 * Allows messages to be displayed to the user

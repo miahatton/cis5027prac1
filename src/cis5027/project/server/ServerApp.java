@@ -3,8 +3,12 @@ package cis5027.project.server;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -41,9 +45,10 @@ public class ServerApp implements ActionListener {
 	private		JButton				loadButton;
 	private 	JButton				stopButton;
 	private 	JButton				delayButton;
-	private		JLabel 				portLabel;
+	private 	JButton				chooseFileBtn;
 	
 	// Other GUI components
+	private		JLabel 				portLabel;
 	public 		ScrollingTextBox 	textBox;
 	private		JTextField 			fileBox;
 	private 	JTextField 			portInput;
@@ -52,7 +57,6 @@ public class ServerApp implements ActionListener {
 
 	private		int 				delay;
 	private 	boolean 			isFileLoaded;
-	
 	
 	/*
 	 * Constructor
@@ -81,15 +85,16 @@ public class ServerApp implements ActionListener {
 
 		// add components to top panel
 		filePanel.add(fileBox);
-		filePanel.add(loadButton);
+		filePanel.add(chooseFileBtn);
 		filePanel.add(delayInput);
 		filePanel.add(delayButton);
+		filePanel.add(loadButton);
 		
 		// add components to bottom panel
 		mainPanel.add(portLabel);
 		mainPanel.add(portInput);
 		mainPanel.add(startButton);
-		mainPanel.add(stopButton);
+		mainPanel.add(stopButton);		
 		mainPanel.add(fileReaderFeedBtn);
 		mainPanel.add(textBox.getScrollPane());
 		
@@ -108,7 +113,7 @@ public class ServerApp implements ActionListener {
         });
 		
 		
-		frame.setSize(600,400);
+		frame.setSize(650,400);
 		frame.setVisible(true);
 	}
 
@@ -118,7 +123,7 @@ public class ServerApp implements ActionListener {
 	 */
 	public void initializeGuiComponents() {
 		// input fields
-		fileBox = new JTextField(20);
+		fileBox = new JTextField(15);
 		delayInput = new JTextField(5);
 		
 		portLabel = new JLabel("Port number");
@@ -129,6 +134,7 @@ public class ServerApp implements ActionListener {
 		stopButton = new JButton("Stop Server");
 		delayButton = new JButton("Set delay (s)");
 		startButton = new JButton("Start Server");
+		chooseFileBtn = new JButton("Choose another file");
 		fileReaderFeedBtn = new JButton("Open CSV feed");
 				
 		// disable server start button until csv file is loaded
@@ -168,6 +174,7 @@ public class ServerApp implements ActionListener {
 		startButton.addActionListener(new StartButtonListener());
 		delayButton.addActionListener(new DelayButtonListener());
 		fileReaderFeedBtn.addActionListener(new CsvListener());
+		chooseFileBtn.addActionListener(new chooseFileListener());
 		stopButton.addActionListener(this);
 		
 	}
@@ -387,12 +394,50 @@ public class ServerApp implements ActionListener {
 			//TODO check that file exists.
 			
 			textBox.displayMessage("Loading csv file from " + fileReader.getFileLocation());
-				
-			fileReader.loadFile(true);
+			try {
+				fileReader.loadFile(true);
+			} catch (FileNotFoundException ex) {
+				showUserErrorDialog("File error", "File not found! Please use 'choose file' to select a file.");
+			}
+			
 			
 			textBox.displayMessage("Loaded csv.");
 			isFileLoaded = true;
 			startButton.setEnabled(true);
+		}
+	}
+	
+	/*
+	 * Inner class with action listener for the choose file button
+	 */
+	public class chooseFileListener implements ActionListener {
+		
+		JFileChooser fileChooser;
+		
+		/*
+		 * On button click, launch file chooser menu
+		 */
+		public void actionPerformed(ActionEvent e) {
+			File file = letUserChooseFile();
+			
+			if(file != null) {
+				fileBox.setText(file.getAbsolutePath());
+			}
+		}
+
+		/**
+		 * @return
+		 */
+		private File letUserChooseFile() {
+			fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new 
+					File(System.getProperty("user.home")));
+		    int status = fileChooser.showOpenDialog(ServerApp.this.frame);
+		    File selected_file = null;
+		    if (status == JFileChooser.APPROVE_OPTION) {
+		        selected_file = fileChooser.getSelectedFile();
+		    }
+		    return selected_file;
 		}
 	}
 	
