@@ -174,7 +174,7 @@ public class ServerApp implements ActionListener {
 		startButton.addActionListener(new StartButtonListener());
 		delayButton.addActionListener(new DelayButtonListener());
 		fileReaderFeedBtn.addActionListener(new CsvListener());
-		chooseFileBtn.addActionListener(new chooseFileListener());
+		chooseFileBtn.addActionListener(new ChooseFileListener());
 		stopButton.addActionListener(this);
 		
 	}
@@ -410,9 +410,9 @@ public class ServerApp implements ActionListener {
 	/*
 	 * Inner class with action listener for the choose file button
 	 */
-	public class chooseFileListener implements ActionListener {
+	public class ChooseFileListener implements ActionListener {
 		
-		JFileChooser fileChooser;
+		private JFileChooser fileChooser;
 		
 		/*
 		 * On button click, launch file chooser menu
@@ -426,7 +426,9 @@ public class ServerApp implements ActionListener {
 		}
 
 		/**
-		 * @return
+		 * Open file chooser menu to user's home directory
+		 * When user clicks OK, return their selected file
+		 * @return selected_file: File
 		 */
 		private File letUserChooseFile() {
 			fileChooser = new JFileChooser();
