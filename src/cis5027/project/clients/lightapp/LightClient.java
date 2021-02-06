@@ -75,16 +75,7 @@ public class LightClient extends AbstractClient {
 			closeAll();
 
 		} catch (ClassNotFoundException e) {
-			displayMessage("Unusual reading received! Class cannot be found: " + e.toString());
-			
-			try {
-				sendMessageToServer("Unusual reading");
-				//TODO handle this message at the server end.
-			} catch (IOException ex) {
-				displayMessage("Error sending message to server.");
-				closeAll();
-			}
-			
+			displayMessage("Unusual reading received! Class cannot be found: " + e.toString());	
 		}
 		
 	}
